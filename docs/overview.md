@@ -29,39 +29,37 @@ Web components include: a section, a generic form and authentication.
     "name": "my_project",
     "screens": [
         {
-            "screen": {
-                "name": "screen1",
-                "is_start": true,
-                "components": [
-                    {
-                        "type": "authentication"
-                    },
-                    {
-                        "type": "form",
-                        "action": "screen2",
-                        "elements": [
-                            {
-                                "element": {
-                                    "type": "text_field",
-                                    "name": "first_name",
-                                    "required": true
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "type": "section",
-                        "elements": [
-                            {
-                                "element": {
-                                    "type": "video",
-                                    "src": "http://test.com/test.ogv"
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }
+            "name": "screen1",
+            "is_start": true,
+            "layout": "col4",
+            "components": [
+                {
+                    "type": "authentication",
+                    "layout": "row1"
+                },
+                {
+                    "type": "form",
+                    "action": "screen2",
+                    "layout": "row2",
+                    "elements": [
+                        {
+                            "type": "text_field",
+                            "name": "first_name",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "type": "section",
+                    "layout": "row3",
+                    "elements": [
+                        {
+                            "type": "video",
+                            "src": "http://test.com/test.ogv"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
