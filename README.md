@@ -1,12 +1,32 @@
 # Napkin
 
-## Installation instructions
+## What It Is
+
+A rapid web prototyping tool to create a functional wireframe.
+
+## High-Level Documentation
+
+[Overview](https://github.com/mozilla/napkin/blob/master/docs/overview.md)
+
+## Installation Instructions
 
 Clone the repository
 
 > git clone git://github.com/mozilla/napkin.git
 
-> curl http://npmjs.org/install.sh | sh
+Install Brew and MongoDB
+
+Brew instructions: https://github.com/mxcl/homebrew/wiki/installation
+
+> brew install mongodb
+
+Run MongoDB in the background
+
+> mongod &
+
+Install node-mongodb-native
+
+> npm install -g mongodb --mongodb:native
 
 Install node by using brew or through the website http://nodejs.org/#download
 
@@ -20,6 +40,7 @@ Run the site
 
 > node app.js
 
-## Tests
+## Run Tests
 
 > make test
+

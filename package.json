@@ -1,20 +1,23 @@
 {
-  "name": "bid-scaffold",
+  "name": "napkin",
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": ">= 0.6.17",
+    "node": ">= 0.6.19",
     "npm": "1.1.x"
   },
   "dependencies": {
     "client-sessions": "0.0.3",
-    "connect": "1.8.6",
+    "connect": "1.8.7",
     "express": "2.5.9",
-    "nock": ">= 0.13.0",
-    "jade": ">= 0.0.1",
-    "mocha": "0.14.1",
+    "jade": ">= 0.20.3",
     "request": "2.9.153",
-    "should": ">= 0.0.1",
+    "socket.io": "0.9.6",
     "nconf": "git://github.com/flatiron/nconf.git"
+  },
+  "devDependencies": {
+    "nock": ">= 0.13.3",
+    "mocha": "0.14.1",
+    "should": ">= 0.0.1"
   }
 }
