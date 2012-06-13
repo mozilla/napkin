@@ -30,8 +30,17 @@ module.exports = function(app, configurations, express) {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   });
 
+  app.configure('development', function() {
+    app.set('napkin', 1);
+  });
+
+  app.configure('test', function() {
+    app.set('napkin', 2);
+  });
+
   app.configure('production', function(){
     app.use(express.errorHandler());
+    app.set('napkin', 0);
   });
 
   app.dynamicHelpers({

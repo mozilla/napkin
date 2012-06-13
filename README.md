@@ -14,19 +14,15 @@ Clone the repository
 
 > git clone git://github.com/mozilla/napkin.git
 
-Install Brew and MongoDB
+Install Brew and redis
 
 Brew instructions: https://github.com/mxcl/homebrew/wiki/installation
 
-> brew install mongodb
+> brew install redis
 
-Run MongoDB in the background
+Run redis in the background
 
-> mongod &
-
-Install node-mongodb-native
-
-> npm install -g mongodb --mongodb:native
+> redis-server &
 
 Install node by using brew or through the website http://nodejs.org/#download
 
