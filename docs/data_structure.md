@@ -40,4 +40,4 @@
 
     Properties
 
-    type, name, identifier, required, src (optional)
+    type, name, identifier, layout, required, src (optional)
