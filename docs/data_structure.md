@@ -26,7 +26,7 @@
 
     String
 
-    screen:<screen_id>:component:<component_id>
+    project:<project_id>:screen:<screen_id>:component:<component_id>
 
     Properties
 
@@ -36,7 +36,7 @@
 
     String
 
-    component:<component_id>:element:<element_id>
+    project:<project_id>:component:<component_id>:element:<element_id>
 
     Properties
 
