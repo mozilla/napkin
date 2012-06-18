@@ -26,7 +26,9 @@ Web components include: a section, a generic form and authentication.
 
 ```json
 {
-    "name": "my_project",
+    "id": 1,
+    "title": "My Project",
+    "author": "test@test.org",
     "screens": [
         {
             "name": "screen1",
@@ -67,7 +69,6 @@ Web components include: a section, a generic form and authentication.
 
 Notes on JSON attributes:
 
-* Names will have to be unique as multiple references will conflict if a form component points to more than one screen
 * Required auto-generates validators for fields if they are empty (specific formatting for email addresses are currently ignored)
 
 After a sitemap is complete, compiling code consists of looping through all the screen objects starting with the one flagged "is_start": true. Only one can be true, the rest are set to false.

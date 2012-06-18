@@ -15,7 +15,8 @@
     "socket.io": "0.9.6",
     "nconf": "git://github.com/flatiron/nconf.git",
     "hiredis": "0.1.14",
-    "redis": "0.7.1"
+    "redis": "0.7.1",
+    "winston": "0.6.1"
   },
   "devDependencies": {
     "nock": ">= 0.13.3",

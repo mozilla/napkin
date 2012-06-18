@@ -16,7 +16,7 @@ var projects = require('../lib/projects');
 describe('project', function() {
   after(function() {
     db.flushdb();
-    console.log('cleared test database');
+    console.log('cleared test projects database');
   });
 
   describe('GET /list', function() {
@@ -104,7 +104,7 @@ describe('project', function() {
   });
 
   describe('DELETE /project/:id', function() {
-    it('does not delete a project because email is not matching', function() {
+    it('attempts to delete a project', function() {
       var req = {
         session: {
           email: 'test2@test.org'
@@ -114,9 +114,7 @@ describe('project', function() {
       projects.remove(req, db, 1, function(err, project) {
         should.exist(project);
       });
-    });
 
-    it('deletes a project', function() {
       var req = {
         session: {
           email: 'test@test.org'
@@ -128,11 +126,6 @@ describe('project', function() {
           should.not.exist(delProject);
         });
       });
-    });
-
-    // TODO: when screen implementation is added
-    it('verifies all child screens are also deleted', function() {
-
     });
   });
 });
