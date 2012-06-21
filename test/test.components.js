@@ -29,7 +29,6 @@ var screenReq = {
     email: 'test@test.org'
   },
   body: {
-    id: 1,
     title: 'My Screen',
     is_start: true,
     layout: 'col1'
@@ -44,11 +43,10 @@ var componentReq = {
     email: 'test@test.org'
   },
   body: {
-    id: 1,
-    project_id: 1,
     type: 'form',
     layout: 'row1',
-    action: '/'
+    action: '/',
+    project_id: 1
   },
   params: {
     id: 1
@@ -56,18 +54,6 @@ var componentReq = {
 };
 
 describe('component', function() {
-  before(function() {
-    var req = projectReq;
-
-    projects.add(req, db, function(err, project) {
-      var req = screenReq;
-
-      screens.add(req, db, function(errScreen, screen) {
-        console.log('Added screen / project');
-      });
-    });
-  });
-
   after(function() {
     db.flushdb();
     console.log('cleared test components database');
@@ -75,96 +61,48 @@ describe('component', function() {
 
   describe('GET /list', function() {
     it('returns a list of available components for the screen', function() {
-      var req = componentReq;
+      var req = projectReq;
 
-      components.add(req, db, function(errComponent, component) {
-        components.list(req, db, function(errList, componentList) {
-          should.exist(componentList);
-          componentList[0].type.should.equal(req.body.type);
-          componentList[0].layout.should.equal(req.body.layout);
-          componentList[0].action.should.equal(req.body.action);
+      projects.add(req, db, function(err, project) {
+        req = screenReq;
+
+        screens.add(req, db, function(errScreen, screen) {
+          req = componentReq;
+
+          components.add(req, db, function(errComponent, component) {
+            components.list(req, db, function(errList, componentList) {
+              componentList[0].type.should.equal(req.body.type);
+              componentList[0].layout.should.equal(req.body.layout);
+              componentList[0].action.should.equal(req.body.action);
+            });
+          });
         });
       });
     });
   });
 
   describe('PUT /component/:id', function() {
-    it('updates a specific component', function() {
+    it('updates a component', function() {
       var req = componentReq;
 
       components.add(req, db, function(errComponent, component) {
-
-        var req = {
-          session: {
-            email: 'test@test.org'
-          },
-          body: {
-            id: 1,
-            layout: 'row2',
-            project_id: 1
-          },
-          params: {
-            id: 2
-          }
-        };
+        req.body.layout = 'row2';
 
         components.update(req, db, 1, function(err, component) {
-          should.exist(component);
           component.layout.should.equal(req.body.layout);
         });
-      });
-    });
-
-    it('does not update specific component because email is not matching', function() {
-      var req = {
-        session: {
-          email: 'test2@test.org'
-        },
-        body: {
-          id: 1,
-          layout: 'row3',
-          project_id: 1
-        },
-        params: {
-          id: 1
-        }
-      };
-
-      components.update(req, db, 1, function(err, component) {
-        component.should.equal(false);
       });
     });
   });
 
   describe('DELETE /component/:id', function() {
-    it('does not delete a component because email is not matching', function() {
+    it('attempts to delete a component', function() {
       var req = componentReq;
-
+      
       components.add(req, db, function(errComponent, component) {
-        var req = {
-          session: {
-            email: 'test2@test.org'
-          },
-          body: {
-            id: 1,
-            project_id: 1
-          },
-          params: {
-            id: 1
-          }
-        };
-        
-        components.remove(req, db, 1, function(err, component) {
-          component.should.equal(false);
+        components.remove(req, db, 1, function(err, status) {
+          status.should.equal(true);
         });
-      });
-    });
-
-    it('deletes a component', function() {
-      var req = componentReq;
-
-      components.remove(req, db, 1, function(err, component) {
-        component.should.equal(true);
       });
     });
   });
