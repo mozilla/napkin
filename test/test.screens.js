@@ -28,7 +28,6 @@ var screenReq = {
     email: 'test@test.org'
   },
   body: {
-    id: 1,
     title: 'My Screen',
     is_start: true,
     layout: 'col1'
@@ -39,14 +38,6 @@ var screenReq = {
 };
 
 describe('screen', function() {
-  before(function() {
-    var req = projectReq;
-
-    projects.add(req, db, function(err, project) {
-      console.log('Added project');
-    });
-  });
-
   after(function() {
     db.flushdb();
     console.log('cleared test screens database');
@@ -54,14 +45,17 @@ describe('screen', function() {
 
   describe('GET /list', function() {
     it('returns a list of available screens for the project', function() {
-      var req = screenReq;
+      var req = projectReq;
 
-      screens.add(req, db, function(errScreen, screen) {
-        screens.list(req, db, function(errList, screenList) {
-          should.exist(screenList);
-          screenList[0].title.should.equal(req.body.title);
-          screenList[0].is_start.should.equal(req.body.is_start);
-          screenList[0].layout.should.equal(req.body.layout);
+      projects.add(req, db, function(err, project) {
+        req = screenReq;
+
+        screens.add(req, db, function(errScreen, screen) {
+          screens.list(req, db, function(errList, screenList) {
+            screenList[0].title.should.equal(req.body.title);
+            screenList[0].is_start.should.equal(req.body.is_start);
+            screenList[0].layout.should.equal(req.body.layout);
+          });
         });
       });
     });
@@ -72,10 +66,7 @@ describe('screen', function() {
       var req = screenReq;
 
       screens.add(req, db, function(errScreen, screen) {
-        var req = screenReq;
-
         screens.get(req, db, 1, function(err, screen) {
-          should.exist(screen);
           screen.title.should.equal(req.body.title);
         });
       });
@@ -93,87 +84,21 @@ describe('screen', function() {
   describe('PUT /screen/:id', function() {
     it('updates a specific screen', function() {
       var req = screenReq;
+      req.body.title = 'My Screen2';
 
-      screens.add(req, db, function(errScreen, screen) {
-        var req = {
-          session: {
-            email: 'test@test.org'
-          },
-          body: {
-            id: 1,
-            title: 'My Screen2'
-          },
-          params: {
-            id: 1
-          }
-        };
-
-        screens.update(req, db, 1, function(err, screen) {
-          screen.title.should.equal(req.body.title);
-        });
-      });
-    });
-
-    it('does not update specific screen because email is not matching', function() {
-      var req = screenReq;
-
-      screens.add(req, db, function(errScreen, screen) {
-        var req = {
-          session: {
-            email: 'test@test.org'
-          },
-          body: {
-            id: 1,
-            title: 'My Screen2'
-          },
-          params: {
-            id: 1
-          }
-        };
-
-        screens.update(req, db, 1, function(err, screen) {
-          screen.should.equal(false);
-        });
+      screens.update(req, db, 1, function(err, screen) {
+        screen.title.should.equal(req.body.title);
       });
     });
   });
 
   describe('DELETE /screen/:id', function() {
     it('attempts to delete a screen', function() {
-      var req = {
-        session: {
-          email: 'test2@test.org'
-        },
-        body: {
-          id: 1,
-          project_id: 1
-        },
-        params: {
-          id: 1
-        }
-      };
+      var req = screenReq;
 
-      screens.remove(req, db, 1, function(err, screen) {
-        screen.should.equal(false);
-      });
-
-      var req = {
-        session: {
-          email: 'test@test.org'
-        },
-        body: {
-          id: 1,
-          project_id: 1
-        },
-        params: {
-          id: 1
-        }
-      };
-
-      screens.remove(req, db, 1, function(err, screen) {
-        screen.should.equal(true);
+      screens.remove(req, db, 1, function(err, status) {
+        status.should.equal(true);
       });
     });
   });
-
 });

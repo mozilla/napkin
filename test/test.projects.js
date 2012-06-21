@@ -12,6 +12,19 @@ var redis = require('./db-test');
 var db = redis.redisConnect(settings);
 
 var projects = require('../lib/projects');
+var screens = require('../lib/screens');
+
+var projectReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    title: 'My Project'
+  },
+  params: {
+    id: undefined
+  }
+};
 
 describe('project', function() {
   after(function() {
@@ -21,18 +34,10 @@ describe('project', function() {
 
   describe('GET /list', function() {
     it('returns a list of available projects for the user', function() {
-      var req = {
-        session: {
-          email: 'test@test.org'
-        },
-        body: {
-          title: 'My Project'
-        }
-      };
+      var req = projectReq;
 
       projects.add(req, db, function(err, project) {
-        projects.list(req, db, function(err, projectList) {
-          projectList.length.should.equal(1);
+        projects.list(req, db, function(errList, projectList) {
           projectList[0].title.should.equal(req.body.title);
           projectList[0].author.should.equal(req.session.email);
         });
@@ -42,89 +47,32 @@ describe('project', function() {
 
   describe('GET /project/:id', function() {
     it('returns a specific project', function() {
-      var req = {
-        session: {
-          email: 'test@test.org'
-        },
-        body: {
-          title: 'My Project'
-        }
-      };
+      var req = projectReq;
 
       projects.get(req, db, 1, function(err, foundProject) {
-        should.exist(foundProject);
         foundProject.title.should.equal(req.body.title);
         foundProject.author.should.equal(req.session.email);
-      });
-    });
-
-    it('returns no project', function() {
-      var req = {
-        session: {
-          email: 'test@test.org'
-        }
-      };
-
-      projects.get(req, db, 12345, function(err, foundProject) {
-        should.not.exist(foundProject);
       });
     });
   });
 
   describe('PUT /project/:id', function() {
     it('updates a specific project', function() {
-      var req = {
-        session: {
-          email: 'test@test.org'
-        },
-        body: {
-          title: 'My Project2'
-        }
-      };
+      var req = projectReq;
+      req.body.title = 'My Project2';
 
       projects.update(req, db, 1, function(err, project) {
-        project.title.should.equal(req.body.title);
-      });
-    });
-
-    it('does not update specific project because email is not matching', function() {
-      var req = {
-        session: {
-          email: 'test2@test.org'
-        },
-        body: {
-          title: 'My Project3'
-        }
-      };
-
-      projects.update(req, db, 1, function(err, project) {
-        project.should.equal(false);
+        project.title.should.equal('My Project2');
       });
     });
   });
 
   describe('DELETE /project/:id', function() {
-    it('attempts to delete a project', function() {
-      var req = {
-        session: {
-          email: 'test2@test.org'
-        }
-      };
-
-      projects.remove(req, db, 1, function(err, project) {
-        should.exist(project);
-      });
-
-      var req = {
-        session: {
-          email: 'test@test.org'
-        }
-      };
+    it('deletes a project', function() {
+      var req = projectReq;
 
       projects.remove(req, db, 1, function(err, status) {
-        projects.get(req, db, 1, function(err, delProject) {
-          should.not.exist(delProject);
-        });
+        status.should.equal(true);
       });
     });
   });
