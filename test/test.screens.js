@@ -38,13 +38,13 @@ var screenReq = {
 };
 
 describe('screen', function() {
-  after(function() {
-    db.flushdb();
+  after(function(done) {
+    db.flushdb(done);
     console.log('cleared test screens database');
   });
 
   describe('GET /list', function() {
-    it('returns a list of available screens for the project', function() {
+    it('returns a list of available screens for the project', function(done) {
       var req = projectReq;
 
       projects.add(req, db, function(err, project) {
@@ -55,6 +55,7 @@ describe('screen', function() {
             screenList[0].title.should.equal(req.body.title);
             screenList[0].is_start.should.equal(req.body.is_start);
             screenList[0].layout.should.equal(req.body.layout);
+            done();
           });
         });
       });
@@ -62,42 +63,46 @@ describe('screen', function() {
   });
 
   describe('GET /screen/:id', function() {
-    it('returns a specific screen', function() {
+    it('returns a specific screen', function(done) {
       var req = screenReq;
 
       screens.add(req, db, function(errScreen, screen) {
         screens.get(req, db, 1, function(err, screen) {
           screen.title.should.equal(req.body.title);
+          done();
         });
       });
     });
 
-    it('returns no screen', function() {
+    it('returns no screen', function(done) {
       var req = screenReq;
 
       screens.get(req, db, 12345, function(err, screen) {
         should.not.exist(screen);
+        done();
       });
     });
   });
 
   describe('PUT /screen/:id', function() {
-    it('updates a specific screen', function() {
+    it('updates a specific screen', function(done) {
       var req = screenReq;
       req.body.title = 'My Screen2';
 
       screens.update(req, db, 1, function(err, screen) {
         screen.title.should.equal(req.body.title);
+        done();
       });
     });
   });
 
   describe('DELETE /screen/:id', function() {
-    it('attempts to delete a screen', function() {
+    it('attempts to delete a screen', function(done) {
       var req = screenReq;
 
       screens.remove(req, db, 1, function(err, status) {
         status.should.equal(true);
+        done();
       });
     });
   });

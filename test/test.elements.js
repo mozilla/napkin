@@ -71,13 +71,13 @@ var elementReq = {
 };
 
 describe('element', function() {
-  after(function() {
-    db.flushdb();
+  after(function(done) {
+    db.flushdb(done);
     console.log('cleared test elements database');
   });
 
   describe('GET /list', function() {
-    it('returns a list of available elements for the component', function() {
+    it('returns a list of available elements for the component', function(done) {
       var req = projectReq;
 
       projects.add(req, db, function(err, project) {
@@ -94,6 +94,7 @@ describe('element', function() {
                 elementList[0].type.should.equal(req.body.type);
                 elementList[0].layout.should.equal(req.body.layout);
                 elementList[0].required.should.equal(req.body.required);
+                done();
               });
             });
           });
@@ -103,7 +104,7 @@ describe('element', function() {
   });
 
   describe('PUT /element/:id', function() {
-    it('updates a specific element', function() {
+    it('updates a specific element', function(done) {
       var req = elementReq;
 
       elements.add(req, db, function(errElement, element) {
@@ -111,18 +112,20 @@ describe('element', function() {
 
         elements.update(req, db, 1, function(err, element) {
           element.layout.should.equal(req.body.layout);
+          done();
         });
       });
     });
   });
 
   describe('DELETE /element/:id', function() {
-    it('deletes an element', function() {
+    it('deletes an element', function(done) {
       var req = elementReq;
 
       elements.add(req, db, function(errElement, element) {
         elements.remove(req, db, 1, function(err, element) {
           element.should.equal(true);
+          done();
         });
       });
     });

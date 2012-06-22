@@ -54,13 +54,13 @@ var componentReq = {
 };
 
 describe('component', function() {
-  after(function() {
-    db.flushdb();
+  after(function(done) {
+    db.flushdb(done);
     console.log('cleared test components database');
   });
 
   describe('GET /list', function() {
-    it('returns a list of available components for the screen', function() {
+    it('returns a list of available components for the screen', function(done) {
       var req = projectReq;
 
       projects.add(req, db, function(err, project) {
@@ -74,6 +74,7 @@ describe('component', function() {
               componentList[0].type.should.equal(req.body.type);
               componentList[0].layout.should.equal(req.body.layout);
               componentList[0].action.should.equal(req.body.action);
+              done();
             });
           });
         });
@@ -82,7 +83,7 @@ describe('component', function() {
   });
 
   describe('PUT /component/:id', function() {
-    it('updates a component', function() {
+    it('updates a component', function(done) {
       var req = componentReq;
 
       components.add(req, db, function(errComponent, component) {
@@ -90,18 +91,20 @@ describe('component', function() {
 
         components.update(req, db, 1, function(err, component) {
           component.layout.should.equal(req.body.layout);
+          done();
         });
       });
     });
   });
 
   describe('DELETE /component/:id', function() {
-    it('attempts to delete a component', function() {
+    it('attempts to delete a component', function(done) {
       var req = componentReq;
       
       components.add(req, db, function(errComponent, component) {
         components.remove(req, db, 1, function(err, status) {
           status.should.equal(true);
+          done();
         });
       });
     });
