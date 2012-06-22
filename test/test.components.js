@@ -102,8 +102,8 @@ describe('component', function() {
       var req = componentReq;
       
       components.add(req, db, function(errComponent, component) {
-        components.remove(req, db, 1, function(err, status) {
-          status.should.equal(true);
+        components.remove(req, db, 1, function(err) {
+          should.not.exist(err);
           done();
         });
       });

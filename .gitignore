@@ -2,6 +2,4 @@
 log
 node_modules
 local.json
-*.swp
-*.swo
-*.swn
+*.sw[pon]

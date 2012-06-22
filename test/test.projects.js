@@ -74,8 +74,8 @@ describe('project', function() {
     it('deletes a project', function(done) {
       var req = projectReq;
 
-      projects.remove(req, db, 1, function(err, status) {
-        status.should.equal(true);
+      projects.remove(req, db, 1, function(err) {
+        should.not.exist(err);
         done();
       });
     });

@@ -100,8 +100,8 @@ describe('screen', function() {
     it('attempts to delete a screen', function(done) {
       var req = screenReq;
 
-      screens.remove(req, db, 1, function(err, status) {
-        status.should.equal(true);
+      screens.remove(req, db, 1, function(err) {
+        should.not.exist(err);
         done();
       });
     });

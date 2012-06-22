@@ -123,8 +123,8 @@ describe('element', function() {
       var req = elementReq;
 
       elements.add(req, db, function(errElement, element) {
-        elements.remove(req, db, 1, function(err, element) {
-          element.should.equal(true);
+        elements.remove(req, db, 1, function(err) {
+          should.not.exist(err);
           done();
         });
       });
