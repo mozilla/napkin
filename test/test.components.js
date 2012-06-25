@@ -54,59 +54,124 @@ var componentReq = {
 };
 
 describe('component', function() {
+  before(function(done) {
+    var req = projectReq;
+    projects.add(req, db, function(err, project) {
+        req = screenReq;
+        screens.add(req, db, done);
+    });
+  });
+
   after(function(done) {
     db.flushdb(done);
     console.log('cleared test components database');
   });
 
+  describe('POST /component', function() {
+    var req = componentReq;
+
+    it('adds a new component', function(done) {
+      components.add(req, db, function(err, component) {
+        component.type.should.equal(req.body.type);
+        component.layout.should.equal(req.body.layout);
+        component.action.should.equal(req.body.action);
+        done();
+      });
+    });
+
+    it('accepts an empty callback', function(done) {
+      components.add(req, db);
+
+      // wait 10ms for db transaction to complete
+      setTimeout(function() {
+        components.get(req, db, 2, function(err, component) {
+          component.type.should.equal(req.body.type);
+          component.layout.should.equal(req.body.layout);
+          component.action.should.equal(req.body.action);
+          done();
+        });
+      }, 10);
+    });
+  });
+
   describe('GET /list', function() {
     it('returns a list of available components for the screen', function(done) {
-      var req = projectReq;
+      var req = componentReq;
 
-      projects.add(req, db, function(err, project) {
-        req = screenReq;
+      components.list(req, db, function(errList, componentList) {
+        componentList[0].type.should.equal(req.body.type);
+        componentList[0].layout.should.equal(req.body.layout);
+        componentList[0].action.should.equal(req.body.action);
+        done();
+      });
+    });
+  });
 
-        screens.add(req, db, function(errScreen, screen) {
-          req = componentReq;
+  describe('GET /component/:id', function() {
+    var req = componentReq;
 
-          components.add(req, db, function(errComponent, component) {
-            components.list(req, db, function(errList, componentList) {
-              componentList[0].type.should.equal(req.body.type);
-              componentList[0].layout.should.equal(req.body.layout);
-              componentList[0].action.should.equal(req.body.action);
-              done();
-            });
-          });
-        });
+    it('returns a specific component', function(done) {
+      components.get(req, db, 1, function(err, component) {
+        component.type.should.equal(req.body.type);
+        component.layout.should.equal(req.body.layout);
+        component.action.should.equal(req.body.action);
+        done();
+      });
+    });
+
+    it('returns no component', function(done) {
+      components.get(req, db, 12345, function(err, component) {
+        should.not.exist(component);
+        done();
       });
     });
   });
 
   describe('PUT /component/:id', function() {
+    var req = componentReq;
+
     it('updates a component', function(done) {
-      var req = componentReq;
+      req.body.layout = 'row2';
+      components.update(req, db, 1, function(err, component) {
+        component.layout.should.equal(req.body.layout);
+        done();
+      });
+    });
 
-      components.add(req, db, function(errComponent, component) {
-        req.body.layout = 'row2';
+    it('accepts an empty callback', function(done) {
+      req.body.layout = 'row3';
+      components.update(req, db, 1);
 
-        components.update(req, db, 1, function(err, component) {
+      // wait 10ms for db transaction to complete
+      setTimeout(function() {
+        components.get(req, db, 1, function(err, component) {
           component.layout.should.equal(req.body.layout);
           done();
         });
-      });
+      }, 10);
     });
   });
 
   describe('DELETE /component/:id', function() {
+    var req = componentReq;
+
     it('attempts to delete a component', function(done) {
-      var req = componentReq;
-      
-      components.add(req, db, function(errComponent, component) {
-        components.remove(req, db, 1, function(err, status) {
-          status.should.equal(true);
+      components.remove(req, db, 1, function(err) {
+        should.not.exist(err);
+        done();
+      });
+    });
+
+    it('accepts an empty callback', function(done) {
+      components.remove(req, db, 2);
+
+      // wait 10ms for db transaction to complete
+      setTimeout(function() {
+        components.list(req, db, function(error, componentList) {
+          componentList.should.eql([]);
           done();
         });
-      });
+      }, 10);
     });
   });
 });
