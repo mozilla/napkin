@@ -20,9 +20,6 @@ var projectReq = {
   },
   body: {
     title: 'My Project'
-  },
-  params: {
-    id: undefined
   }
 };
 
