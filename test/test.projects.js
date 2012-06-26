@@ -23,6 +23,20 @@ var projectReq = {
   }
 };
 
+var screenReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    title: 'My Screen',
+    is_start: true,
+    layout: 'col1'
+  },
+  params: {
+    project_id: 1
+  }
+};
+
 describe('project', function() {
   after(function(done) {
     db.flushdb(done);
@@ -132,6 +146,26 @@ describe('project', function() {
           done();
         });
       }, 10);
+    });
+
+    it('deletes a screen associated with a project', function(done) {
+      var req = projectReq;
+
+      projects.add(req, db, function(err, project) {
+        req = screenReq;
+
+        screens.add(req, db, function(err, screen) {
+          req = projectReq;
+
+          projects.remove(req, db, 1, function(err) {
+            should.not.exist(err);
+            screens.list(req, db, function(err, screenList) {
+              screenList.should.eql([]);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 });
