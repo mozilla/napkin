@@ -35,7 +35,7 @@ var screenReq = {
     layout: 'col1'
   },
   params: {
-    id: 1
+    project_id: 1
   }
 };
 
@@ -46,11 +46,11 @@ var componentReq = {
   body: {
     type: 'form',
     layout: 'row1',
-    action: '/',
-    project_id: 1
+    action: '/'
   },
   params: {
-    id: 1
+    project_id: 1,
+    screen_id: 1
   }
 };
 
@@ -62,11 +62,12 @@ var elementReq = {
     type: 'input_text',
     layout: 'row1',
     required: true,
-    src: '',
-    project_id: 1
+    src: ''
   },
   params: {
-    id: 1
+    project_id: 1,
+    screen_id: 1,
+    component_id: 1
   }
 };
 
@@ -78,9 +79,7 @@ describe('element', function() {
       req = screenReq;
       screens.add(req, db, function(errScreen, screen) {
         req = componentReq;
-        components.add(req, db, function(errComponent, component) {
-          done();
-        });
+        components.add(req, db, done);
       });
     });
   });
