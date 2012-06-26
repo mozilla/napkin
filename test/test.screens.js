@@ -33,16 +33,14 @@ var screenReq = {
     layout: 'col1'
   },
   params: {
-    id: 1
+    project_id: 1
   }
 };
 
 describe('screen', function() {
   before(function(done) {
     var req = projectReq;
-    projects.add(req, db, function(err, project) {
-      done();
-    });
+    projects.add(req, db, done);
   });
 
   after(function(done) {

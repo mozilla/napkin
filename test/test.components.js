@@ -34,7 +34,7 @@ var screenReq = {
     layout: 'col1'
   },
   params: {
-    id: 1
+    project_id: 1
   }
 };
 
@@ -45,11 +45,11 @@ var componentReq = {
   body: {
     type: 'form',
     layout: 'row1',
-    action: '/',
-    project_id: 1
+    action: '/'
   },
   params: {
-    id: 1
+    project_id: 1,
+    screen_id: 1
   }
 };
 
