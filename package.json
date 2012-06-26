@@ -13,7 +13,7 @@
     "jade": ">= 0.20.3",
     "request": "2.9.153",
     "socket.io": "0.9.6",
-    "nconf": "git://github.com/flatiron/nconf.git",
+    "nconf": "0.6.0",
     "hiredis": "0.1.14",
     "redis": "0.7.1",
     "winston": "0.6.1"
