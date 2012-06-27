@@ -23,6 +23,15 @@ var projectReq = {
   }
 };
 
+var otherProjectReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    title: 'My Other Project'
+  }
+};
+
 var screenReq = {
   session: {
     email: 'test@test.org'
@@ -44,9 +53,8 @@ describe('project', function() {
   });
 
   describe('POST /project', function() {
-    var req = projectReq;
-
     it('adds a new project', function(done) {
+      var req = projectReq;
       projects.add(req, db, function(err, project) {
         project.title.should.equal(req.body.title);
         project.author.should.equal(req.session.email);
@@ -55,6 +63,7 @@ describe('project', function() {
     });
 
     it('accepts an empty callback', function(done) {
+      var req = otherProjectReq;
       projects.add(req, db);
 
       // wait 10ms for db transaction to complete
@@ -75,6 +84,8 @@ describe('project', function() {
       projects.list(req, db, function(errList, projectList) {
         projectList[0].title.should.equal(req.body.title);
         projectList[0].author.should.equal(req.session.email);
+
+        req = otherProjectReq;
         projectList[1].title.should.equal(req.body.title);
         projectList[1].author.should.equal(req.session.email);
         done();
