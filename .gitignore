@@ -2,4 +2,5 @@
 log
 node_modules
 local.json
+public/stylesheets/main.css
 *.sw[pon]

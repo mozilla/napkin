@@ -1,26 +1,35 @@
 !!! 5
 html
   head
-    title This is my site
+    title Napkin - The Rapid Web Prototyping Tool
     meta(content='width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0', name='viewport')
+
     meta(content='yes', name='apple-mobile-web-app-capable')
     meta(content='chrome=1', http-equiv='X-UA-Compatible')
-    link(rel='shortcut icon', href='/images/favicon.png')
+
+    // TODO: add favicon later - link(rel='shortcut icon', href='/images/favicon.png')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-stripped.min.css')
     link(rel='stylesheet', href='/stylesheets/main.css')
+    link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Quicksand')
 
   body
-    #header
-      h1 My Site
+    #main.clearfix
+      #sidebar
+        header
+          h1 Napkin
 
-    if session.email
-      a(href='/logout') Log out
-    else
-      form(method='post', action='/login', id='login-form')
-        a(href='#', id='login') Log in
-        input(type='hidden', name='bid_assertion', value='1')
+          if session.email
+            a(href='/logout')
+              img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+          else
+            form(method='post', action='/login', id='login-form')
+              a(href='#', id='login')
+                img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
+              input(type='hidden', name='bid_assertion', value='1')
 
-    block content
-    #footer
+        block sidebar
+      #content
+        block content
 
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
     script(src='https://browserid.org/include.js', type='text/javascript')
