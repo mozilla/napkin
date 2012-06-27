@@ -38,6 +38,20 @@ var screenReq = {
   }
 };
 
+var otherScreenReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    title: 'My Other Screen',
+    is_start: false,
+    layout: 'col3'
+  },
+  params: {
+    project_id: 1
+  }
+};
+
 var componentReq = {
   session: {
     email: 'test@test.org'
@@ -65,9 +79,8 @@ describe('screen', function() {
   });
 
   describe('POST /screen', function() {
-    var req = screenReq;
-
     it('adds a new screen', function(done) {
+      var req = screenReq;
       screens.add(req, db, function(err, screen) {
         screen.title.should.equal(req.body.title);
         screen.is_start.should.equal(req.body.is_start);
@@ -77,6 +90,7 @@ describe('screen', function() {
     });
 
     it('accepts an empty callback', function(done) {
+      var req = otherScreenReq;
       screens.add(req, db);
 
       // wait 10ms for db transaction to complete
@@ -99,6 +113,8 @@ describe('screen', function() {
         screenList[0].title.should.equal(req.body.title);
         screenList[0].is_start.should.equal(req.body.is_start);
         screenList[0].layout.should.equal(req.body.layout);
+
+        req = otherScreenReq;
         screenList[1].title.should.equal(req.body.title);
         screenList[1].is_start.should.equal(req.body.is_start);
         screenList[1].layout.should.equal(req.body.layout);

@@ -54,6 +54,21 @@ var componentReq = {
   }
 };
 
+var otherComponentReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    type: 'authentication',
+    layout: 'row1',
+    action: '/auth'
+  },
+  params: {
+    project_id: 1,
+    screen_id: 1
+  }
+};
+
 var elementReq = {
   session: {
     email: 'test@test.org'
@@ -86,9 +101,9 @@ describe('component', function() {
   });
 
   describe('POST /component', function() {
-    var req = componentReq;
-
     it('adds a new component', function(done) {
+      var req = componentReq;
+
       components.add(req, db, function(err, component) {
         component.type.should.equal(req.body.type);
         component.layout.should.equal(req.body.layout);
@@ -98,6 +113,7 @@ describe('component', function() {
     });
 
     it('accepts an empty callback', function(done) {
+      var req = otherComponentReq;
       components.add(req, db);
 
       // wait 10ms for db transaction to complete
@@ -120,6 +136,8 @@ describe('component', function() {
         componentList[0].type.should.equal(req.body.type);
         componentList[0].layout.should.equal(req.body.layout);
         componentList[0].action.should.equal(req.body.action);
+
+        req = otherComponentReq;
         componentList[1].type.should.equal(req.body.type);
         componentList[1].layout.should.equal(req.body.layout);
         componentList[1].action.should.equal(req.body.action);
