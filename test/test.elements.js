@@ -71,6 +71,23 @@ var elementReq = {
   }
 };
 
+var otherElementReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    type: 'input_radio',
+    layout: 'col1',
+    required: true,
+    src: ''
+  },
+  params: {
+    project_id: 1,
+    screen_id: 1,
+    component_id: 1
+  }
+};
+
 describe('element', function() {
   before(function(done) {
     var req = projectReq;
@@ -90,9 +107,8 @@ describe('element', function() {
   });
 
   describe('POST /element', function() {
-    var req = elementReq;
-
     it('adds a new element', function(done) {
+      var req = elementReq;
       elements.add(req, db, function(err, element) {
         element.type.should.equal(req.body.type);
         element.layout.should.equal(req.body.layout);
@@ -103,6 +119,7 @@ describe('element', function() {
     });
 
     it('accepts an empty callback', function(done) {
+      var req = otherElementReq;
       elements.add(req, db);
 
       // wait 10ms for db transaction to complete
@@ -127,6 +144,8 @@ describe('element', function() {
         elementList[0].layout.should.equal(req.body.layout);
         elementList[0].required.should.equal(req.body.required);
         elementList[0].src.should.equal(req.body.src);
+
+        req = otherElementReq;
         elementList[1].type.should.equal(req.body.type);
         elementList[1].layout.should.equal(req.body.layout);
         elementList[1].required.should.equal(req.body.required);
