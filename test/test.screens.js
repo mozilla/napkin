@@ -13,6 +13,7 @@ var db = redis.redisConnect(settings);
 
 var screens = require('../lib/screens');
 var projects = require('../lib/projects');
+var components = require('../lib/components');
 
 var projectReq = {
   session: {
@@ -34,6 +35,21 @@ var screenReq = {
   },
   params: {
     project_id: 1
+  }
+};
+
+var componentReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    type: 'form',
+    layout: 'row1',
+    action: '/'
+  },
+  params: {
+    project_id: 1,
+    screen_id: 1
   }
 };
 
@@ -83,6 +99,9 @@ describe('screen', function() {
         screenList[0].title.should.equal(req.body.title);
         screenList[0].is_start.should.equal(req.body.is_start);
         screenList[0].layout.should.equal(req.body.layout);
+        screenList[1].title.should.equal(req.body.title);
+        screenList[1].is_start.should.equal(req.body.is_start);
+        screenList[1].layout.should.equal(req.body.layout);
         done();
       });
     });
@@ -134,7 +153,7 @@ describe('screen', function() {
   describe('DELETE /screen/:id', function() {
     var req = screenReq;
 
-    it('attempts to delete a screen', function(done) {
+    it('deletes a screen', function(done) {
       screens.remove(req, db, 1, function(err) {
         should.not.exist(err);
         done();
@@ -151,6 +170,26 @@ describe('screen', function() {
           done();
         });
       }, 10);
+    });
+
+    it('deletes a component associated with a screen', function(done) {
+      var req = screenReq;
+
+      screens.add(req, db, function(err, screen) {
+        req = componentReq;
+
+        components.add(req, db, function(err, component) {
+          req = screenReq;
+
+          screens.remove(req, db, 1, function(err) {
+            should.not.exist(err);
+            components.list(req, db, function(err, componentList) {
+              componentList.should.eql([]);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 });
