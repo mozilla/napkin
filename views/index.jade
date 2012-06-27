@@ -1,7 +1,120 @@
 extend layout
 
-block content
-  p This is the main page
+block sidebar
+  h2 Projects
 
-  if session.email
-    p You are logged in!
+  form#add-project(method='post', action='')
+    input(type='text', name='project-title', value='Enter a new project title...')
+    input(type='submit', class='btn btn-danger', value='Add')
+
+  ul.projects
+    li
+      a(href='#') Persona.org
+        i.icon-chevron-right
+    li
+      a(href='#') Mortar
+        i.icon-chevron-right
+    li
+      a(href='#') Firefox Mobile
+        i.icon-chevron-right
+    li
+      a(href='#') Firefox Desktop
+        i.icon-chevron-right
+    li.active
+      a(href='#') Boot2Gecko
+        i.icon-chevron-right
+    li
+      a(href='#') OpenBadges
+        i.icon-chevron-right
+    li
+      a(href='#') Mozilla Popcorn
+        i.icon-chevron-right
+    li
+      a(href='#') WebFWD
+        i.icon-chevron-right
+
+block content
+  #add-screen
+    h2 Screens
+
+    form(method='post', action='')
+      input#screen-name(type='text', name='screen-title', value='Enter a new screen title...')
+      input(type='submit', class='btn btn-primary', value='Add!')
+
+  .row
+    .span3.screen
+      h4 Home
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 About
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Contact
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Gallery
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+
+  .row
+    .span3.screen
+      h4 Portfolio
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 My Account
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Log In
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Log Out
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+
+  .row
+    .span3.screen
+      h4 Dashboard
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Admin
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Pricing
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
+    .span3.screen
+      h4 Purchase
+        a(href='#')
+          i.icon-pencil
+      a(href='#')
+        img(src='http://placehold.it/220x220', alt='')
