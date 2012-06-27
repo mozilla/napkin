@@ -14,6 +14,7 @@ var db = redis.redisConnect(settings);
 var screens = require('../lib/screens');
 var projects = require('../lib/projects');
 var components = require('../lib/components');
+var elements = require('../lib/elements');
 
 var projectReq = {
   session: {
@@ -50,6 +51,23 @@ var componentReq = {
   params: {
     project_id: 1,
     screen_id: 1
+  }
+};
+
+var elementReq = {
+  session: {
+    email: 'test@test.org'
+  },
+  body: {
+    type: 'input_text',
+    layout: 'row1',
+    required: true,
+    src: ''
+  },
+  params: {
+    project_id: 1,
+    screen_id: 1,
+    component_id: 1
   }
 };
 
@@ -102,6 +120,9 @@ describe('component', function() {
         componentList[0].type.should.equal(req.body.type);
         componentList[0].layout.should.equal(req.body.layout);
         componentList[0].action.should.equal(req.body.action);
+        componentList[1].type.should.equal(req.body.type);
+        componentList[1].layout.should.equal(req.body.layout);
+        componentList[1].action.should.equal(req.body.action);
         done();
       });
     });
@@ -172,6 +193,26 @@ describe('component', function() {
           done();
         });
       }, 10);
+    });
+
+    it('deletes an element associated with a component', function(done) {
+      var req = componentReq;
+
+      components.add(req, db, function(err, component) {
+        req = elementReq;
+
+        elements.add(req, db, function(err, element) {
+          req = componentReq;
+
+          components.remove(req, db, 1, function(err) {
+            should.not.exist(err);
+            elements.list(req, db, function(err, elementList) {
+              elementList.should.eql([]);
+              done();
+            });
+          });
+        });
+      });
     });
   });
 });
