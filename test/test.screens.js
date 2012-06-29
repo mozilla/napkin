@@ -78,7 +78,7 @@ describe('screen', function() {
     console.log('cleared test screens database');
   });
 
-  describe('POST /screen', function() {
+  describe('POST /projects/:project_id/screens', function() {
     it('adds a new screen', function(done) {
       var req = screenReq;
       screens.add(req, db, function(err, screen) {
@@ -105,8 +105,8 @@ describe('screen', function() {
     });
   });
 
-  describe('GET /list', function() {
-    it('returns a list of available screens for the project', function(done) {
+  describe('GET /projects/:project_id/screens', function() {
+    it('returns a list of screens', function(done) {
       var req = screenReq;
 
       screens.list(req, db, function(errList, screenList) {
@@ -123,7 +123,7 @@ describe('screen', function() {
     });
   });
 
-  describe('GET /screen/:id', function() {
+  describe('GET /projects/:project_id/screens/:id', function() {
     var req = screenReq;
 
     it('returns a specific screen', function(done) {
@@ -141,7 +141,7 @@ describe('screen', function() {
     });
   });
 
-  describe('PUT /screen/:id', function() {
+  describe('PUT /projects/:project_id/screens/:id', function() {
     var req = screenReq;
 
     it('updates a specific screen', function(done) {
@@ -166,7 +166,7 @@ describe('screen', function() {
     });
   });
 
-  describe('DELETE /screen/:id', function() {
+  describe('DELETE /projects/:project_id/screens/:id', function() {
     var req = screenReq;
 
     it('deletes a screen', function(done) {
@@ -197,7 +197,7 @@ describe('screen', function() {
         components.add(req, db, function(err, component) {
           req = screenReq;
 
-          screens.remove(req, db, 1, function(err) {
+          screens.remove(req, db, 3, function(err) {
             should.not.exist(err);
             components.list(req, db, function(err, componentList) {
               componentList.should.eql([]);

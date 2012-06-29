@@ -592,6 +592,9 @@ input[type="submit"].btn::-moz-focus-inner {
 .icon-pencil {
   background-position: 0 -72px;
 }
+.icon-trash {
+  background-position: -456px 0;
+}
 .tooltip {
   position: absolute;
   z-index: 1020;
@@ -665,4 +668,15 @@ input[type="submit"].btn::-moz-focus-inner {
   position: absolute;
   width: 0;
   height: 0;
+}
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+     -moz-transition: opacity 0.15s linear;
+      -ms-transition: opacity 0.15s linear;
+       -o-transition: opacity 0.15s linear;
+          transition: opacity 0.15s linear;
+}
+.fade.in {
+  opacity: 1;
 }

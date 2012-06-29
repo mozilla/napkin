@@ -52,7 +52,7 @@ describe('project', function() {
     console.log('cleared test projects database');
   });
 
-  describe('POST /project', function() {
+  describe('POST /projects', function() {
     it('adds a new project', function(done) {
       var req = projectReq;
       projects.add(req, db, function(err, project) {
@@ -77,8 +77,8 @@ describe('project', function() {
     });
   });
 
-  describe('GET /list', function() {
-    it('returns a list of available projects for the user', function(done) {
+  describe('GET /projects', function() {
+    it('returns a list of projects', function(done) {
       var req = projectReq;
 
       projects.list(req, db, function(errList, projectList) {
@@ -93,7 +93,7 @@ describe('project', function() {
     });
   });
 
-  describe('GET /project/:id', function() {
+  describe('GET /projects/:id', function() {
     var req = projectReq;
 
     it('returns a specific project', function(done) {
@@ -112,7 +112,7 @@ describe('project', function() {
     });
   });
 
-  describe('PUT /project/:id', function() {
+  describe('PUT /projects/:id', function() {
     var req = projectReq;
 
     it('updates a specific project', function(done) {
@@ -137,7 +137,7 @@ describe('project', function() {
     });
   });
 
-  describe('DELETE /project/:id', function() {
+  describe('DELETE /projects/:id', function() {
     var req = projectReq;
 
     it('deletes a project', function(done) {
@@ -168,7 +168,7 @@ describe('project', function() {
         screens.add(req, db, function(err, screen) {
           req = projectReq;
 
-          projects.remove(req, db, 1, function(err) {
+          projects.remove(req, db, 3, function(err) {
             should.not.exist(err);
             screens.list(req, db, function(err, screenList) {
               screenList.should.eql([]);
