@@ -69,7 +69,6 @@ input[type='text']
   color #eee
   float left
   margin-right 50px
-  min-height 1000px /* TODO: temporary until JS is written */
   overflow hidden
   padding 0 20px
   width 260px
@@ -99,50 +98,67 @@ header a
 #sidebar form
   margin 10px 0
 
-.projects
+#projects
   margin 0
 
-.projects li
+#projects li
   border-bottom 1px solid #333
   box-shadow(0 6px 15px -9px #999)
   font-size 18px
   line-height 1.5
   list-style-type none
   margin 0 -25px
+  padding-left 30px
 
-.projects a
+#projects a
   color #eee
   display block
-  padding 13px 0 10px 30px
+  padding 13px 0 10px
 
-.projects .active, .projects .active:hover
+#projects .active, #projects .active:hover
   background-color rgba(255, 255, 255, 0.1)
 
-.projects li:hover
+#projects li:hover
   background-color rgba(255, 255, 255, 0.05)
 
-.projects i
+#projects .icon-chevron-right
   float right
   margin-right 20px
   margin-top 5px
 
-#add-project
-  overflow hidden
-
-#add-project input[type='text']
+#sidebar input[type='text']
   background #333
   border-color #555
   box-shadow(inset 0 3px 4px #303030)
   color #eee
+
+#projects .edit
+  display none
+
+#projects .editing
+  padding 13px 0 10px 30px
+
+#projects .editing a
+  display none
+
+#projects .editing .edit
+  display block
+  margin-bottom 0
+
+#add-project-form label
+  display block
+  margin-bottom 5px
+
+#add-project-form input[type='text']
   float left
   margin-right 10px
   width 180px
 
-#add-project input[type='text']:focus
-  box-shadow(none)
+#add-project-form input[type='text']:focus
+  box-shadow(inset 0 3px 4px #303030\, 0 0 3px #666)
   outline none
 
-#add-project .btn
+#add-project-form .btn
   float left
   padding-bottom 6px
   padding-top 6px
@@ -152,19 +168,24 @@ header a
   line-height 50px
   margin-right 10px
 
-#add-screen
+#add-screen .span12
   border-bottom 1px dotted #ccc
   margin-bottom 30px
-  overflow hidden
 
 #add-screen form
   float right
   margin 0
 
+#add-screen label
+  float left
+  margin-right 10px
+  line-height 38px
+
 #add-screen input[type='text']
   float left
-  margin-right 15px
+  margin-right 10px
   margin-top 3px
+  width 180px
 
 #add-screen .btn
   float left
@@ -172,15 +193,24 @@ header a
   padding-bottom 5px
   padding-top 5px
 
+#add-screen .cancel, #add-project-form .cancel
+  color #999
+  float left
+  margin-right 10px
+  margin-top 10px
+
+#add-project-form .cancel
+  margin-top 7px
+
 .screen h4
   margin-bottom 10px
   text-align center
   text-transform uppercase
 
-.screen h4 a
+.screen h4 a, #projects .icon-white
   display none
 
-.screen h4 i
+.screen h4 i, #projects .icon-white
   margin 3px 0 0 10px
 
 .screen img
@@ -194,6 +224,19 @@ header a
 
 .screen:hover h4 a
   display inline
+
+.screen .edit
+  display none
+  width 204px
+
+.screen.editing h4
+  display none
+
+.screen.editing .edit
+  display block
+
+#projects a:hover .icon-white, #projects .active .icon-white
+  display inline-block
 
 .screen img:hover
   border 1px solid #3366bb

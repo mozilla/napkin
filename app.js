@@ -14,7 +14,7 @@ db.select(settings.set('napkin'), function(errDb, res) {
 nconf.argv().env().file({ file: 'local.json' });
 
 // routes
-require("./routes")(app);
+require('./routes')(app, nconf, db);
 require('./routes/auth')(app, nconf);
 
 app.listen(process.env.PORT || nconf.get('port'));

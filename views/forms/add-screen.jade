@@ -1,0 +1,9 @@
+#add-screen.row
+    .span12
+      h2 Screens
+
+      form(method='post')
+        label(for='screen-title') Screen name:
+        input#screen-title(type='text', name='screen-title',
+          placeholder='Enter a new screen title...')
+        input(type='submit', class='btn btn-primary', value='Add')

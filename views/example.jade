@@ -1,0 +1,123 @@
+extend layout
+
+block sidebar
+  h2 Projects
+  !=partial('forms/add-project')
+
+  ul#projects
+    li
+      a(href='#edit-project') Persona.org
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') Mortar
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') Firefox Mobile
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') Firefox Desktop
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li.active
+      a(href='#edit-project') Boot2Gecko
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') OpenBadges
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') Mozilla Popcorn
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+    li
+      a(href='#edit-project') WebFWD
+        i.icon-pencil.icon-white
+        i.icon-chevron-right
+
+block content
+  !=partial('forms/add-screen')
+
+  .row
+    .span3.screen
+      h4 Home
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 About
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Contact
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Gallery
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+
+  .row
+    .span3.screen
+      h4 Portfolio
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 My Account
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Log In
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Log Out
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+
+  .row
+    .span3.screen
+      h4 Dashboard
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Admin
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Pricing
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+    .span3.screen
+      h4 Purchase
+        a(href='#edit-screen')
+          i.icon-pencil
+      a(href='#view-screen')
+        img(src='http://placehold.it/220x220', alt='Screen placeholder')
+
+  !=partial('project-template')
+  !=partial('screen-template')
