@@ -22,8 +22,8 @@ html
             a(href='/logout')
               img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
           else
-            form(method='post', action='/login', id='login-form')
-              a(href='#', id='login')
+            form#login-form(method='post', action='/login')
+              a(href='#')
                 img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
               input(type='hidden', name='bid_assertion', value='1')
 
@@ -31,17 +31,19 @@ html
       #content
         block content
 
-    script(src='/javascripts/json2.js')
-    script(src='/javascripts/underscore.min.js')
-
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
     script(src='https://browserid.org/include.js', type='text/javascript')
-
     script(src='/javascripts/bootstrap.min.js')
-    script(src='/javascripts/backbone.min.js')
-    script(src='/javascripts/main.js')
-    script
-      $(function() {
-        NapkinClient(window, window.document, jQuery, {});
-      });
+
+    if session.email
+      script(src='/javascripts/json2.js')
+      script(src='/javascripts/underscore.min.js')
+      script(src='/javascripts/backbone.min.js')
+      script(src='/javascripts/main.js')
+      script
+        $(function() {
+          NapkinClient(window, document, jQuery, {});
+        });
+    else
+      script(src='/javascripts/example.js')
 

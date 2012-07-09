@@ -3,11 +3,11 @@ var screens = require('../lib/screens');
 
 module.exports = function(app, nconf, db) {
   app.get('/', function (req, res) {
-    res.render('index');
-  });
-
-  app.get('/example', function (req, res) {
-    res.render('example');
+    if (req.session.email) {
+      res.render('index');
+    } else {
+      res.render('example');
+    }
   });
 
   projects.generateRESTRoutes(app, db);
