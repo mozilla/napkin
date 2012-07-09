@@ -2,7 +2,6 @@ function NapkinClient(window, document, $, data, undefined) {
   var $window = $(window);
   var $body = $('body');
   var $sidebar = $('#sidebar');
-  var $loginForm = $('#login-form');
   var $addScreen = $('#add-screen').hide();
 
   var Project = Backbone.Model.extend({
@@ -393,15 +392,4 @@ function NapkinClient(window, document, $, data, undefined) {
   $window.resize(function() {
     $sidebar.height(Math.max($window.height(), $body.height()));
   }).resize(); // initial call
-
-  // Browser ID login
-  $loginForm.on('click', '#login', function(event) {
-    event.preventDefault(); 
-    navigator.id.getVerifiedEmail(function(assertion) {
-      if (assertion) {
-        $loginForm.find('input[name="bid_assertion"]').val(assertion);
-        $loginForm.submit();
-      }
-    });
-  });
 }
