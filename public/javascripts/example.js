@@ -1,14 +1,8 @@
 (function(window, document, $, undefined) {
   $(function() {
-    var $window = $(window);
     var $body = $('body');
-    var $sidebar = $('#sidebar');
     var $loginForm = $('#login-form');
-
-    // extend sidebar to full window height
-    $window.resize(function() {
-      $sidebar.height(Math.max($window.height(), $body.height()));
-    }).resize(); // initial call
+    var $sidebar = $('#sidebar');
 
     // Browser ID login
     $loginForm.on('click', 'a', function(event) {

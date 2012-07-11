@@ -1,0 +1,5 @@
+script#input-radio-element-template(type='text/template')
+  // TODO: make names unique and id-ize them for inputs
+  .active-element.field
+    label(for!='<%- name %>') <%- name %>: 
+    input(type='radio', name!='<%- name %>', id!='<%- name %>')

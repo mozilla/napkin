@@ -1,7 +1,5 @@
 function NapkinClient(window, document, $, data, undefined) {
   var $window = $(window);
-  var $body = $('body');
-  var $sidebar = $('#sidebar');
   var $addScreen = $('#add-screen').hide();
 
   var Project = Backbone.Model.extend({
@@ -114,7 +112,7 @@ function NapkinClient(window, document, $, data, undefined) {
     name: 'Screen',
 
     defaults: function() {
-      /* TODO: implement is_start, layout */
+      // TODO: implement is_start, layout
       return {
         title: 'Screen name'
       };
@@ -134,13 +132,12 @@ function NapkinClient(window, document, $, data, undefined) {
   var ScreenList = Backbone.Collection.extend({
     model: Screen,
     url: '/screens',
-    urlTemplate: _.template('/projects/<%= id %>/screens'),
+    urlTemplate: _.template('/projects/<%= projectId %>/screens'),
 
     // set which project the user is focused on
-    setActiveProject: function(id) {
-      this.url = this.urlTemplate({
-        id: id
-      });
+    setActiveProject: function(projectId) {
+      this.activeProjectId = projectId;
+      this.url = this.urlTemplate({ projectId: projectId });
       this.fetch();
     },
 
@@ -149,6 +146,9 @@ function NapkinClient(window, document, $, data, undefined) {
       return screen.get('title');
     }
   });
+
+  var projects = new ProjectList();
+  var screens = new ScreenList();
 
   var ScreenView = Backbone.View.extend({
     tagName: 'div',
@@ -168,7 +168,10 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     render: function() {
-      this.$el.html(this.template(this.model.toJSON()));
+      var templateData = this.model.toJSON();
+      templateData.projectId = screens.activeProjectId;
+
+      this.$el.html(this.template(templateData));
       this.$input = this.$('.edit');
       return this;
     },
@@ -210,9 +213,6 @@ function NapkinClient(window, document, $, data, undefined) {
       this.model.destroy();
     }
   });
-
-  var projects = new ProjectList();
-  var screens = new ScreenList();
 
   var AppView = Backbone.View.extend({
     el: $('body'),
@@ -362,34 +362,4 @@ function NapkinClient(window, document, $, data, undefined) {
 
   // instantiate the app view to begin!
   new AppView();
-
-  // placeholder polyfill
-  var input = document.createElement('input');
-  if (!('placeholder' in input)) {
-    $('input[placeholder]').each(function() {
-      var $this = $(this);
-      var placeholder = $this.attr('placeholder');
-
-      if ($this.val() === '') {
-        $this.val(placeholder);
-      }
-
-      $this.focus(function() {
-        if ($this.val() === placeholder) {
-          $this.val('');
-        }
-      });
-
-      $this.blur(function() {
-        if ($this.val() === '') {
-          $this.val(placeholder);
-        }
-      });
-    });
-  }
-
-  // extend sidebar to full window height
-  $window.resize(function() {
-    $sidebar.height(Math.max($window.height(), $body.height()));
-  }).resize(); // initial call
 }
