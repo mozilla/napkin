@@ -1,0 +1,28 @@
+extend layout
+
+block scripts
+  script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
+  script(src='/javascripts/json2.js')
+  script(src='/javascripts/underscore.min.js')
+  script(src='/javascripts/backbone.min.js')
+  script(src='/javascripts/prototype.js')
+  script
+    jQuery(function() {
+      NapkinClient(window, document, jQuery, {
+        projectId: #{projectId},
+        screenId: #{screenId}
+      });
+    });
+
+  != partial('templates/layout')
+  != partial('templates/component-list')
+  != partial('templates/article-element-list')
+  != partial('templates/form-element-list')
+
+  != partial('templates/heading-element')
+  != partial('templates/paragraph-element')
+
+  != partial('templates/input-text-element')
+  != partial('templates/input-radio-element')
+  != partial('templates/input-checkbox-element')
+  != partial('templates/textarea-element')
