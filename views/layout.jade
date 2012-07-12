@@ -12,9 +12,9 @@ html
     link(rel='stylesheet', href='/stylesheets/main.css')
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Quicksand')
 
-  body
+  body(id='#{pageId}')
     #main.clearfix
-      #sidebar
+      #sidebar.clearfix
         header
           h1 Napkin
 
@@ -32,18 +32,7 @@ html
         block content
 
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-    script(src='https://browserid.org/include.js', type='text/javascript')
     script(src='/javascripts/bootstrap.min.js')
+    script(src='/javascripts/core.js')
 
-    if session.email
-      script(src='/javascripts/json2.js')
-      script(src='/javascripts/underscore.min.js')
-      script(src='/javascripts/backbone.min.js')
-      script(src='/javascripts/main.js')
-      script
-        $(function() {
-          NapkinClient(window, document, jQuery, {});
-        });
-    else
-      script(src='/javascripts/example.js')
-
+    block scripts

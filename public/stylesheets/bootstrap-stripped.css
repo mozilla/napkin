@@ -219,7 +219,9 @@ textarea {
 .offset1 {
   margin-left: 100px;
 }
-input[type="text"] {
+select,
+input[type="text"],
+textarea {
   display: inline-block;
   height: 18px;
   padding: 4px;
@@ -228,10 +230,12 @@ input[type="text"] {
   line-height: 18px;
   color: #555555;
 }
-input {
+input,
+textarea {
   width: 210px;
 }
-input[type="text"] {
+input[type="text"],
+textarea {
   background-color: #ffffff;
   border: 1px solid #cccccc;
   -webkit-border-radius: 3px;
@@ -246,7 +250,7 @@ input[type="text"] {
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
 }
-input[type="text"]:focus {
+input[type="text"]:focus, textarea:focus {
   border-color: rgba(82, 168, 236, 0.8);
   outline: 0;
   outline: thin dotted \9;
@@ -256,9 +260,69 @@ input[type="text"]:focus {
   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(82,168,236,.6);
 }
-input[type="submit"] {
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 3px 0;
+  *margin-top: 0;
+  /* IE7 */
+
+  line-height: normal;
+  cursor: pointer;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="radio"],
+input[type="checkbox"] {
   width: auto;
 }
+
+.uneditable-textarea {
+  width: auto;
+  height: auto;
+}
+
+select {
+  height: 28px;
+  /* In IE7, the height of the select element cannot be changed by height, only font-size */
+
+  *margin-top: 4px;
+  /* For IE7, add top margin to align select with labels */
+
+  line-height: 28px;
+}
+
+select {
+  width: 220px;
+  border: 1px solid #bbb;
+}
+
+select[multiple],
+select[size] {
+  height: auto;
+}
+
+select:focus,
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.radio,
+.checkbox {
+  min-height: 18px;
+  padding-left: 18px;
+}
+
+.radio input[type="radio"],
+.checkbox input[type="checkbox"] {
+  float: left;
+  margin-left: -18px;
+}
+
 .btn {
   display: inline-block;
   *display: inline;
@@ -594,6 +658,9 @@ input[type="submit"].btn::-moz-focus-inner {
 }
 .icon-trash {
   background-position: -456px 0;
+}
+.icon-plus-sign {
+  background-position: 0 -96px;
 }
 .tooltip {
   position: absolute;

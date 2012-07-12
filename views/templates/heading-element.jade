@@ -1,0 +1,8 @@
+script#heading-element-template(type='text/template')
+  <% if (level === 1) { %>
+  h1.active-element(data-type='heading') <%- text %>
+  <% } else if (level === 2) { %>
+  h2.active-element(data-type='heading') <%- text %>
+  <% } else if (level === 3) { %>
+  h3.active-element(data-type='heading') <%- text %>
+  <% } %>

@@ -4,5 +4,5 @@ script#screen-template(type='text/template')
       i.icon-pencil
       i.icon-trash
   input.edit(type='text', value!='<%- title %>')
-  a(href='#view-screen')
+  a(href!='/prototype/project/<%- projectId %>/screen/<%- id %>')
     img(src='http://placehold.it/220x220', alt='Screen placeholder')

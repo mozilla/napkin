@@ -59,8 +59,15 @@ ul, ol
 a
   text-decoration none
 
+p
+  margin-top 0
+  margin-bottom 10px
+
 input[type='text']
   padding 6px 8px
+
+textarea
+  height 100px
 
 #sidebar
   background url(/images/texture.jpg) repeat
@@ -69,7 +76,6 @@ input[type='text']
   color #eee
   float left
   margin-right 50px
-  overflow hidden
   padding 0 20px
   width 260px
 
@@ -107,7 +113,7 @@ header a
   font-size 18px
   line-height 1.5
   list-style-type none
-  margin 0 -25px
+  margin 0 -21px
   padding-left 30px
 
 #projects a
@@ -126,7 +132,7 @@ header a
   margin-right 20px
   margin-top 5px
 
-#sidebar input[type='text']
+#sidebar input[type='text'], #sidebar textarea
   background #333
   border-color #555
   box-shadow(inset 0 3px 4px #303030)
@@ -163,7 +169,7 @@ header a
   padding-bottom 6px
   padding-top 6px
 
-#content h2
+#add-screen h2
   float left
   line-height 50px
   margin-right 10px
@@ -242,7 +248,93 @@ header a
   border 1px solid #3366bb
   border-color rgba(82, 168, 236, 0.4)
   box-shadow(0 0 8px rgba(82, 168, 236, 0.6))
-  outline 0
+  outline none
 
-.popover-content p
-  margin-top 0
+.drop-target, .drag-element
+  border 2px dashed #999
+  border-radius(10px)
+  margin-bottom 20px
+
+.drop-target
+  min-height 200px
+  cursor pointer
+
+.drop-target.drop-hover
+  background #ddd
+
+.drop-target.active
+  border-style solid 
+
+.drag-element
+  padding 15px 20px
+  text-align center
+  border-width 1px
+  cursor crosshair
+
+.elements ul
+  border 1px dashed
+  padding 15px 20px
+
+.article-container
+  border-color #4380d3
+
+.article, .article-elements ul
+  margin-top 10px
+  border-color #4380d3
+  background rgba(5, 49, 109, 0.3)
+
+.article p
+  margin 5px 0
+
+.elements li
+  list-style-type none
+  overflow hidden
+  margin-bottom 15px
+
+.element
+  float left
+  width 190px
+
+.active-element:hover
+  background rgba(78, 150, 0, 0.3)
+  background #F7F3C5
+
+.elements .btn
+  float right
+  font-size 110%
+  font-weight bold
+  text-shadow 1px 1px #222
+  padding 1px 5px 3px
+
+.form-container
+  border-color #ee3c7e
+
+.form, .form-elements ul
+  border-color #ee3c7e
+  background rgba(144, 0, 53, 0.3)
+
+.form-elements input[type='text'], .form-elements textarea
+  width 160px
+
+.form-elements textarea
+  height 100px
+  outline none
+
+.form input[type='text']
+  width 180px
+  margin 5px 0
+
+.auth-container
+  border-color #ff9640
+
+.auth
+  border-color #ff9640
+  background rgba(166, 75, 0, 0.3)
+  // border-color #9bf33d
+  // background rgba(78, 150, 0, 0.3)
+
+.auth img
+  margin 5px 0
+
+#prototype #content h2
+  margin-bottom 20px

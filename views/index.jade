@@ -9,3 +9,13 @@ block content
       
   !=partial('templates/project')
   !=partial('templates/screen')
+
+block scripts
+  script(src='/javascripts/json2.js')
+  script(src='/javascripts/underscore.min.js')
+  script(src='/javascripts/backbone.min.js')
+  script(src='/javascripts/main.js')
+  script
+    jQuery(function() {
+      NapkinClient(window, document, jQuery, {});
+    });
