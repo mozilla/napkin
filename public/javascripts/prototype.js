@@ -226,7 +226,16 @@ function NapkinClient(window, document, $, data, undefined) {
       }, this);
 
       $component.data('elementGroup', elementGroup);
-      elementGroup.fetch(); // get the elements for this component
+      // get the elements for this component
+      elementGroup.fetch({
+        // TODO: handle error
+        success: function(collection, response) {
+          if (collection.models.length === 0) {
+            $component.addClass('empty');
+            $component.text(componentModel.get('type'));
+          }
+        }
+      });
     },
 
     addAllComponents: function() {
@@ -353,6 +362,13 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     addElement: function(element, $component) {
+      // if component has empty class, nothing has been added to it yet
+      if ($component.hasClass('empty')) {
+        $component.removeClass('empty');
+        // clear out the type label that exists as text inside the component
+        $component.text('');
+      }
+
       var templateId = element.get('type') + '-element-template';
       var elementTemplate = _.template($('#' + templateId).html());
 
@@ -404,8 +420,8 @@ function NapkinClient(window, document, $, data, undefined) {
       this.resetActiveElement();
       var model = $element.data('model');
 
-      // $element.parent() is the component
-      var elementGroup = $element.parent().data('elementGroup');
+      var $component = $element.parent();
+      var elementGroup = $component.data('elementGroup');
 
       var previous = elementGroup.where({ nextId: model.id })[0];
       var nextId = model.get('nextId');
@@ -419,9 +435,14 @@ function NapkinClient(window, document, $, data, undefined) {
           } else {
             // removing the first element, so reset the head
             var next = elementGroup.get(nextId);
-            if (next) { // may also be the last element
+            if (next) {
               next.set('head', true);
               next.save();
+            } else {
+              // this is also the last element; add the empty class to the
+              // component and the type label
+              $component.addClass('empty');
+              $component.text($component.data('model').get('type'));
             }
           }
 
