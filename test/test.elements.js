@@ -60,7 +60,8 @@ var elementReq = {
   },
   body: {
     type: 'input_text',
-    layout: 'row1',
+    head: true,
+    nextId: 1,
     required: true,
     src: ''
   },
@@ -77,7 +78,7 @@ var otherElementReq = {
   },
   body: {
     type: 'input_radio',
-    layout: 'col1',
+    nextId: null,
     required: true,
     src: ''
   },
@@ -112,7 +113,8 @@ describe('element', function() {
         var req = elementReq;
         elements.add(req, db, function(err, element) {
           element.type.should.equal(req.body.type);
-          element.layout.should.equal(req.body.layout);
+          element.head.should.equal(req.body.head);
+          element.nextId.should.equal(req.body.nextId);
           element.required.should.equal(req.body.required);
           element.src.should.equal(req.body.src);
           done();
@@ -127,7 +129,8 @@ describe('element', function() {
         setTimeout(function() {
           elements.get(req, db, 2, function(err, element) {
             element.type.should.equal(req.body.type);
-            element.layout.should.equal(req.body.layout);
+            should.not.exist(element.head);
+            should.not.exist(element.nextId);
             element.required.should.equal(req.body.required);
             element.src.should.equal(req.body.src);
             done();
@@ -143,13 +146,15 @@ describe('element', function() {
 
         elements.list(req, db, function(errList, elementList) {
           elementList[0].type.should.equal(req.body.type);
-          elementList[0].layout.should.equal(req.body.layout);
+          elementList[0].head.should.equal(req.body.head);
+          elementList[0].nextId.should.equal(req.body.nextId);
           elementList[0].required.should.equal(req.body.required);
           elementList[0].src.should.equal(req.body.src);
 
           req = otherElementReq;
           elementList[1].type.should.equal(req.body.type);
-          elementList[1].layout.should.equal(req.body.layout);
+          should.not.exist(elementList[1].head);
+          should.not.exist(elementList[1].nextId);
           elementList[1].required.should.equal(req.body.required);
           elementList[1].src.should.equal(req.body.src);
           done();
@@ -164,7 +169,8 @@ describe('element', function() {
       it('returns a specific element', function(done) {
         elements.get(req, db, 1, function(err, element) {
           element.type.should.equal(req.body.type);
-          element.layout.should.equal(req.body.layout);
+          element.head.should.equal(req.body.head);
+          element.nextId.should.equal(req.body.nextId);
           element.required.should.equal(req.body.required);
           element.src.should.equal(req.body.src);
           done();
@@ -184,21 +190,21 @@ describe('element', function() {
       var req = elementReq;
 
       it('updates a specific element', function(done) {
-        req.body.layout = 'row2';
+        req.body.nextId = 2;
         elements.update(req, db, 1, function(err, element) {
-          element.layout.should.equal(req.body.layout);
+          element.nextId.should.equal(req.body.nextId);
           done();
         });
       });
 
       it('accepts an empty callback', function(done) {
-        req.body.layout = 'row3';
+        req.body.nextId = 3;
         elements.update(req, db, 1);
 
         // wait 10ms for db transaction to complete
         setTimeout(function() {
           elements.get(req, db, 1, function(err, element) {
-            element.layout.should.equal(req.body.layout);
+            element.nextId.should.equal(req.body.nextId);
             done();
           });
         }, 10);
