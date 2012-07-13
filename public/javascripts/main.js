@@ -288,7 +288,7 @@ function NapkinClient(window, document, $, data, undefined) {
       var that = this;
 
       projects.create({
-        title: this.$projectInput.val().trim(),
+        title: this.$projectInput.val().trim()
       }, {
         error: tooltipErrorHandler(this.$projectInput),
         success: function(model) {
@@ -303,7 +303,7 @@ function NapkinClient(window, document, $, data, undefined) {
       var that = this;
 
       screens.create({
-        title: this.$screenInput.val().trim(),
+        title: this.$screenInput.val().trim()
       }, {
         error: tooltipErrorHandler(this.$screenInput),
         success: function(model) {

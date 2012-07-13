@@ -23,7 +23,7 @@
       // outerWidth/outerHeight = width/height with padding/border
       width: $sidebar.outerWidth(),
       height: $sidebar.outerHeight() - 70,
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)'
     }).appendTo('body');
 
     $('<div/>').css({
@@ -33,7 +33,7 @@
       // outerWidth/outerHeight = width/height with padding/border
       width: $body.outerWidth() - $sidebar.outerWidth(),
       height: $sidebar.outerHeight(),
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)'
     }).appendTo('body');
 
     $loginForm.children('a').popover({

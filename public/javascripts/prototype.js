@@ -83,7 +83,7 @@ function NapkinClient(window, document, $, data, undefined) {
       var $element = $target.siblings('.element').clone();
 
       $element.removeClass('element')
-        .addClass('active-element');
+        .addClass('live-element');
       this.trigger('createElement', $element);
     }
   });
@@ -97,24 +97,18 @@ function NapkinClient(window, document, $, data, undefined) {
     $componentClicked: null,
 
     events: {
-      'click [class^="span"]': 'recordActiveComponentClick',
-      'click': 'blurComponent'
+      'click [class^="span"]': 'recordComponentClick',
+      'click .live-element': 'recordElementClick',
+      'click': 'switchFocus'
     },
 
-    selectComponent: function($component, model) {
-      $component.data('model', model);
-      $component.addClass(model.get('type') + '-container');
-      $component.addClass('active');
+    initialize: function() {
+      componentGroup.bind('add', this.addComponent, this);
+      componentGroup.bind('reset', this.addAllComponents, this);
 
-      // trigger a selectComponent event which the AppView will handle
-      this.$activeComponent = $component;
-      this.trigger('selectComponent', $component);
-    },
-
-    resetComponent: function($component, type) {
-      $component.removeClass(type + '-container');
-      $component.removeClass('active');
-      $component.empty();
+      this.bind('closePopover', this.resetActiveElement, this);
+      this.bind('applyEdits', this.applyEdits, this);
+      this.bind('removeElement', this.removeElement, this);
     },
 
     getDropOptions: function(layoutView) {
@@ -167,11 +161,6 @@ function NapkinClient(window, document, $, data, undefined) {
       };
     },
 
-    initialize: function() {
-      componentGroup.bind('add', this.addComponent, this);
-      componentGroup.bind('reset', this.addAllComponents, this);
-    },
-
     render: function() {
       var that = this;
       this.$el.html(this.template({}));
@@ -196,6 +185,22 @@ function NapkinClient(window, document, $, data, undefined) {
         $dropTarget.width($dropTarget.width() - 30);
       });
       return this;
+    },
+
+    selectComponent: function($component, model) {
+      $component.data('model', model);
+      $component.addClass(model.get('type') + '-container');
+      $component.addClass('active');
+
+      // trigger a selectComponent event which the AppView will handle
+      this.$activeComponent = $component;
+      this.trigger('selectComponent', $component);
+    },
+
+    resetComponent: function($component, type) {
+      $component.removeClass(type + '-container');
+      $component.removeClass('active');
+      $component.empty();
     },
 
     addComponent: function(componentModel) {
@@ -231,16 +236,25 @@ function NapkinClient(window, document, $, data, undefined) {
       });
     },
 
-    recordActiveComponentClick: function(event) {
-      var $component = $(event.currentTarget);
-      if ($component.is(this.$activeComponent)) {
+    recordComponentClick: function(event) {
+      var $target = $(event.currentTarget);
+      this.$componentClicked = $target;
+
+      if ($target.is(this.$activeComponent)) {
         this.clickedActiveComponent = true;
       }
-
-      this.$componentClicked = $component;
     },
 
-    blurComponent: function(event) {
+    recordElementClick: function(event) {
+      var $target = $(event.currentTarget);
+      this.$elementClicked = $target;
+
+      if ($target.is(this.$activeElement)) {
+        this.clickedActiveElement = true;
+      }
+    },
+
+    switchFocus: function(event) {
       // note that clickedActiveComponent will be set by the
       // recordComponentClick function due to event bubbling
       if (!this.clickedActiveComponent) {
@@ -250,6 +264,7 @@ function NapkinClient(window, document, $, data, undefined) {
         if (this.$activeComponent) {
           this.$activeComponent.removeClass('active');
           this.trigger('blurComponent');
+          this.$activeComponent = null;
         }
 
         // if a component was clicked, put it in focus
@@ -259,14 +274,45 @@ function NapkinClient(window, document, $, data, undefined) {
             this.trigger('selectComponent', $component);
             $component.addClass('active');
             this.$activeComponent = $component;
-          } else {
-            this.$activeComponent = null;
           }
         }
       }
 
+      if (!this.clickedActiveElement) {
+        var $element = this.$elementClicked;
+
+        // active element may not be defined if nothing is in focus
+        this.resetActiveElement();
+
+        // if an element was clicked, put it in focus
+        if ($element) {
+          this.setActiveElement($element);
+        }
+      }
+
+      // reset click data
       this.clickedActiveComponent = false;
+      this.clickedActiveElement = false;
       this.$componentClicked = null;
+      this.$elementClicked = null;
+    },
+
+    setActiveElement: function($element) {
+      $element.popover('show');
+      $element.addClass('active');
+      this.$activeElement = $element;
+    },
+
+    resetActiveElement: function() {
+      var $element = this.$activeElement;
+      if ($element) {
+        $element.popover('hide');
+        $element.removeClass('active');
+      }
+
+      this.$activeElement = null;
+      this.clickedActiveElement = false;
+      this.$elementClicked = null;
     },
 
     createElement: function($element) {
@@ -281,7 +327,7 @@ function NapkinClient(window, document, $, data, undefined) {
 
       var elementAttrs = {
         type: $element.data('type'),
-        next: null,
+        nextId: null,
         name: $element.data('name'),
         required: false,
         src: $element.data('src'),
@@ -290,7 +336,7 @@ function NapkinClient(window, document, $, data, undefined) {
       };
 
       // if there's no last element, this must be the head
-      var last = elementGroup.where({ next: null })[0];
+      var last = elementGroup.where({ nextId: null })[0];
       if (!last) {
         elementAttrs.head = true;
       }
@@ -299,7 +345,7 @@ function NapkinClient(window, document, $, data, undefined) {
         // TODO: handle error
         success: function(model) {
           if (last) {
-            last.set('next', model.id);
+            last.set('nextId', model.id);
             last.save();
           }
         }
@@ -308,24 +354,92 @@ function NapkinClient(window, document, $, data, undefined) {
 
     addElement: function(element, $component) {
       var templateId = element.get('type') + '-element-template';
-      var template = _.template($('#' + templateId).html());
-      $(template(element.toJSON())).appendTo($component);
+      var elementTemplate = _.template($('#' + templateId).html());
+
+      templateId = element.get('type') + '-popover-template';
+      var popoverTemplate = _.template($('#' + templateId).html());
+
+      var $element = $(elementTemplate(element.toJSON()));
+      var row = $component.data('position').row;
+
+      var placement = 'right';
+      if (row === 0) {
+        placement = 'bottom';
+      } else if (row === 2) {
+        placement = 'top';
+      }
+
+      $element.appendTo($component);
+      $element.data('model', element);
+
+      $element.popover({
+          title: 'Edit Element',
+          trigger: 'manual',
+          placement: placement,
+          content: popoverTemplate(element.toJSON())
+        });
     },
 
     addAllElements: function($component) {
+      // clear out any leftover elements
+      $component.empty();
+
       var elementGroup = $component.data('elementGroup');
       var element = elementGroup.where({ head: true })[0];
 
       // go through each element in the linked list
       while (element) {
         this.addElement(element, $component);
-        element = elementGroup.get(element.get('next'));
+        element = elementGroup.get(element.get('nextId'));
       }
+    },
+
+    applyEdits: function() {
+      var $element = this.$activeElement;
+
+    },
+
+    removeElement: function() {
+      var $element = this.$activeElement;
+      this.resetActiveElement();
+      var model = $element.data('model');
+
+      // $element.parent() is the component
+      var elementGroup = $element.parent().data('elementGroup');
+
+      var previous = elementGroup.where({ nextId: model.id })[0];
+      var nextId = model.get('nextId');
+
+      model.destroy({
+        success: function() {
+          if (previous) {
+            // rearrange links in the linked list
+            previous.set('nextId', nextId);
+            previous.save();
+          } else {
+            // removing the first element, so reset the head
+            var next = elementGroup.get(nextId);
+            if (next) { // may also be the last element
+              next.set('head', true);
+              next.save();
+            }
+          }
+
+          $element.remove();
+        }
+      });
     }
   });
 
   var AppView = Backbone.View.extend({
     el: $('body'),
+
+    events: {
+      'click .close-popover': 'closePopover',
+      'click .popover-content .btn-primary': 'applyEdits',
+      'click .popover-content .btn-danger': 'removeElement',
+      'keydown': 'processKeyShortcuts'
+    },
 
     initialize: function() {
       this.componentListView = new ComponentListView();
@@ -358,6 +472,34 @@ function NapkinClient(window, document, $, data, undefined) {
       if (this.elementListView) {
         this.elementListView.unbind('addElement');
         this.elementListView.remove();
+      }
+    },
+
+    // close popover when close popover link is clicked
+    closePopover: function(event) {
+      event.preventDefault();
+      this.layoutView.trigger('closePopover');
+    },
+
+    // apply edits to element when apply button is clicked
+    applyEdits: function(event) {
+      this.layoutView.trigger('applyEdits');
+    },
+
+    // remove element when delete button is clicked
+    removeElement: function(event) {
+      this.layoutView.trigger('removeElement');
+    },
+
+    // process key presses for shortcuts; e.g. backspace deletes an element
+    processKeyShortcuts: function(event) {
+      // ignore key presses in input fields
+      if ($('input[type="text"]:focus, textarea:focus').length === 0) {
+        // if the user hit backspace and has an element focused, remove it
+        if (event.which === 8 && this.layoutView.$activeElement) {
+          this.layoutView.trigger('removeElement');
+          event.preventDefault();
+        }
       }
     }
   });

@@ -1,0 +1,6 @@
+script#input-checkbox-popover-template(type='text/template')
+  .field
+    label(for='name') Name:
+    input#name(name='name', type='text', value!='<%- name %>')
+
+  != partial('templates/popovers/footer')

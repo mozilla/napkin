@@ -14,15 +14,24 @@ block scripts
       });
     });
 
-  != partial('templates/layout')
-  != partial('templates/component-list')
-  != partial('templates/article-element-list')
-  != partial('templates/form-element-list')
+  // layouts and lists
+  != partial('templates/layouts/layout')
+  != partial('templates/lists/component')
+  != partial('templates/lists/article-element')
+  != partial('templates/lists/form-element')
 
-  != partial('templates/heading-element')
-  != partial('templates/paragraph-element')
+  // article elements and popovers
+  != partial('templates/elements/heading')
+  != partial('templates/popovers/heading')
+  != partial('templates/elements/paragraph')
+  != partial('templates/popovers/paragraph')
 
-  != partial('templates/input-text-element')
-  != partial('templates/input-radio-element')
-  != partial('templates/input-checkbox-element')
-  != partial('templates/textarea-element')
+  // form elements and popovers
+  != partial('templates/elements/input-text')
+  != partial('templates/popovers/input-text')
+  != partial('templates/elements/input-radio')
+  != partial('templates/popovers/input-radio')
+  != partial('templates/elements/input-checkbox')
+  != partial('templates/popovers/input-checkbox')
+  != partial('templates/elements/textarea')
+  != partial('templates/popovers/textarea')

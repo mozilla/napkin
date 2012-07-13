@@ -45,7 +45,10 @@ var componentReq = {
   },
   body: {
     type: 'form',
-    layout: 'row1',
+    layout: {
+      row: 1,
+      col: 0
+    },
     action: '/'
   },
   params: {
@@ -60,7 +63,10 @@ var otherComponentReq = {
   },
   body: {
     type: 'authentication',
-    layout: 'row1',
+    layout: {
+      row: 1,
+      col: 1
+    },
     action: '/auth'
   },
   params: {
@@ -107,7 +113,7 @@ describe('component', function() {
 
         components.add(req, db, function(err, component) {
           component.type.should.equal(req.body.type);
-          component.layout.should.equal(req.body.layout);
+          component.layout.should.eql(req.body.layout);
           component.action.should.equal(req.body.action);
           done();
         });
@@ -121,7 +127,7 @@ describe('component', function() {
         setTimeout(function() {
           components.get(req, db, 2, function(err, component) {
             component.type.should.equal(req.body.type);
-            component.layout.should.equal(req.body.layout);
+            component.layout.should.eql(req.body.layout);
             component.action.should.equal(req.body.action);
             done();
           });
@@ -136,12 +142,12 @@ describe('component', function() {
 
         components.list(req, db, function(errList, componentList) {
           componentList[0].type.should.equal(req.body.type);
-          componentList[0].layout.should.equal(req.body.layout);
+          componentList[0].layout.should.eql(req.body.layout);
           componentList[0].action.should.equal(req.body.action);
 
           req = otherComponentReq;
           componentList[1].type.should.equal(req.body.type);
-          componentList[1].layout.should.equal(req.body.layout);
+          componentList[1].layout.should.eql(req.body.layout);
           componentList[1].action.should.equal(req.body.action);
           done();
         });
@@ -155,7 +161,7 @@ describe('component', function() {
       it('returns a specific component', function(done) {
         components.get(req, db, 1, function(err, component) {
           component.type.should.equal(req.body.type);
-          component.layout.should.equal(req.body.layout);
+          component.layout.should.eql(req.body.layout);
           component.action.should.equal(req.body.action);
           done();
         });
@@ -174,21 +180,27 @@ describe('component', function() {
       var req = componentReq;
 
       it('updates a component', function(done) {
-        req.body.layout = 'row2';
+        req.body.layout = {
+          row: 2,
+          col: 1,
+        };
         components.update(req, db, 1, function(err, component) {
-          component.layout.should.equal(req.body.layout);
+          component.layout.should.eql(req.body.layout);
           done();
         });
       });
 
       it('accepts an empty callback', function(done) {
-        req.body.layout = 'row3';
+        req.body.layout = {
+          row: 2,
+          col: 2
+        };
         components.update(req, db, 1);
 
         // wait 10ms for db transaction to complete
         setTimeout(function() {
           components.get(req, db, 1, function(err, component) {
-            component.layout.should.equal(req.body.layout);
+            component.layout.should.eql(req.body.layout);
             done();
           });
         }, 10);
