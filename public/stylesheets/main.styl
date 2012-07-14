@@ -263,17 +263,29 @@ header a
   background #ddd
 
 .drop-target.active
-  border-style solid 
+  border-style solid
+
+.drop-target.empty
+  color #aaa
+  font-size 25px
+  letter-spacing 1px
+  // to vertically center the text in the component
+  line-height 190px
+  text-align center
+  text-transform uppercase
 
 .drag-element
   padding 15px 20px
   text-align center
-  border-width 1px
+  border 1px solid
   cursor crosshair
+  box-shadow inset 0 0 2px #222
 
 .elements ul
-  border 1px dashed
+  border 1px solid
   padding 15px 20px
+  border-radius(5px)
+  box-shadow inset 0 0 2px #222
 
 .article-container
   border-color #4380d3
@@ -281,6 +293,7 @@ header a
 .article, .article-elements ul
   margin-top 10px
   border-color #4380d3
+  border-color #284c7e
   background rgba(5, 49, 109, 0.3)
 
 .article p
@@ -304,6 +317,9 @@ header a
   margin-left -10px
   margin-right -10px
 
+.live-element input[type="text"], .live-element textarea
+  display block
+
 .elements .btn
   float right
   font-size 110%
@@ -315,7 +331,7 @@ header a
   border-color #ee3c7e
 
 .form, .form-elements ul
-  border-color #ee3c7e
+  border-color #8e244b
   background rgba(144, 0, 53, 0.3)
 
 .form-elements input[type='text'], .form-elements textarea
@@ -333,7 +349,7 @@ header a
   border-color #ff9640
 
 .auth
-  border-color #ff9640
+  border-color #995a26
   background rgba(166, 75, 0, 0.3)
   // border-color #9bf33d
   // background rgba(78, 150, 0, 0.3)
@@ -369,12 +385,3 @@ header a
   width 45px
   margin-left 10px
   margin-top 7px
-
-.drop-target.empty
-  text-align center
-  text-transform uppercase
-  color #aaa
-  font-size 25px
-  // to vertically center the text in the component
-  line-height 190px
-  letter-spacing 1px
