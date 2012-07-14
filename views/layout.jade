@@ -19,7 +19,7 @@ html
           h1 Napkin
 
           if session.email
-            a(href='/logout')
+            a(href='/logout', tabindex='-1')
               img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
           else
             form#login-form(method='post', action='/login')
