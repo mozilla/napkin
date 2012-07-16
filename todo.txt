@@ -1,1 +1,15 @@
-- Restructure files in new folders before commit
+======================
+| Key:               |
+| - Open task        |
+| ~ Task in progress |
+| / Task completed   |
+======================
+
+- Add validators on the client-side that correspond to the server-side
+- Update client-side validators for project and screen
+- For all forms on the page, make sure their field ids are by default in the usedIds hash
+- Authentication component
+- Ensure project and screen exist to prototype screen page
+/ Restructure files in new folders before commit
+/ Make form names unique
+/ Stop inputs from focusing on element click

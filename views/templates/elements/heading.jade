@@ -5,4 +5,10 @@ script#heading-element-template(type='text/template')
   h2.live-element(data-type='heading') <%- text %>
   <% } else if (level === 3) { %>
   h3.live-element(data-type='heading') <%- text %>
+  <% } else if (level === 4) { %>
+  h4.live-element(data-type='heading') <%- text %>
+  <% } else if (level === 5) { %>
+  h5.live-element(data-type='heading') <%- text %>
+  <% } else if (level === 6) { %>
+  h6.live-element(data-type='heading') <%- text %>
   <% } %>

@@ -1,6 +1,43 @@
 function NapkinClient(window, document, $, data, undefined) {
   var $window = $(window);
 
+  // given a form element, serialize its inputs into a JavaScript object ready
+  // to be JSON-ified
+  $.fn.serializeObject = function() {
+    var object = {};
+    var array = this.serializeArray();
+
+    // serializeArray returns an array in the form:
+    // [
+    //  {
+    //    name: 'inputName',
+    //    value: 'inputValue'
+    //  },
+    //  {
+    //    name: 'input2Name',
+    //    value: 'inpu2Value'
+    //  },
+    //  ...
+    // ];
+    // convert this to the form:
+    // {
+    //  inputName: 'inputValue',
+    //  input2Name: 'input2Value
+    // }
+    $.each(array, function() {
+        if (object[this.name] !== undefined) {
+            if (!object[this.name].push) {
+                object[this.name] = [ object[this.name] ];
+            }
+            object[this.name].push(this.value || '');
+        } else {
+            object[this.name] = this.value || '';
+        }
+    });
+
+    return object;
+  }; 
+
   var Component = Backbone.Model.extend({
     // TODO: validate a component's attributes
     validate: function(attrs) {
@@ -96,6 +133,13 @@ function NapkinClient(window, document, $, data, undefined) {
     clickedActiveComponent: false,
     $componentClicked: null,
 
+    // IDs of form components already on the page
+    usedIds: {
+      'name': 1,
+      'text': 1,
+      'levels': 1
+    },
+
     events: {
       'click [class^="span"]': 'recordComponentClick',
       'click .live-element': 'recordElementClick',
@@ -114,6 +158,7 @@ function NapkinClient(window, document, $, data, undefined) {
     getDropOptions: function(layoutView) {
       return {
         hoverClass: 'drop-hover',
+        accept: '.drag-element',
         drop: function(event, ui) {
           var $this = $(this);
           var $component = $(ui.draggable);
@@ -130,11 +175,11 @@ function NapkinClient(window, document, $, data, undefined) {
             var existingType = existingModel.get('type');
 
             if (existingType === componentType) {
-              layoutView.selectComponent($this, existingModel);
+              layoutView.selectComponentElement($this, existingModel);
               return false;
             } else {
               existingModel.destroy();
-              layoutView.resetComponent($this, existingType);
+              layoutView.resetComponentElement($this, existingType);
             }
           }
 
@@ -144,7 +189,7 @@ function NapkinClient(window, document, $, data, undefined) {
           }, {
             // TODO: handle error
             success: function(model) {
-              layoutView.selectComponent($this, model);
+              layoutView.selectComponentElement($this, model);
             },
 
             // wait for server to respond to get id of component
@@ -187,19 +232,20 @@ function NapkinClient(window, document, $, data, undefined) {
       return this;
     },
 
-    selectComponent: function($component, model) {
+    selectComponentElement: function($component, model) {
       $component.data('model', model);
       $component.addClass(model.get('type') + '-container');
       $component.addClass('active');
 
-      // trigger a selectComponent event which the AppView will handle
+      // trigger a setActiveComponent event to focus this component
       this.$activeComponent = $component;
-      this.trigger('selectComponent', $component);
+      this.trigger('setActiveComponent', $component);
     },
 
-    resetComponent: function($component, type) {
+    resetComponentElement: function($component, type) {
       $component.removeClass(type + '-container');
       $component.removeClass('active');
+      $component.addClass('empty');
       $component.empty();
     },
 
@@ -226,7 +272,17 @@ function NapkinClient(window, document, $, data, undefined) {
       }, this);
 
       $component.data('elementGroup', elementGroup);
-      elementGroup.fetch(); // get the elements for this component
+      // get the elements for this component
+      elementGroup.fetch({
+        // TODO: handle error
+        success: function(collection) {
+          if (collection.models.length === 0) {
+            $component.text(componentModel.get('type'));
+          } else {
+            $component.removeClass('empty');
+          }
+        }
+      });
     },
 
     addAllComponents: function() {
@@ -259,29 +315,16 @@ function NapkinClient(window, document, $, data, undefined) {
       // recordComponentClick function due to event bubbling
       if (!this.clickedActiveComponent) {
         var $component = this.$componentClicked;
-
-        // active component may not be defined if nothing is in focus
-        if (this.$activeComponent) {
-          this.$activeComponent.removeClass('active');
-          this.trigger('blurComponent');
-          this.$activeComponent = null;
-        }
+        this.resetActiveComponent();
 
         // if a component was clicked, put it in focus
         if ($component) {
-          var type = $component.data('type');
-          if (type) {
-            this.trigger('selectComponent', $component);
-            $component.addClass('active');
-            this.$activeComponent = $component;
-          }
+          this.setActiveComponent($component);
         }
       }
 
       if (!this.clickedActiveElement) {
         var $element = this.$elementClicked;
-
-        // active element may not be defined if nothing is in focus
         this.resetActiveElement();
 
         // if an element was clicked, put it in focus
@@ -297,6 +340,27 @@ function NapkinClient(window, document, $, data, undefined) {
       this.$elementClicked = null;
     },
 
+    setActiveComponent: function($component) {
+      var type = $component.data('type');
+      if (type) {
+        this.trigger('setActiveComponent', $component);
+        $component.addClass('active');
+        this.$activeComponent = $component;
+      }
+    },
+
+    resetActiveComponent: function() {
+      // active component may not be defined if nothing is in focus
+      if (this.$activeComponent) {
+        this.$activeComponent.removeClass('active');
+        this.trigger('blurComponent');
+      }
+
+      this.$activeComponent = null;
+      this.clickedActiveComponent = false;
+      this.$componentClicked = null;
+    },
+
     setActiveElement: function($element) {
       $element.popover('show');
       $element.addClass('active');
@@ -305,6 +369,8 @@ function NapkinClient(window, document, $, data, undefined) {
 
     resetActiveElement: function() {
       var $element = this.$activeElement;
+
+      // active element may not be defined if nothing is in focus
       if ($element) {
         $element.popover('hide');
         $element.removeClass('active');
@@ -353,13 +419,25 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     addElement: function(element, $component) {
+      // if component has empty class, nothing has been added to it yet
+      if ($component.hasClass('empty')) {
+        $component.removeClass('empty');
+        // clear out the type label that exists as text inside the component
+        $component.text('');
+      }
+
       var templateId = element.get('type') + '-element-template';
       var elementTemplate = _.template($('#' + templateId).html());
 
       templateId = element.get('type') + '-popover-template';
       var popoverTemplate = _.template($('#' + templateId).html());
 
-      var $element = $(elementTemplate(element.toJSON()));
+      var elementData = element.toJSON();
+      if ($component.data('model').get('type') === 'form') {
+        elementData.elementId = this.generateId(element);
+      }
+
+      var $element = $(elementTemplate(elementData));
       var row = $component.data('position').row;
 
       var placement = 'right';
@@ -381,6 +459,8 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     addAllElements: function($component) {
+      var that = this;
+
       // clear out any leftover elements
       $component.empty();
 
@@ -392,11 +472,161 @@ function NapkinClient(window, document, $, data, undefined) {
         this.addElement(element, $component);
         element = elementGroup.get(element.get('nextId'));
       }
+
+      var $oldPreviousElement;
+      var $oldNextElement;
+
+      // checking the data attribute asserts whether the sortable plugin has
+      // been activated on this element
+      if (!$component.data('sortable')) {
+        $component.sortable({
+          items: '.live-element',
+
+          // set the correct focus when sorting starts and stops
+          start: function(event, ui) {
+            var $element = $(ui.item);
+            var $component = $element.parent();
+            var $placeholder = $(ui.placeholder);
+
+            // make this component active if it isn't already
+            if (!that.$activeComponent ||
+                !that.$activeComponent.is($component)) {
+              that.resetActiveComponent();
+              that.setActiveComponent($component);
+            }
+
+            // previous element is before the current element; next element is
+            // after the placeholder
+            $oldPreviousElement = $element.prev();
+            $oldNextElement = $placeholder.next();
+
+            that.resetActiveElement();
+          },
+
+          stop: function(event, ui) {
+            that.setActiveElement($(ui.item));
+          },
+
+          // modify the linked list appropriately when the order has been updated
+          update: function(event, ui) {
+            var $element = $(ui.item);
+            var model = $element.data('model');
+
+            var $newPreviousElement = $element.prev();
+            var $newNextElement = $element.next();
+
+            var oldPreviousModel;
+            var oldNextModel;
+
+            var newPreviousModel;
+            var newNextModel;
+
+            if ($oldPreviousElement.length === 1) {
+              // old previous element exists; update its next
+              oldPreviousModel = $oldPreviousElement.data('model');
+              // TODO: handle set errors throughout (see further below as well)
+              oldPreviousModel.set({ nextId: model.get('nextId') });
+            } else {
+              // no old previous element; the old next element is now the head
+              // old next element must exist; otherwise, list order could not update
+              window.$oldNextElement = $oldNextElement;
+              oldNextModel = $oldNextElement.data('model');
+              oldNextModel.set({ head: true });
+            }
+
+            if ($newPreviousElement.length === 1) {
+              // new previous element exists; rearrange next IDs
+              newPreviousModel = $newPreviousElement.data('model');
+              model.set({ nextId: newPreviousModel.get('nextId') });
+              newPreviousModel.set({ nextId: model.id });
+            } else {
+              // new next element must exist; otherwise, list order could not update
+              newNextModel = $newNextElement.data('model');
+
+              // if there is no new previous element, this must be the head
+              newNextModel.set({ head: false });
+              model.set({
+                head: true,
+                nextId: newNextModel.id
+              });
+            }
+
+            // save each model if it exists
+            if (oldPreviousModel) {
+              oldPreviousModel.save();
+            }
+            if (oldNextModel) {
+              oldNextModel.save();
+            }
+
+            if (newPreviousModel) {
+              newPreviousModel.save();
+            }
+            if (newNextModel) {
+              newNextModel.save();
+            }
+
+            // current model must exist
+            model.save();
+          }
+        });
+
+        // disable text selections, since this is draggable
+        $component.disableSelection();
+      }
+    },
+
+    generateId: function(element) {
+      var id = element.get('name');
+      
+      // restrict to alphanumeric characters and underscores
+      id = id.replace(/ /g, '_');
+      id = id.replace(/[^a-zA-Z0-9_\-]/g, '');
+      
+      // an ID must start with a letter, dash, or underscore; if it starts with
+      // a dash, there are further rules involved, so just prepend an
+      // underscore if the generated ID begins with either a dash or number
+      if (/[0-9\-]/.test(id[0])) {
+        id = '_' + id;
+      }
+
+      // remove all numeric characters from the end of this id
+      id = id.replace(/[0-9]+$/g, '');
+
+      // note that usedIds[id] contains a count of how many ids there are with
+      // the indexed id as a base; i.e. 'id', 'id1', 'id2', 'id3', etc. all
+      // have the same base of 'id'
+      if (!this.usedIds[id]) {
+        this.usedIds[id] = 1;
+      } else {
+        this.usedIds[id]++;
+
+        // this will append the count to id to create a unique id
+        id = id + (this.usedIds[id] - 1);
+        this.usedIds[id] = 1;
+      }
+
+      return id;
     },
 
     applyEdits: function() {
+      var that = this;
       var $element = this.$activeElement;
+      var $component = $element.parent();
+      var model = $element.data('model');
 
+      var $popover = $element.data('popover').tip();
+      var updatedProperties = $('form', $popover).serializeObject();
+
+      // TODO: handle set and save errors
+      model.set(updatedProperties);
+      model.save({}, {
+        success: function(model) {
+          that.resetActiveElement();
+          $component.empty();
+          $component.data('elementGroup').trigger('reset');
+        }
+      });
     },
 
     removeElement: function() {
@@ -404,8 +634,8 @@ function NapkinClient(window, document, $, data, undefined) {
       this.resetActiveElement();
       var model = $element.data('model');
 
-      // $element.parent() is the component
-      var elementGroup = $element.parent().data('elementGroup');
+      var $component = $element.parent();
+      var elementGroup = $component.data('elementGroup');
 
       var previous = elementGroup.where({ nextId: model.id })[0];
       var nextId = model.get('nextId');
@@ -419,9 +649,14 @@ function NapkinClient(window, document, $, data, undefined) {
           } else {
             // removing the first element, so reset the head
             var next = elementGroup.get(nextId);
-            if (next) { // may also be the last element
+            if (next) {
               next.set('head', true);
               next.save();
+            } else {
+              // this is also the last element; add the empty class to the
+              // component and the type label
+              $component.addClass('empty');
+              $component.text($component.data('model').get('type'));
             }
           }
 
@@ -436,9 +671,9 @@ function NapkinClient(window, document, $, data, undefined) {
 
     events: {
       'click .close-popover': 'closePopover',
-      'click .popover-content .btn-primary': 'applyEdits',
+      'submit .popover-content form': 'applyEdits',
       'click .popover-content .btn-danger': 'removeElement',
-      'keydown': 'processKeyShortcuts'
+      'keydown': 'processKeyShortcuts',
     },
 
     initialize: function() {
@@ -449,11 +684,11 @@ function NapkinClient(window, document, $, data, undefined) {
       this.layoutView.render(); // already attached to #content
       componentGroup.fetch(); // fetch all components for the layout
 
-      this.layoutView.bind('selectComponent', this.selectComponent, this);
+      this.layoutView.bind('setActiveComponent', this.setActiveComponent, this);
       this.layoutView.bind('blurComponent', this.blurComponent, this);
     },
 
-    selectComponent: function($component) {
+    setActiveComponent: function($component) {
       var type = $component.data('type');
       this.componentListView.$el.hide();
 
@@ -483,6 +718,7 @@ function NapkinClient(window, document, $, data, undefined) {
 
     // apply edits to element when apply button is clicked
     applyEdits: function(event) {
+      event.preventDefault();
       this.layoutView.trigger('applyEdits');
     },
 
@@ -499,6 +735,11 @@ function NapkinClient(window, document, $, data, undefined) {
         if (event.which === 8 && this.layoutView.$activeElement) {
           this.layoutView.trigger('removeElement');
           event.preventDefault();
+        }
+
+        // if the user hit escape, reset the active element
+        if (event.which === 27) {
+          this.layoutView.resetActiveElement();
         }
       }
     }
