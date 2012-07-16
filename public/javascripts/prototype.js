@@ -38,26 +38,14 @@ function NapkinClient(window, document, $, data, undefined) {
     return object;
   }; 
 
-  var Component = Backbone.Model.extend({
-    // TODO: validate a component's attributes
-    validate: function(attrs) {
-
-    }
-  });
-
+  var Component = Backbone.Model.extend({});
   var ComponentGroup = Backbone.Collection.extend({
     model: Component,
     url: '/projects/' + data.projectId + '/screens/' + data.screenId +
       '/components'
   });
 
-  var Element = Backbone.Model.extend({
-    // TODO: validate an element's attributes
-    validate: function(attrs) {
-
-    }
-  });
-
+  var Element = Backbone.Model.extend({});
   var ElementGroup = Backbone.Collection.extend({
     initialize: function(models, options) {
       this.url = '/projects/' + data.projectId + '/screens/' +
@@ -172,14 +160,11 @@ function NapkinClient(window, document, $, data, undefined) {
           // remove any existing component if its type is different from the
           // one being added; otherwise, simply select the component
           if (existingModel) {
-            var existingType = existingModel.get('type');
-
-            if (existingType === componentType) {
+            if (existingModel.get('type') === componentType) {
               layoutView.selectComponentElement($this, existingModel);
               return false;
             } else {
-              existingModel.destroy();
-              layoutView.resetComponentElement($this, existingType);
+              layoutView.resetComponentElement($this);
             }
           }
 
@@ -187,7 +172,6 @@ function NapkinClient(window, document, $, data, undefined) {
             layout: $this.data('position'),
             type: $component.data('type')
           }, {
-            // TODO: handle error
             success: function(model) {
               layoutView.selectComponentElement($this, model);
             },
@@ -242,8 +226,11 @@ function NapkinClient(window, document, $, data, undefined) {
       this.trigger('setActiveComponent', $component);
     },
 
-    resetComponentElement: function($component, type) {
-      $component.removeClass(type + '-container');
+    resetComponentElement: function($component) {
+      var model = $component.data('model');
+      model.destroy();
+      $component.removeClass(model.get('type') + '-container');
+
       $component.removeClass('active');
       $component.addClass('empty');
       $component.empty();
@@ -274,7 +261,6 @@ function NapkinClient(window, document, $, data, undefined) {
       $component.data('elementGroup', elementGroup);
       // get the elements for this component
       elementGroup.fetch({
-        // TODO: handle error
         success: function(collection) {
           if (collection.models.length === 0) {
             $component.text(componentModel.get('type'));
@@ -408,13 +394,13 @@ function NapkinClient(window, document, $, data, undefined) {
       }
 
       elementGroup.create(elementAttrs, {
-        // TODO: handle error
         success: function(model) {
           if (last) {
             last.set('nextId', model.id);
-            last.save();
+            last.save({}, { wait: true });
           }
-        }
+        },
+        wait: true
       });
     },
 
@@ -427,6 +413,7 @@ function NapkinClient(window, document, $, data, undefined) {
       }
 
       var templateId = element.get('type') + '-element-template';
+      console.log(element.get('type'));
       var elementTemplate = _.template($('#' + templateId).html());
 
       templateId = element.get('type') + '-popover-template';
@@ -524,7 +511,6 @@ function NapkinClient(window, document, $, data, undefined) {
             if ($oldPreviousElement.length === 1) {
               // old previous element exists; update its next
               oldPreviousModel = $oldPreviousElement.data('model');
-              // TODO: handle set errors throughout (see further below as well)
               oldPreviousModel.set({ nextId: model.get('nextId') });
             } else {
               // no old previous element; the old next element is now the head
@@ -553,21 +539,21 @@ function NapkinClient(window, document, $, data, undefined) {
 
             // save each model if it exists
             if (oldPreviousModel) {
-              oldPreviousModel.save();
+              oldPreviousModel.save({}, { wait: true });
             }
             if (oldNextModel) {
-              oldNextModel.save();
+              oldNextModel.save({}, { wait: true });
             }
 
             if (newPreviousModel) {
-              newPreviousModel.save();
+              newPreviousModel.save({}, { wait: true });
             }
             if (newNextModel) {
-              newNextModel.save();
+              newNextModel.save({}, { wait: true });
             }
 
             // current model must exist
-            model.save();
+            model.save({}, { wait: true });
           }
         });
 
@@ -618,14 +604,16 @@ function NapkinClient(window, document, $, data, undefined) {
       var $popover = $element.data('popover').tip();
       var updatedProperties = $('form', $popover).serializeObject();
 
-      // TODO: handle set and save errors
       model.set(updatedProperties);
       model.save({}, {
+        error: tooltipErrorHandler($element, 'right'),
         success: function(model) {
+          $element.tooltip('hide');
           that.resetActiveElement();
           $component.empty();
           $component.data('elementGroup').trigger('reset');
-        }
+        },
+        wait: true
       });
     },
 
@@ -645,13 +633,13 @@ function NapkinClient(window, document, $, data, undefined) {
           if (previous) {
             // rearrange links in the linked list
             previous.set('nextId', nextId);
-            previous.save();
+            previous.save({}, { wait: true });
           } else {
             // removing the first element, so reset the head
             var next = elementGroup.get(nextId);
             if (next) {
               next.set('head', true);
-              next.save();
+              next.save({}, { wait: true });
             } else {
               // this is also the last element; add the empty class to the
               // component and the type label
@@ -731,9 +719,13 @@ function NapkinClient(window, document, $, data, undefined) {
     processKeyShortcuts: function(event) {
       // ignore key presses in input fields
       if ($('input[type="text"]:focus, textarea:focus').length === 0) {
-        // if the user hit backspace and has an element focused, remove it
-        if (event.which === 8 && this.layoutView.$activeElement) {
-          this.layoutView.trigger('removeElement');
+        // if the user hit backspace and has an element/component focused, remove it
+        if (event.which === 8) {
+          if (this.layoutView.$activeElement) {
+            this.layoutView.trigger('removeElement');
+          } else if (this.layoutView.$activeComponent) {
+            this.layoutView.resetComponentElement(this.layoutView.$activeComponent);
+          }
           event.preventDefault();
         }
 

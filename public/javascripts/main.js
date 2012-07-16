@@ -10,16 +10,6 @@ function NapkinClient(window, document, $, data, undefined) {
       return {
         title: 'Project name'
       };
-    },
-
-    // validate a project's attributes
-    validate: function(attrs) {
-      var name = this.name + ' ';
-      if (!attrs.title || attrs.title.length === 0) {
-        return name + 'must have a title.';
-      } else if (attrs.title.length > 25) {
-        return name + 'must have a title less than 25 characters long.';
-      }
     }
   });
 
@@ -65,8 +55,8 @@ function NapkinClient(window, document, $, data, undefined) {
     
     // finish editing a project
     finish: function() {
-      var title = this.$input.val().trim();
       var that = this;
+      var title = this.$input.val().trim();
 
       this.model.save({
         title: title
@@ -74,7 +64,8 @@ function NapkinClient(window, document, $, data, undefined) {
         error: tooltipErrorHandler(this.$input),
         success: function(model) {
           that.$el.removeClass('editing');
-        }
+        },
+        wait: true
       });
     },
 
@@ -116,16 +107,6 @@ function NapkinClient(window, document, $, data, undefined) {
       return {
         title: 'Screen name'
       };
-    },
-
-    // validate a screen's attributes
-    validate: function(attrs) {
-      var name = this.name + ' ';
-      if (!attrs.title || attrs.title.length === 0) {
-        return name + 'must have a title.';
-      } else if (attrs.title.length > 25) {
-        return name + 'must have a title less than 25 characters long.';
-      }
     }
   });
 
@@ -194,7 +175,8 @@ function NapkinClient(window, document, $, data, undefined) {
         error: tooltipErrorHandler(this.$input),
         success: function(model) {
           that.$el.removeClass('editing');
-        }
+        },
+        wait: true
       });
     },
 
@@ -293,7 +275,8 @@ function NapkinClient(window, document, $, data, undefined) {
         error: tooltipErrorHandler(this.$projectInput),
         success: function(model) {
           that.$projectInput.val('');
-        }
+        },
+        wait: true
       });
     },
 
@@ -308,57 +291,11 @@ function NapkinClient(window, document, $, data, undefined) {
         error: tooltipErrorHandler(this.$screenInput),
         success: function(model) {
           that.$screenInput.val('');
-        }
+        },
+        wait: true
       });
     }
   });
-
-  /* Returns a tooltip error handler for a create/save call.
-   * Requires: input element to create a tooltip on
-   * Returns: an error handler that displays a tooltip if a problem arises
-   */
-  function tooltipErrorHandler($input) {
-    return function(model, message) {
-      if (_.isString(message)) {
-        // client-side validation
-        displayTooltip($input, message);
-      } else {
-        // server-side validation
-        displayTooltip($input, message.responseText);
-      }
-      $input.focus();
-    };
-  }
-
-  /* Display a tooltip on the given element.
-   * Requires: element, message of tooltip, placement, how long to display for
-   */
-  function displayTooltip($element, message, placement, howLong) {
-    placement = placement || 'bottom';
-    howLong = howLong || 3000;
-
-    var tooltip = $element.data('tooltip');
-    if (tooltip) {
-      // if the element already has a tooltip, reset its properties
-      clearTimeout($element.data('timeout'));
-      tooltip.options.title = message;
-      tooltip.options.placement = placement;
-      $element.tooltip('show'); // call show to update content
-    } else {
-      // otherwise create its tooltip
-      $element.tooltip({
-        trigger: 'manual',
-        title: message,
-        placement: placement
-      }).tooltip('show');
-    }
-
-    // make the tooltip hide after the given display time has elapsed
-    var timeout = setTimeout(function() {
-      $element.tooltip('hide');
-    }, howLong);
-    $element.data('timeout', timeout);
-  }
 
   // instantiate the app view to begin!
   new AppView();
