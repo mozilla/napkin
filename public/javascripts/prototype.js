@@ -413,7 +413,6 @@ function NapkinClient(window, document, $, data, undefined) {
       }
 
       var templateId = element.get('type') + '-element-template';
-      console.log(element.get('type'));
       var elementTemplate = _.template($('#' + templateId).html());
 
       templateId = element.get('type') + '-popover-template';

@@ -91,11 +91,15 @@ function NapkinClient(window, document, $, data, undefined) {
 
       // make sure that this isn't propagation
       if ($target.is('a')) {
-        this.$el.siblings().removeClass('active');
-        this.$el.addClass('active');
-        this.options.screens.setActiveProject(this.model.id);
-        $addScreen.show();
+        this.forceActive();
       }
+    },
+
+    forceActive: function() {
+      this.$el.siblings().removeClass('active');
+      this.$el.addClass('active');
+      this.options.screens.setActiveProject(this.model.id);
+      $addScreen.show();
     }
   });
 
@@ -213,7 +217,17 @@ function NapkinClient(window, document, $, data, undefined) {
 
       projects.bind('add', this.addProject, this);
       projects.bind('reset', this.addAllProjects, this);
-      projects.fetch(); // get all projects from server
+
+      // if the part of the URL after # is an existing project id, make the
+      // corresponding project active initially
+      var poundIndex = location.href.lastIndexOf('#');
+      if (poundIndex !== -1) {
+        this.initialProjectId = location.href.substring(poundIndex + 1);
+        this.initialProjectId = parseInt(this.initialProjectId, 10);
+      }
+
+      // get all projects from server
+      projects.fetch();
 
       screens.bind('add', this.addAllScreens, this);
       screens.bind('reset', this.addAllScreens, this);
@@ -231,6 +245,11 @@ function NapkinClient(window, document, $, data, undefined) {
         screens: screens
       });
       this.$projectList.append(view.render().$el);
+
+      if (this.initialProjectId === project.id) {
+        view.forceActive();
+        this.initialProjectId = null;
+      }
     },
 
     // add all projects to the list
