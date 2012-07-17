@@ -1,10 +1,14 @@
 extend layout
 
+block sidebar
+  a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page
+
 block scripts
   script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
   script(src='/javascripts/json2.js')
   script(src='/javascripts/underscore.min.js')
   script(src='/javascripts/backbone.min.js')
+  script(src='/javascripts/tooltip-errors.js')
   script(src='/javascripts/prototype.js')
   script
     jQuery(function() {

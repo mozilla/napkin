@@ -5,11 +5,16 @@
 | / Task completed   |
 ======================
 
-- Add validators on the client-side that correspond to the server-side
-- Update client-side validators for project and screen
 - For all forms on the page, make sure their field ids are by default in the usedIds hash
-- Authentication component
+- Authentication component -> switch to element in article
 - Ensure project and screen exist to prototype screen page
+- Add button to navigate back to project page from screen prototype
+- Add form action
+- Validate action is an actual screen ID
+- Add screen flag for being logged in to view it
 / Restructure files in new folders before commit
 / Make form names unique
 / Stop inputs from focusing on element click
+/ ALLOWED_FIELDS should deal with sub-objects
+/ Add validators on the client-side that correspond to the server-side
+/ Update client-side validators for project and screen
