@@ -5,20 +5,20 @@ script#form-element-list(type='text/template')
     li
       .element(data-type='input-text', data-name='input-text')
         label(for='input-text') Text Input: 
-        input(type='text', name='input-text')
-      a.btn.btn-success +
+        input(type='text', name='input-text', tabindex='-1')
+      a.btn.btn-success(tabindex='-1') +
     li
       .element(data-type='input-radio', data-name='input-radio')
         label(for='input-radio') Radio Input: 
-        input.radio(type='radio', name='input-radio')
-      a.btn.btn-success +
+        input.radio(type='radio', name='input-radio', tabindex='-1')
+      a.btn.btn-success(tabindex='-1') +
     li
       .element(data-type='input-checkbox', data-name='input-checkbox')
         label(for='input-checkbox') Checkbox Input: 
-        input.checkbox(type='checkbox', name='input-checkbox')
-      a.btn.btn-success +
+        input.checkbox(type='checkbox', name='input-checkbox', tabindex='-1')
+      a.btn.btn-success(tabindex='-1') +
     li
       .element(data-type='textarea', data-name='textarea')
         label(for='textarea') Textarea: 
-        textarea(rows='8', cols='20', name='textarea')
-      a.btn.btn-success +
+        textarea(rows='8', cols='20', name='textarea', tabindex='-1')
+      a.btn.btn-success(tabindex='-1') +
