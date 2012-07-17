@@ -98,7 +98,10 @@ function NapkinClient(window, document, $, data, undefined) {
       this.$('.btn').each(function() {
         var $btn = $(this);
         var $element = $btn.siblings('.element');
-        $btn.css('margin-top', ($element.height() - $btn.height()) / 2);
+
+        if ($element.height() > $btn.height()) {
+          $btn.css('margin-top', ($element.height() - $btn.height()) / 2);
+        }
       });
     },
 
@@ -381,11 +384,13 @@ function NapkinClient(window, document, $, data, undefined) {
         type: $element.data('type'),
         nextId: null,
         name: $element.data('name'),
-        required: false,
         src: $element.data('src'),
-        text: $element.text(),
         level: level
       };
+
+      if ($element.text()) {
+        elementAttrs.text = $element.text();
+      }
 
       // if there's no last element, this must be the head
       var last = elementGroup.where({ nextId: null })[0];
