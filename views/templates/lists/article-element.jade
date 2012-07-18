@@ -4,7 +4,11 @@ script#article-element-list(type='text/template')
   ul
     li
       h3.element(data-type='heading', data-level='3') Heading
-      a.btn.btn-success +
+      a.btn.btn-success(href='#add-element') +
     li
       p.element(data-type='paragraph') Paragraph text
-      a.btn.btn-success +
+      a.btn.btn-success(href='#add-element') +
+    li
+      img.element(data-type='auth', src='/images/browser-id-sign-in.png',
+        alt='BrowserID Sign In')
+      a.btn.btn-success(href='#add-element') +

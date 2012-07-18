@@ -671,6 +671,9 @@ input[type="submit"].btn::-moz-focus-inner {
 .icon-chevron-right {
   background-position: -456px -72px;
 }
+.icon-chevron-down {
+  background-position: -313px -119px;
+}
 .icon-pencil {
   background-position: 0 -72px;
 }
@@ -685,6 +688,9 @@ input[type="submit"].btn::-moz-focus-inner {
 }
 .icon-refresh {
   background-position: -240px -24px;
+}
+.icon-ok {
+  background-position: -288px 0;
 }
 .tooltip {
   position: absolute;

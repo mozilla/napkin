@@ -33,5 +33,17 @@
     $window.resize(function() {
       $sidebar.height(Math.max($window.height(), $body.height()));
     }).resize(); // initial call
+
+    // periodically refresh sidebar
+    setTimeout(function resizeSidebar() {
+      $window.resize();
+      setTimeout(resizeSidebar, 500);
+    }, 500);
+
+    // display selected option in plain text to allow for easier select styling
+    $window.on('change', '.field select', function() {
+      var $this = $(this);
+      $this.siblings('.selection').text($this.find('option:selected').text());
+    });
   });
 })(window, document, jQuery);
