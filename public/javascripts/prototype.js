@@ -69,7 +69,9 @@ function NapkinClient(window, document, $, data, undefined) {
 
     render: function() {
       this.$el.html(this.template({}));
-      this.$('.drag-element').draggable(this.dragOptions);
+      if (!data.sharing) {
+        this.$('.drag-element').draggable(this.dragOptions);
+      }
       return this;
     }
   });
@@ -83,7 +85,11 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     initialize: function() {
-      var templateId = this.options.type + '-element-list';
+      if (data.sharing) {
+        this.events = {};
+      }
+
+      var templateId = this.options.type + '-element-list-template';
       this.template = _.template($('#' + templateId).html());
       this.$el.addClass(this.options.type + '-elements');
     },
@@ -113,11 +119,7 @@ function NapkinClient(window, document, $, data, undefined) {
     createElement: function(event) {
       event.preventDefault();
       var $target = $(event.currentTarget);
-      var $element = $target.siblings('.element').clone();
-
-      $element.removeClass('element')
-        .addClass('live-element');
-      this.trigger('createElement', $element);
+      this.trigger('createElement', $target.siblings('.element'));
     }
   });
 
@@ -143,13 +145,18 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     initialize: function() {
+      if (data.sharing) {
+        // no need for events when sharing
+        this.events = {};
+      } else {
+        this.bind('closePopover', this.resetActiveElement, this);
+        this.bind('applyComponentConfig', this.applyComponentConfig, this);
+        this.bind('applyElementEdits', this.applyElementEdits, this);
+        this.bind('removeElement', this.removeElement, this);
+      }
+
       componentGroup.bind('add', this.addComponent, this);
       componentGroup.bind('reset', this.addAllComponents, this);
-
-      this.bind('closePopover', this.resetActiveElement, this);
-      this.bind('applyComponentConfig', this.applyComponentConfig, this);
-      this.bind('applyElementEdits', this.applyElementEdits, this);
-      this.bind('removeElement', this.removeElement, this);
     },
 
     getDropOptions: function(layoutView) {
@@ -205,22 +212,34 @@ function NapkinClient(window, document, $, data, undefined) {
 
       this.$('.row').each(function(row) {
         $(this).children('[class^="span"]').each(function(col) {
+          var $this = $(this);
           var position = {
             row: row,
             col: col
           };
 
-          $(this).attr('data-position', position.row + ':' + position.col)
+          $this.attr('data-position', position.row + ':' + position.col)
             .data('position', position);
+
+          if (data.sharing) {
+            // remove all classes except span*, since no other functionality is
+            // needed to share this screen
+            var match = /span\d/.exec($this.attr('class'));
+            $this.attr('class', match[0]);
+          }
         });
       });
 
       this.$('.drop-target').each(function() {
         var $dropTarget = $(this);
-        $dropTarget.droppable(that.getDropOptions(that));
 
-        $dropTarget.css({ padding: '10px 15px' });
-        $dropTarget.width($dropTarget.width() - 30);
+        if (data.sharing) {
+          $dropTarget.css({ border: 'none' });
+        } else {
+          $dropTarget.droppable(that.getDropOptions(that));
+          $dropTarget.css({ padding: '10px 15px' });
+          $dropTarget.width($dropTarget.width() - 30);
+        }
       });
       return this;
     },
@@ -265,6 +284,22 @@ function NapkinClient(window, document, $, data, undefined) {
 
       elementGroup.bind('reset', function() {
         that.addAllElements($component);
+
+        if (data.sharing) {
+          var templateId = componentModel.get('type') + '-wrapper-template';
+          var $templateElement = $('#' + templateId);
+
+          var template;
+          var templateData;
+
+          if ($templateElement.length === 1) {
+            template = _.template($templateElement.html());
+            templateData = componentModel.toJSON();
+
+            templateData.html = $component.html();
+            $component.html(template(templateData));
+          }
+        }
       }, this);
 
       $component.data('elementGroup', elementGroup);
@@ -272,7 +307,9 @@ function NapkinClient(window, document, $, data, undefined) {
       elementGroup.fetch({
         success: function(collection) {
           if (collection.models.length === 0) {
-            $component.text(componentModel.get('type'));
+            if (!data.sharing) {
+              $component.text(componentModel.get('type'));
+            }
           } else {
             $component.removeClass('empty');
           }
@@ -426,9 +463,6 @@ function NapkinClient(window, document, $, data, undefined) {
       var templateId = element.get('type') + '-element-template';
       var elementTemplate = _.template($('#' + templateId).html());
 
-      templateId = element.get('type') + '-popover-template';
-      var popoverTemplate = _.template($('#' + templateId).html());
-
       var elementData = element.toJSON();
       if ($component.data('model').get('type') === 'form') {
         elementData.elementId = this.generateId(element);
@@ -447,12 +481,17 @@ function NapkinClient(window, document, $, data, undefined) {
       $element.appendTo($component);
       $element.data('model', element);
 
-      $element.popover({
+      if (!data.sharing) {
+        templateId = element.get('type') + '-popover-template';
+        var popoverTemplate = _.template($('#' + templateId).html());
+
+        $element.popover({
           title: 'Edit Element',
           trigger: 'manual',
           placement: placement,
           content: popoverTemplate(element.toJSON())
         });
+      }
     },
 
     addAllElements: function($component) {
@@ -475,7 +514,7 @@ function NapkinClient(window, document, $, data, undefined) {
 
       // checking the data attribute asserts whether the sortable plugin has
       // been activated on this element
-      if (!$component.data('sortable')) {
+      if (!$component.data('sortable') && !data.sharing) {
         $component.sortable({
           items: '.live-element',
 
@@ -679,7 +718,7 @@ function NapkinClient(window, document, $, data, undefined) {
             if (next) {
               next.set('head', true);
               next.save({}, { wait: true });
-            } else {
+            } else if (!data.sharing) {
               // this is also the last element; add the empty class to the
               // component and the type label
               $component.addClass('empty');
@@ -705,8 +744,13 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     initialize: function() {
-      this.componentListView = new ComponentListView();
-      $('#sidebar').append(this.componentListView.render().$el);
+      if (data.sharing) {
+        // events are unnecessary if sharing
+        this.events = {};
+      } else {
+        this.componentListView = new ComponentListView();
+        $('#sidebar').append(this.componentListView.render().$el);
+      }
 
       this.layoutView = new LayoutView();
       this.layoutView.render(); // already attached to #content

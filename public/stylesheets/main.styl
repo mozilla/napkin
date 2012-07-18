@@ -64,7 +64,7 @@ p
   margin-top 0
   margin-bottom 10px
 
-input[type='text']
+input[type='text'], textarea
   padding 6px 8px
 
 textarea
@@ -88,12 +88,13 @@ header
   margin 20px 0
   overflow hidden
 
-header h1
+header h1 a
   float left
   font-size 40px
   font-weight normal
   line-height 1
   text-transform uppercase
+  color #eee
 
 #sidebar header form
   margin 0
@@ -343,8 +344,15 @@ header a
   margin-left -10px
   margin-right -10px
 
-.live-element input[type="text"], .live-element textarea
+.live-element input[type="text"], .live-element textarea,
+.share-element input[type="text"], .share-element textarea
   display block
+
+.share-element input[type="text"], .share-element textarea
+  width 270px
+
+#share .row
+  margin-bottom 20px
 
 .elements a.btn
   float right
@@ -383,11 +391,28 @@ header a
   margin-right 10px
   display none
 
-.screen-title
+#prototype-header
   margin-bottom 20px
+  overflow hidden
+  border-bottom 1px dotted #ccc
 
-#back, img.live-element
+#prototype-header h2
+  float left
+  margin-bottom 5px
+
+#prototype-header a
+  float right
+  color #3366bb
+  line-height 36px
+
+#prototype-header i
+  margin 1px 5px 0 0
+
+#back, img.live-element, img.share-element
   margin-bottom 10px
+
+.form-submit
+  margin-top 10px
 
 .popover-inner
   width 260px

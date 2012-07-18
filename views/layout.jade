@@ -18,7 +18,8 @@ html
     #main.clearfix
       #sidebar.clearfix
         header
-          h1 Napkin
+          h1
+            a(href='/') Napkin
 
           if session.email
             a(href='/logout', tabindex='-1')

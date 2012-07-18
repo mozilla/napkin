@@ -32,13 +32,25 @@ module.exports = function(app, nconf, db) {
           screenHash[screen.id] = screen;
         });
 
-        console.log(screenHash);
         res.render('prototype', {
           pageId: 'prototype',
           projectId: projectId,
           screenId: screenId,
-          screenHash: screenHash
+          screenHash: screenHash,
+          sharing: false
         });
+      });
+    });
+
+  app.get('/share/project/:projectId/screen/:screenId',
+    function(req, res) {
+      var projectId = req.params.projectId;
+      var screenId = req.params.screenId;
+      res.render('prototype', {
+        pageId: 'share',
+        projectId: projectId,
+        screenId: screenId,
+        sharing: true
       });
     });
 

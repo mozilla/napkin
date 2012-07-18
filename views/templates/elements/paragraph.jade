@@ -1,2 +1,5 @@
 script#paragraph-element-template(type='text/template')
-  p.live-element(data-type='paragraph') <%- text %>
+  if sharing
+    p.share-element(data-type='paragraph') <%- text %>
+  else
+    p.live-element(data-type='paragraph') <%- text %>
