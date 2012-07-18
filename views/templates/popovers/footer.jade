@@ -1,11 +1,14 @@
 .form-actions
   // TODO: work on focus flow (tab to focus apply, delete, etc.)
-  button.btn.btn-primary(type='submit')
-    i.icon-refresh.icon-white
-    | Apply
-  a.btn.btn-danger(href='#delete')
-    i.icon-trash.icon-white
-    | Delete
+  if (locals.apply !== false)
+    button.btn.btn-primary(type='submit')
+      i.icon-refresh.icon-white
+      | Apply
+
+  if (locals.delete !== false)
+    a.btn.btn-danger(href='#delete')
+      i.icon-trash.icon-white
+      | Delete
 
 a.close-popover(href='#close')
   i.icon-remove.icon-white
