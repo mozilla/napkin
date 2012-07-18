@@ -1,24 +1,43 @@
 script#form-element-list(type='text/template')
   h2 Form Elements
-
   ul
     li
       .element(data-type='input-text', data-name='input-text')
         label(for='input-text') Text Input: 
         input(type='text', name='input-text', tabindex='-1')
-      a.btn.btn-success(tabindex='-1') +
+      a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-radio', data-name='input-radio')
         label(for='input-radio') Radio Input: 
         input.radio(type='radio', name='input-radio', tabindex='-1')
-      a.btn.btn-success(tabindex='-1') +
+      a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-checkbox', data-name='input-checkbox')
         label(for='input-checkbox') Checkbox Input: 
         input.checkbox(type='checkbox', name='input-checkbox', tabindex='-1')
-      a.btn.btn-success(tabindex='-1') +
+      a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='textarea', data-name='textarea')
         label(for='textarea') Textarea: 
         textarea(rows='8', cols='20', name='textarea', tabindex='-1')
-      a.btn.btn-success(tabindex='-1') +
+      a.btn.btn-success(href='#add-element') +
+
+  h2 Form Configuration
+  form.component-config
+    .field
+      label(for='action') On submit, redirect to screen:
+      .field-select
+        .selection
+        i.icon-chevron-down.icon-white
+        select#action(name='action')
+          - for (var screenId in screenHash) {
+          -   var screen = screenHash[screenId];
+          <% if (typeof action !== 'undefined' && action === #{screenId}) { %>
+          option(value=screenId, selected="true")= screen.title
+          <% } else { %>
+          option(value=screenId)= screen.title
+          <% } %>
+          - };
+
+    button.btn.btn-danger(type='submit') Save
+    i.icon-white.icon-ok

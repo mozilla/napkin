@@ -16,15 +16,31 @@ module.exports = function(app, nconf, db) {
     }
   });
 
-  app.get(/\/prototype\/project\/(\d+)\/screen\/(\d+)/, function(req, res) {
-    var projectId = req.params[0];
-    var screenId = req.params[1];
-    res.render('prototype', {
-      pageId: 'prototype',
-      projectId: projectId,
-      screenId: screenId
+  // TODO: add validation for parameters
+  app.get('/prototype/project/:projectId/screen/:screenId',
+    function(req, res) {
+      var projectId = req.params.projectId;
+      var screenId = req.params.screenId;
+
+      screens.list(req, db, function(err, screenList) {
+        if (err) {
+          throw err;
+        }
+
+        var screenHash = {};
+        screenList.forEach(function(screen) {
+          screenHash[screen.id] = screen;
+        });
+
+        console.log(screenHash);
+        res.render('prototype', {
+          pageId: 'prototype',
+          projectId: projectId,
+          screenId: screenId,
+          screenHash: screenHash
+        });
+      });
     });
-  });
 
   projects.generateRESTRoutes(app, db);
   screens.generateRESTRoutes(app, db);

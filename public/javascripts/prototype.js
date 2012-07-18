@@ -79,7 +79,7 @@ function NapkinClient(window, document, $, data, undefined) {
     className: 'elements',
 
     events: {
-      'click .btn': 'createElement'
+      'click a.btn': 'createElement'
     },
 
     initialize: function() {
@@ -89,7 +89,7 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     render: function() {
-      this.$el.html(this.template({}));
+      this.$el.html(this.template(this.options.component.toJSON()));
       return this;
     },
 
@@ -103,6 +103,11 @@ function NapkinClient(window, document, $, data, undefined) {
           $btn.css('margin-top', ($element.height() - $btn.height()) / 2);
         }
       });
+    },
+
+    populateSelectText: function() {
+      // change event will populate .selection div with text
+      this.$('select').change();
     },
 
     createElement: function(event) {
@@ -142,7 +147,8 @@ function NapkinClient(window, document, $, data, undefined) {
       componentGroup.bind('reset', this.addAllComponents, this);
 
       this.bind('closePopover', this.resetActiveElement, this);
-      this.bind('applyEdits', this.applyEdits, this);
+      this.bind('applyComponentConfig', this.applyComponentConfig, this);
+      this.bind('applyElementEdits', this.applyElementEdits, this);
       this.bind('removeElement', this.removeElement, this);
     },
 
@@ -522,6 +528,7 @@ function NapkinClient(window, document, $, data, undefined) {
               window.$oldNextElement = $oldNextElement;
               oldNextModel = $oldNextElement.data('model');
               oldNextModel.set({ head: true });
+              model.set({ head: false });
             }
 
             if ($newPreviousElement.length === 1) {
@@ -599,7 +606,35 @@ function NapkinClient(window, document, $, data, undefined) {
       return id;
     },
 
-    applyEdits: function() {
+    applyComponentConfig: function($form) {
+      var that = this;
+      var $component = this.$activeComponent;
+
+      var model = $component.data('model');
+      var config = $form.serializeObject();
+
+      var $formSubmit = $('[type="submit"]');
+      var $confirmIcon = $('.icon-ok');
+
+      $formSubmit.attr('disabled', 'true');
+      $confirmIcon.hide();
+      model.set(config);
+
+      model.save({}, {
+        error: tooltipErrorHandler($form, 'right'),
+        success: function(component) {
+          $formSubmit.removeAttr('disabled');
+          $confirmIcon.show();
+
+          setTimeout(function() {
+            $confirmIcon.hide();
+          }, 1500);
+        },
+        wait: true
+      });
+    },
+
+    applyElementEdits: function() {
       var that = this;
       var $element = this.$activeElement;
       var $component = $element.parent();
@@ -663,9 +698,10 @@ function NapkinClient(window, document, $, data, undefined) {
 
     events: {
       'click .close-popover': 'closePopover',
-      'submit .popover-content form': 'applyEdits',
+      'submit .popover-content form': 'applyElementEdits',
+      'submit .component-config': 'applyComponentConfig',
       'click .popover-content .btn-danger': 'removeElement',
-      'keydown': 'processKeyShortcuts',
+      'keydown': 'processKeyShortcuts'
     },
 
     initialize: function() {
@@ -685,13 +721,15 @@ function NapkinClient(window, document, $, data, undefined) {
       this.componentListView.$el.hide();
 
       this.elementListView = new ElementListView({
-        type: type
+        type: type,
+        component: $component.data('model')
       });
       this.elementListView.bind('createElement', this.layoutView.createElement,
         this.layoutView);
 
       $('#sidebar').append(this.elementListView.render().$el);
       this.elementListView.centerButtons();
+      this.elementListView.populateSelectText();
     },
 
     blurComponent: function() {
@@ -708,10 +746,16 @@ function NapkinClient(window, document, $, data, undefined) {
       this.layoutView.trigger('closePopover');
     },
 
-    // apply edits to element when apply button is clicked
-    applyEdits: function(event) {
+    // apply edits to element when edit form is submitted
+    applyElementEdits: function(event) {
       event.preventDefault();
-      this.layoutView.trigger('applyEdits');
+      this.layoutView.trigger('applyElementEdits');
+    },
+
+    // apply component configuration when config form is submitted
+    applyComponentConfig: function(event) {
+      event.preventDefault();
+      this.layoutView.trigger('applyComponentConfig', $(event.currentTarget));
     },
 
     // remove element when delete button is clicked
@@ -736,6 +780,14 @@ function NapkinClient(window, document, $, data, undefined) {
         // if the user hit escape, reset the active element
         if (event.which === 27) {
           this.layoutView.resetActiveElement();
+        }
+
+        // if the user hit tab, make sure he/she focuses something in the main
+        // content area and not the sidebar
+        if (event.which === 9) {
+          // since content dynamically changes, just add the tabIndex attribute
+          // whenever tab is pressed
+          $('#sidebar').find('a, input, select, button').attr('tabIndex', -1);
         }
       }
     }
