@@ -30,11 +30,11 @@ var screenReq = {
   },
   body: {
     title: 'My Screen',
-    is_start: true,
+    isStart: true,
     layout: 'col1'
   },
   params: {
-    project_id: 1
+    projectId: 1
   }
 };
 
@@ -44,11 +44,11 @@ var otherScreenReq = {
   },
   body: {
     title: 'My Other Screen',
-    is_start: false,
+    isStart: false,
     layout: 'col3'
   },
   params: {
-    project_id: 1
+    projectId: 1
   }
 };
 
@@ -62,8 +62,8 @@ var componentReq = {
     action: '/'
   },
   params: {
-    project_id: 1,
-    screen_id: 1
+    projectId: 1,
+    screenId: 1
   }
 };
 
@@ -78,12 +78,12 @@ describe('screen', function() {
     console.log('cleared test screens database');
   });
 
-  describe('POST /projects/:project_id/screens', function() {
+  describe('POST /projects/:projectId/screens', function() {
     it('adds a new screen', function(done) {
       var req = screenReq;
       screens.add(req, db, function(err, screen) {
         screen.title.should.equal(req.body.title);
-        screen.is_start.should.equal(req.body.is_start);
+        screen.isStart.should.equal(req.body.isStart);
         screen.layout.should.equal(req.body.layout);
         done();
       });
@@ -97,7 +97,7 @@ describe('screen', function() {
       setTimeout(function() {
         screens.get(req, db, 2, function(err, screen) {
           screen.title.should.equal(req.body.title);
-          screen.is_start.should.equal(req.body.is_start);
+          screen.isStart.should.equal(req.body.isStart);
           screen.layout.should.equal(req.body.layout);
           done();
         });
@@ -105,25 +105,25 @@ describe('screen', function() {
     });
   });
 
-  describe('GET /projects/:project_id/screens', function() {
+  describe('GET /projects/:projectId/screens', function() {
     it('returns a list of screens', function(done) {
       var req = screenReq;
 
       screens.list(req, db, function(errList, screenList) {
         screenList[0].title.should.equal(req.body.title);
-        screenList[0].is_start.should.equal(req.body.is_start);
+        screenList[0].isStart.should.equal(req.body.isStart);
         screenList[0].layout.should.equal(req.body.layout);
 
         req = otherScreenReq;
         screenList[1].title.should.equal(req.body.title);
-        screenList[1].is_start.should.equal(req.body.is_start);
+        screenList[1].isStart.should.equal(req.body.isStart);
         screenList[1].layout.should.equal(req.body.layout);
         done();
       });
     });
   });
 
-  describe('GET /projects/:project_id/screens/:id', function() {
+  describe('GET /projects/:projectId/screens/:id', function() {
     var req = screenReq;
 
     it('returns a specific screen', function(done) {
@@ -141,7 +141,7 @@ describe('screen', function() {
     });
   });
 
-  describe('PUT /projects/:project_id/screens/:id', function() {
+  describe('PUT /projects/:projectId/screens/:id', function() {
     var req = screenReq;
 
     it('updates a specific screen', function(done) {
@@ -166,7 +166,7 @@ describe('screen', function() {
     });
   });
 
-  describe('DELETE /projects/:project_id/screens/:id', function() {
+  describe('DELETE /projects/:projectId/screens/:id', function() {
     var req = screenReq;
 
     it('deletes a screen', function(done) {

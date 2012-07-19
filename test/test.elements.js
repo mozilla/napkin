@@ -31,11 +31,11 @@ var screenReq = {
   },
   body: {
     title: 'My Screen',
-    is_start: true,
+    isStart: true,
     layout: 'col1'
   },
   params: {
-    project_id: 1
+    projectId: 1
   }
 };
 
@@ -49,8 +49,8 @@ var componentReq = {
     action: '/'
   },
   params: {
-    project_id: 1,
-    screen_id: 1
+    projectId: 1,
+    screenId: 1
   }
 };
 
@@ -60,15 +60,14 @@ var elementReq = {
   },
   body: {
     type: 'input_text',
-    head: true,
-    nextId: 1,
-    required: true,
-    src: ''
+    name: 'email',
+    nextId: null,
+    required: true
   },
   params: {
-    project_id: 1,
-    screen_id: 1,
-    component_id: 1
+    projectId: 1,
+    screenId: 1,
+    componentId: 1
   }
 };
 
@@ -77,15 +76,16 @@ var otherElementReq = {
     email: 'test@test.org'
   },
   body: {
-    type: 'input_radio',
-    nextId: null,
-    required: true,
-    src: ''
+    type: 'heading',
+    head: true,
+    nextId: 1,
+    text: 'Email',
+    level: 3
   },
   params: {
-    project_id: 1,
-    screen_id: 1,
-    component_id: 1
+    projectId: 1,
+    screenId: 1,
+    componentId: 1
   }
 };
 
@@ -107,16 +107,16 @@ describe('element', function() {
     console.log('cleared test elements database');
   });
 
-  describe('POST /projects/:project_id/screens/:screen_id/components/:component_id/elements',
+  describe('POST /projects/:projectId/screens/:screenId/components/:componentId/elements',
     function() {
       it('adds a new element', function(done) {
         var req = elementReq;
         elements.add(req, db, function(err, element) {
           element.type.should.equal(req.body.type);
-          element.head.should.equal(req.body.head);
-          element.nextId.should.equal(req.body.nextId);
+          element.name.should.equal(req.body.name);
+          should.not.exist(element.head);
+          should.not.exist(element.nextId);
           element.required.should.equal(req.body.required);
-          element.src.should.equal(req.body.src);
           done();
         });
       });
@@ -129,50 +129,50 @@ describe('element', function() {
         setTimeout(function() {
           elements.get(req, db, 2, function(err, element) {
             element.type.should.equal(req.body.type);
-            should.not.exist(element.head);
-            should.not.exist(element.nextId);
-            element.required.should.equal(req.body.required);
-            element.src.should.equal(req.body.src);
+            element.head.should.equal(req.body.head);
+            element.nextId.should.equal(req.body.nextId);
+            element.text.should.equal(req.body.text);
+            element.level.should.equal(req.body.level);
             done();
           });
         }, 10);
       });
     });
 
-  describe('GET /projects/:project_id/screens/:screen_id/components/:component_id/elements',
+  describe('GET /projects/:projectId/screens/:screenId/components/:componentId/elements',
     function() {
       it('returns a list of available elements for the component', function(done) {
         var req = elementReq;
 
         elements.list(req, db, function(errList, elementList) {
           elementList[0].type.should.equal(req.body.type);
-          elementList[0].head.should.equal(req.body.head);
-          elementList[0].nextId.should.equal(req.body.nextId);
+          elementList[0].name.should.equal(req.body.name);
+          should.not.exist(elementList[0].head);
+          should.not.exist(elementList[0].nextId);
           elementList[0].required.should.equal(req.body.required);
-          elementList[0].src.should.equal(req.body.src);
 
           req = otherElementReq;
           elementList[1].type.should.equal(req.body.type);
-          should.not.exist(elementList[1].head);
-          should.not.exist(elementList[1].nextId);
-          elementList[1].required.should.equal(req.body.required);
-          elementList[1].src.should.equal(req.body.src);
+          elementList[1].head.should.equal(req.body.head);
+          elementList[1].nextId.should.equal(req.body.nextId);
+          elementList[1].text.should.equal(req.body.text);
+          elementList[1].level.should.equal(req.body.level);
           done();
         });
       });
     });
 
-  describe('GET /projects/:project_id/screens/:screen_id/components/:component_id/elements/:id',
+  describe('GET /projects/:projectId/screens/:screenId/components/:componentId/elements/:id',
     function() {
       var req = elementReq;
 
       it('returns a specific element', function(done) {
         elements.get(req, db, 1, function(err, element) {
           element.type.should.equal(req.body.type);
-          element.head.should.equal(req.body.head);
-          element.nextId.should.equal(req.body.nextId);
+          element.name.should.equal(req.body.name);
+          should.not.exist(element.head);
+          should.not.exist(element.nextId);
           element.required.should.equal(req.body.required);
-          element.src.should.equal(req.body.src);
           done();
         });
       });
@@ -185,7 +185,7 @@ describe('element', function() {
       });
     });
 
-  describe('PUT /projects/:project_id/screens/:screen_id/components/:component_id/elements/:id',
+  describe('PUT /projects/:projectId/screens/:screenId/components/:componentId/elements/:id',
     function() {
       var req = elementReq;
 
@@ -211,7 +211,7 @@ describe('element', function() {
       });
     });
 
-  describe('DELETE /projects/:project_id/screens/:screen_id/components/:component_id/elements/:id',
+  describe('DELETE /projects/:projectId/screens/:screenId/components/:componentId/elements/:id',
     function() {
       var req = elementReq;
 

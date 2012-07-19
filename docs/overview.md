@@ -1,16 +1,12 @@
 # Overview - version 0.1
 
-## What It Is
-
-Napkin is a rapid web prototyping tool meant for users who either are not necessarily developers but are primarily involved in product/UX/UI for a site/application.
-
 ## How It Works
 
-A project (sitemap) is created and contains screens which are wireframes containing HTML elements and basic web components.
+Users create a project for each potential application/site they have in mind. Each project contains multiple screens, which represent pages or different views. After selecting a layout for a screen, users can add components&mdash;articles, forms, navigation, etc.&mdash; and their corresponding elements&mdash;headings, paragraphs, input boxes, links&mdash;as a means of wireframing the pages they would eventually like to create.
 
-Once wireframes are completed at the screen level, the screens can be linked at the sitemap level - e.g. a form element is linked to another screen after a successful POSt request is submitted.
+But wireframes are not limited to interaction at the inter-screen level. Through links and form submissions, they can also have intra-screen connections. For example, a contact form on one screen could submit to a thank you page represented by another screen. In this way, users are able to create a more complete mockup that not only mimics the final product's aesthetics, but also its interactions.
 
-Once the site is complete, the project can be compiled and run as a demo or exported as a standalone Node/Express application.
+Once the site is complete, the project can be run as a demo or exported to a standalone node.js express application.
 
 ## Technical Code Generation Process
 

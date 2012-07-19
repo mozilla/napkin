@@ -38,11 +38,11 @@ var screenReq = {
   },
   body: {
     title: 'My Screen',
-    is_start: true,
+    isStart: true,
     layout: 'col1'
   },
   params: {
-    project_id: 1
+    projectId: 1
   }
 };
 
