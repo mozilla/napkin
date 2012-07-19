@@ -1,4 +1,4 @@
-script#form-element-list(type='text/template')
+script#form-element-list-template(type='text/template')
   h2 Form Elements
   ul
     li
@@ -22,22 +22,35 @@ script#form-element-list(type='text/template')
         textarea(rows='8', cols='20', name='textarea', tabindex='-1')
       a.btn.btn-success(href='#add-element') +
 
-  h2 Form Configuration
-  form.component-config
-    .field
-      label(for='action') On submit, redirect to screen:
-      .field-select
-        .selection
-        i.icon-chevron-down.icon-white
-        select#action(name='action')
-          - for (var screenId in screenHash) {
-          -   var screen = screenHash[screenId];
-          <% if (typeof action !== 'undefined' && action === #{screenId}) { %>
-          option(value=screenId, selected="true")= screen.title
-          <% } else { %>
-          option(value=screenId)= screen.title
-          <% } %>
-          - };
+  if !sharing
+    h2 Form Configuration
+    form.component-config
+      .field
+        label(for='action') On submit, redirect to screen:
+        .field-select
+          .selection
+          i.icon-chevron-down.icon-white
+          select#action(name='action')
+            - for (var screenId in screenHash) {
+            -   var screen = screenHash[screenId];
+            <% if (typeof action !== 'undefined' && action === #{screenId}) { %>
+            option(value=screenId, selected="true")= screen.title
+            <% } else { %>
+            option(value=screenId)= screen.title
+            <% } %>
+            - };
 
-    button.btn.btn-danger(type='submit') Save
-    i.icon-white.icon-ok
+      button.btn.btn-danger(type='submit') Save
+      i.icon-white.icon-ok
+
+if sharing
+  script#form-wrapper-template(type='text/template')
+    <% if (typeof action === 'undefined') { %>
+    form(method='get', action!='/share/project/#{projectId}/screen/#{screenId}')
+      <%= html %>
+      button.form-submit.btn.btn-primary(type='submit') Submit
+    <% } else { %>
+    form(method='get', action!='/share/project/#{projectId}/screen/<%- action %>')
+      <%= html %>
+      button.form-submit.btn.btn-primary(type='submit') Submit
+    <% } %>

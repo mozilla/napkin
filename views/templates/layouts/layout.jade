@@ -1,5 +1,10 @@
 script#layout-template(type='text/template')
-  h2.screen-title Screen Prototype
+  if !sharing
+    #prototype-header
+      h2 &lsquo;#{screenHash[screenId].title}&rsquo; Screen Prototype
+      a(href='/share/project/#{projectId}/screen/#{screenId}')
+        i.icon-globe
+        | Share Screen
 
   .row
     .span4.drop-target.empty

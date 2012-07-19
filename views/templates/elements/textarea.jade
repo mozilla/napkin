@@ -1,5 +1,11 @@
 script#textarea-element-template(type='text/template')
   // TODO: make names unique and id-ize them for textarea
-  .live-element.field
-    label(for!='<%- elementId %>') <%- name %>: 
-    textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>', tabindex='-1')
+  if sharing
+    .share-element.field
+      label(for!='<%- elementId %>') <%- name %>: 
+      textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>')
+  else
+    .live-element.field
+      label(for!='<%- elementId %>') <%- name %>: 
+      textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>',
+        tabindex='-1')

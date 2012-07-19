@@ -692,6 +692,9 @@ input[type="submit"].btn::-moz-focus-inner {
 .icon-ok {
   background-position: -288px 0;
 }
+.icon-globe {
+  background-position: -336px -144px;
+}
 .tooltip {
   position: absolute;
   z-index: 1020;

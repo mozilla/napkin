@@ -1,7 +1,11 @@
 extend layout
 
 block sidebar
-  a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page
+  if sharing
+    a.btn.btn-danger#back(href='/') &larr; Back to home
+    p This is Napkin, a rapid web prototyping tool. You're currently being shared a screen on the right, which is a mockup of one page of a potential website.
+  else
+    a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page
 
 block scripts
   script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
@@ -14,7 +18,8 @@ block scripts
     jQuery(function() {
       NapkinClient(window, document, jQuery, {
         projectId: #{projectId},
-        screenId: #{screenId}
+        screenId: #{screenId},
+        sharing: #{sharing}
       });
     });
 
@@ -26,18 +31,22 @@ block scripts
 
   // article elements and popovers
   != partial('templates/elements/heading')
-  != partial('templates/popovers/heading')
   != partial('templates/elements/paragraph')
-  != partial('templates/popovers/paragraph')
   != partial('templates/elements/auth')
-  != partial('templates/popovers/auth')
+
+  if !sharing
+    != partial('templates/popovers/heading')
+    != partial('templates/popovers/paragraph')
+    != partial('templates/popovers/auth')
 
   // form elements and popovers
   != partial('templates/elements/input-text')
-  != partial('templates/popovers/input-text')
   != partial('templates/elements/input-radio')
-  != partial('templates/popovers/input-radio')
   != partial('templates/elements/input-checkbox')
-  != partial('templates/popovers/input-checkbox')
   != partial('templates/elements/textarea')
-  != partial('templates/popovers/textarea')
+
+  if !sharing
+    != partial('templates/popovers/input-text')
+    != partial('templates/popovers/input-radio')
+    != partial('templates/popovers/input-checkbox')
+    != partial('templates/popovers/textarea')
