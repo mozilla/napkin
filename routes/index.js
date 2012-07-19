@@ -2,10 +2,12 @@ var projects = require('../lib/projects');
 var screens = require('../lib/screens');
 var components = require('../lib/components');
 var elements = require('../lib/elements');
+var users = require('../lib/users');
 
 module.exports = function(app, nconf, db) {
   app.get('/', function (req, res) {
     if (req.session.email) {
+      delete req.session.sharedId;
       res.render('index', {
           pageId: 'index'
       });
@@ -22,7 +24,11 @@ module.exports = function(app, nconf, db) {
       var projectId = req.params.projectId;
       var screenId = req.params.screenId;
 
+      // delete sharedId becuase this user is no longer viewing a shared screen
+      delete req.session.sharedId;
+
       screens.list(req, db, function(err, screenList) {
+        // TODO: handle error
         if (err) {
           throw err;
         }
@@ -42,10 +48,12 @@ module.exports = function(app, nconf, db) {
       });
     });
 
-  app.get('/share/project/:projectId/screen/:screenId',
+  app.get('/share/:userId/project/:projectId/screen/:screenId',
     function(req, res) {
       var projectId = req.params.projectId;
       var screenId = req.params.screenId;
+      req.session.sharedId = req.params.userId;
+
       res.render('prototype', {
         pageId: 'share',
         projectId: projectId,
