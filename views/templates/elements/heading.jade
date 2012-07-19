@@ -1,14 +1,29 @@
 script#heading-element-template(type='text/template')
-  <% if (level === 1) { %>
-  h1.live-element(data-type='heading') <%- text %>
-  <% } else if (level === 2) { %>
-  h2.live-element(data-type='heading') <%- text %>
-  <% } else if (level === 3) { %>
-  h3.live-element(data-type='heading') <%- text %>
-  <% } else if (level === 4) { %>
-  h4.live-element(data-type='heading') <%- text %>
-  <% } else if (level === 5) { %>
-  h5.live-element(data-type='heading') <%- text %>
-  <% } else if (level === 6) { %>
-  h6.live-element(data-type='heading') <%- text %>
-  <% } %>
+  if sharing
+    <% if (level === 1) { %>
+    h1.share-element(data-type='heading') <%- text %>
+    <% } else if (level === 2) { %>
+    h2.share-element(data-type='heading') <%- text %>
+    <% } else if (level === 3) { %>
+    h3.share-element(data-type='heading') <%- text %>
+    <% } else if (level === 4) { %>
+    h4.share-element(data-type='heading') <%- text %>
+    <% } else if (level === 5) { %>
+    h5.share-element(data-type='heading') <%- text %>
+    <% } else if (level === 6) { %>
+    h6.share-element(data-type='heading') <%- text %>
+    <% } %>
+  else
+    <% if (level === 1) { %>
+    h1.live-element(data-type='heading') <%- text %>
+    <% } else if (level === 2) { %>
+    h2.live-element(data-type='heading') <%- text %>
+    <% } else if (level === 3) { %>
+    h3.live-element(data-type='heading') <%- text %>
+    <% } else if (level === 4) { %>
+    h4.live-element(data-type='heading') <%- text %>
+    <% } else if (level === 5) { %>
+    h5.live-element(data-type='heading') <%- text %>
+    <% } else if (level === 6) { %>
+    h6.live-element(data-type='heading') <%- text %>
+    <% } %>
