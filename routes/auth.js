@@ -23,8 +23,7 @@ module.exports = function(app, nconf, db) {
   // Logout
   app.get('/logout', function(req, res) {
     if (req.session) {
-      delete req.session.email;
-      delete req.session.id;
+      req.session.reset();
     }
     res.redirect('/', 303);
   });
