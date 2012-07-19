@@ -1,10 +1,10 @@
 # Napkin
 
-## What It Is
+## Summary
 
-A rapid web prototyping tool to create a functional wireframe.
+Napkin is a rapid web prototyping tool meant for users who want to make functional, revisionable mockups that can easily be shared and exported to baseline front and back-end code.
 
-## High-Level Documentation
+## High-Level Overview
 
 [Overview](https://github.com/mozilla/napkin/blob/master/docs/overview.md)
 
@@ -12,31 +12,27 @@ A rapid web prototyping tool to create a functional wireframe.
 
 Clone the repository
 
-> git clone git://github.com/mozilla/napkin.git
+    $ git clone git://github.com/mozilla/napkin.git
 
-Install Brew and redis
+Install brew; instructions: https://github.com/mxcl/homebrew/wiki/installation.
+Next, use brew to get redis:
 
-Brew instructions: https://github.com/mxcl/homebrew/wiki/installation
-
-> brew install redis
+    $ brew install redis
 
 Run redis in the background
 
-> redis-server &
+    $ redis-server &
 
 Install node by using brew or through the website http://nodejs.org/#download
 
-> cd napkin
+    $ cd napkin
+    $ cp local.json-dist local.json
+    $ npm install
 
-> cp local.json-dist local.json
+Run napkin on http://localhost:3000:
 
-> npm install
+    $ node app.js
 
-Run the site
+Run tests (optional):
 
-> node app.js
-
-## Run Tests
-
-> make test
-
+    $ make test

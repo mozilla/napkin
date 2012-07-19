@@ -31,11 +31,11 @@ var screenReq = {
   },
   body: {
     title: 'My Screen',
-    is_start: true,
+    isStart: true,
     layout: 'col1'
   },
   params: {
-    project_id: 1
+    projectId: 1
   }
 };
 
@@ -52,8 +52,8 @@ var componentReq = {
     action: '/'
   },
   params: {
-    project_id: 1,
-    screen_id: 1
+    projectId: 1,
+    screenId: 1
   }
 };
 
@@ -70,8 +70,8 @@ var otherComponentReq = {
     action: '/auth'
   },
   params: {
-    project_id: 1,
-    screen_id: 1
+    projectId: 1,
+    screenId: 1
   }
 };
 
@@ -86,9 +86,9 @@ var elementReq = {
     src: ''
   },
   params: {
-    project_id: 1,
-    screen_id: 1,
-    component_id: 1
+    projectId: 1,
+    screenId: 1,
+    componentId: 1
   }
 };
 
@@ -106,7 +106,7 @@ describe('component', function() {
     console.log('cleared test components database');
   });
 
-  describe('POST /projects/:project_id/screens/:screen_id/components',
+  describe('POST /projects/:projectId/screens/:screenId/components',
     function() {
       it('adds a new component', function(done) {
         var req = componentReq;
@@ -135,7 +135,7 @@ describe('component', function() {
       });
     });
 
-  describe('GET /projects/:project_id/screens/:screen_id/components',
+  describe('GET /projects/:projectId/screens/:screenId/components',
     function() {
       it('returns a list of available components for the screen', function(done) {
         var req = componentReq;
@@ -154,7 +154,7 @@ describe('component', function() {
       });
     });
 
-  describe('GET /projects/:project_id/screens/:screen_id/components/:id',
+  describe('GET /projects/:projectId/screens/:screenId/components/:id',
     function() {
       var req = componentReq;
 
@@ -175,7 +175,7 @@ describe('component', function() {
       });
     });
 
-  describe('PUT /projects/:project_id/screens/:screen_id/components/:id',
+  describe('PUT /projects/:projectId/screens/:screenId/components/:id',
     function() {
       var req = componentReq;
 
@@ -207,7 +207,7 @@ describe('component', function() {
       });
     });
 
-  describe('DELETE /projects/:project_id/screens/:screen_id/components/:id',
+  describe('DELETE /projects/:projectId/screens/:screenId/components/:id',
     function() {
       var req = componentReq;
 
