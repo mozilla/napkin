@@ -107,7 +107,7 @@ function NapkinClient(window, document, $, data, undefined) {
     name: 'Screen',
 
     defaults: function() {
-      // TODO: implement is_start, layout
+      // TODO: implement isStart, layout
       return {
         title: 'Screen name'
       };
