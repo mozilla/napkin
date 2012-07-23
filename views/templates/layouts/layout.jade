@@ -1,8 +1,8 @@
 script#layout-template(type='text/template')
   if !sharing
     #prototype-header
-      h2 &lsquo;#{screenHash[screenId].title}&rsquo; Screen Prototype
-      a(href='/share/#{session.id}/project/#{projectId}/screen/#{screenId}')
+      h2 &lsquo;#{screenHash[screenId].title}&rsquo; screen prototype
+      a.btn(href='/share/#{session.id}/project/#{projectId}/screen/#{screenId}', tabindex='-1')
         i.icon-globe
         | Share Screen
 
