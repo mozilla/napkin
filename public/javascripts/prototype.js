@@ -804,6 +804,7 @@ function NapkinClient(window, document, $, data, undefined) {
 
     // remove element when delete button is clicked
     removeElement: function(event) {
+      event.preventDefault();
       this.layoutView.trigger('removeElement');
     },
 

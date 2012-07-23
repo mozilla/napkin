@@ -3,9 +3,10 @@ var screens = require('../lib/screens');
 var components = require('../lib/components');
 var elements = require('../lib/elements');
 var users = require('../lib/users');
+var utils = require('../lib/utils');
 
 module.exports = function(app, nconf, db) {
-  app.get('/', function (req, res) {
+  app.get('/', function(req, res) {
     if (req.session.email) {
       delete req.session.sharedId;
       res.render('index', {
@@ -83,7 +84,7 @@ module.exports = function(app, nconf, db) {
         if (err) {
           next(err);
         } else if (!project) {
-          next(new Error('Project could not be found.'));
+          utils.render404(req, res);
         } else {
           req.project = project;
 
@@ -103,7 +104,7 @@ module.exports = function(app, nconf, db) {
         if (err) {
           next(err);
         } else if (!screen) {
-          next(new Error('Screen could not be found.'));
+          utils.render404(req, res);
         } else {
           req.screen = screen;
 
