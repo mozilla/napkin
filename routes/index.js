@@ -21,7 +21,7 @@ module.exports = function(app, nconf, db) {
 
   // TODO: add validation for parameters
   app.get('/prototype/project/:projectId/screen/:screenId',
-    confirmScaffoldExistence, function(req, res) {
+    confirmAuthentication, confirmScaffoldExistence, function(req, res) {
       var projectId = req.project.id;
       var screenId = req.screen.id;
 
@@ -63,10 +63,22 @@ module.exports = function(app, nconf, db) {
       });
     });
 
-  projects.generateRESTRoutes(app, db);
-  screens.generateRESTRoutes(app, db);
-  components.generateRESTRoutes(app, db);
-  elements.generateRESTRoutes(app, db);
+  projects.generateRESTRoutes(app, db, confirmAuthentication);
+  screens.generateRESTRoutes(app, db, confirmAuthentication);
+  components.generateRESTRoutes(app, db, confirmAuthentication);
+  elements.generateRESTRoutes(app, db, confirmAuthentication);
+
+  /* Confirms that the current user is authenticated. If he/she is not,
+   * redirects to 404 page. This is meant to be used as Express middleware.
+   * Requires: web request, web response, next function to call when done
+   */
+  function confirmAuthentication(req, res, next) {
+    if (req.session.email) {
+      next();
+    } else {
+      utils.render404(req, res);
+    }
+  }
 
   /* Confirms that the ids in req correspond to existing scaffolds. Also
    * extracts the existing scaffolds into the request object This is meant to be
