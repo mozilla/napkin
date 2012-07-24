@@ -1,3 +1,8 @@
 script#auth-element-template(type='text/template')
-  img.live-element(data-type='auth', src='/images/browser-id-sign-in.png',
-    alt='BrowserID Sign In')
+  if sharing
+    a(href='#')
+      img.share-element(data-type='auth', src='/images/browser-id-sign-in.png',
+        alt='BrowserID Sign In')
+  else
+    img.live-element(data-type='auth', src='/images/browser-id-sign-in.png',
+      alt='BrowserID Sign In')

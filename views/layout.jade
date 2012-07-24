@@ -21,14 +21,15 @@ html
           h1
             a(href='/') Napkin
 
-          if session.email
-            a(href='/logout', tabindex='-1')
-              img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
-          else
-            form#login-form(method='post', action='/login')
-              a(href='#')
-                img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
-              input(type='hidden', name='bid_assertion', value='1')
+          if typeof(sharing) === 'undefined' || !sharing
+            if session.email
+              a(href='/logout', tabindex='-1')
+                img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+            else
+              form#login-form(method='post', action='/login')
+                a(href='#')
+                  img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
+                input(type='hidden', name='bid_assertion', value='1')
 
         block sidebar
       #content
