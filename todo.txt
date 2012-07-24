@@ -5,6 +5,7 @@
 | / Task completed   |
 ======================
 
+- Delete component while it is active
 - Validate action is an actual screen ID
 - Should auth be implemented for screen sharing page?
 - Improve sharing page sidebar
@@ -29,3 +30,4 @@
 / Ensure project and screen exist to prototype screen page
 / Add validation for projectId and screenId paramters in route
 / 404 page for invalid projectId/screenId/etc.
+/ Fix submit links

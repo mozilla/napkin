@@ -46,11 +46,11 @@ script#form-element-list-template(type='text/template')
 if sharing
   script#form-wrapper-template(type='text/template')
     <% if (typeof action === 'undefined') { %>
-    form(method='get', action!='/share/project/#{projectId}/screen/#{screenId}')
+    form(method='get', action!='/share/#{session.sharedId}/project/#{projectId}/screen/#{screenId}')
       <%= html %>
       button.form-submit.btn.btn-primary(type='submit') Submit
     <% } else { %>
-    form(method='get', action!='/share/project/#{projectId}/screen/<%- action %>')
+    form(method='get', action!='/share/#{session.sharedId}/project/#{projectId}/screen/<%- action %>')
       <%= html %>
       button.form-submit.btn.btn-primary(type='submit') Submit
     <% } %>
