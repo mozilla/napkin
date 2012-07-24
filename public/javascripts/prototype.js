@@ -840,4 +840,19 @@ function NapkinClient(window, document, $, data, undefined) {
   });
 
   new AppView();
+
+  if (data.sharing) {
+    // Browser ID login
+    $('[class^="span"]').on('click', '.login-form a', function(event) {
+      event.preventDefault(); 
+      var $form = $(this).parent();
+
+      navigator.id.getVerifiedEmail(function(assertion) {
+        if (assertion) {
+          $form.find('input[name="bid_assertion"]').val(assertion);
+          $form.submit();
+        }
+      });
+    });
+  }
 }

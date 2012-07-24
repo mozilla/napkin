@@ -1,8 +1,12 @@
 script#auth-element-template(type='text/template')
   if sharing
-    a(href='#')
-      img.share-element(data-type='auth', src='/images/browser-id-sign-in.png',
-        alt='BrowserID Sign In')
+    if session.auth && session.auth[projectId]
+      a(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/logout')
+        img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+    else
+      form.login-form(method='post', action='/share/#{userId}/project/#{projectId}/screen/#{screenId}/login')
+        a(href='#login')
+          img.share-element(src='/images/browser-id-sign-in.png', alt='BrowserID Sign In')
+        input(type='hidden', name='bid_assertion', value='1')
   else
-    img.live-element(data-type='auth', src='/images/browser-id-sign-in.png',
-      alt='BrowserID Sign In')
+    img.live-element(src='/images/browser-id-sign-in.png', alt='BrowserID Sign In')
