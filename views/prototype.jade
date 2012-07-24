@@ -2,7 +2,10 @@ extend layout
 
 block sidebar
   if sharing
-    a.btn.btn-danger#back(href='/') &larr; Back to home
+    if projectAuthor === session.id
+      a.btn.btn-danger#back(href='/prototype/project/#{projectId}/screen/#{screenId}') &larr; Back to prototype
+    else
+      a.btn.btn-danger#back(href='/') &larr; Back to home
     p This is Napkin, a rapid web prototyping tool. You're currently being shared a screen on the right, which is a mockup of one page of a potential website.
   else
     a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page

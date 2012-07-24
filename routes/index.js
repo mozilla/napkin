@@ -26,9 +26,6 @@ module.exports = function(app, nconf, db) {
   app.get('/prototype/project/:projectId/screen/:screenId',
     utils.confirmAuthentication, confirmScaffoldExistence,
     function(req, res) {
-      var projectId = req.project.id;
-      var screenId = req.screen.id;
-
       // delete sharedId becuase this user is no longer viewing a shared screen
       // TODO: this needs to go in every non-sharing route; find a way to
       // factor it out
@@ -47,8 +44,8 @@ module.exports = function(app, nconf, db) {
 
         res.render('prototype', {
           pageId: 'prototype',
-          projectId: projectId,
-          screenId: screenId,
+          projectId: req.project.id,
+          screenId: req.screen.id,
           screenHash: screenHash,
           sharing: false
         });
@@ -57,14 +54,12 @@ module.exports = function(app, nconf, db) {
 
   app.get('/share/:userId/project/:projectId/screen/:screenId',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
-      var projectId = req.project.id;
-      var screenId = req.screen.id;
-
       res.render('prototype', {
         pageId: 'share',
         userId: req.params.userId,
-        projectId: projectId,
-        screenId: screenId,
+        projectId: req.project.id,
+        projectAuthor: req.project.authorId,
+        screenId: req.screen.id,
         sharing: true
       });
     });

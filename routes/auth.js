@@ -31,9 +31,6 @@ module.exports = function(app, nconf, db) {
   // Log in to project
   app.post('/share/:userId/project/:projectId/screen/:screenId/log-in',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
-    var projectId = req.project.id;
-    var screenId = req.screen.id;
-
     auth.verify(req, nconf, function(err, email) {
       if (err) {
         throw err;
@@ -44,12 +41,11 @@ module.exports = function(app, nconf, db) {
           req.session.auth = {};
         }
 
-        req.session.auth[projectId] = email;
+        req.session.auth[req.project.id] = email;
         res.redirect('/share/' + req.params.userId + '/project/' +
           req.project.id + '/screen/' + req.screen.id);
       }
     });
-    
   });
 
   // Log out of napkin
