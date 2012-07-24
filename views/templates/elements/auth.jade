@@ -1,10 +1,10 @@
 script#auth-element-template(type='text/template')
   if sharing
     if session.auth && session.auth[projectId]
-      a(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/logout')
+      a(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')
         img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
     else
-      form.login-form(method='post', action='/share/#{userId}/project/#{projectId}/screen/#{screenId}/login')
+      form.login-form(method='post', action='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-in')
         a(href='#login')
           img.share-element(src='/images/browser-id-sign-in.png', alt='BrowserID Sign In')
         input(type='hidden', name='bid_assertion', value='1')

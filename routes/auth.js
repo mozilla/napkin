@@ -7,7 +7,7 @@ module.exports = function(app, nconf, db) {
   var confirmScaffoldExistence = utils.confirmScaffoldExistence(db);
 
   // Log in to napkin
-  app.post('/login', function(req, res) {
+  app.post('/log-in', function(req, res) {
     auth.verify(req, nconf, function(err, email) {
       if (err) {
         throw err;
@@ -29,7 +29,7 @@ module.exports = function(app, nconf, db) {
   });
 
   // Log in to project
-  app.post('/share/:userId/project/:projectId/screen/:screenId/login',
+  app.post('/share/:userId/project/:projectId/screen/:screenId/log-in',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
     var projectId = req.project.id;
     var screenId = req.screen.id;
@@ -53,7 +53,7 @@ module.exports = function(app, nconf, db) {
   });
 
   // Log out of napkin
-  app.get('/logout', function(req, res) {
+  app.get('/log-out', function(req, res) {
     if (req.session) {
       req.session.reset();
     }
@@ -62,7 +62,7 @@ module.exports = function(app, nconf, db) {
   });
 
   // Log out of project
-  app.get('/share/:userId/project/:projectId/screen/:screenId/logout',
+  app.get('/share/:userId/project/:projectId/screen/:screenId/log-out',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
       if (req.session && req.session.auth) {
         delete req.session.auth[req.project.id];
