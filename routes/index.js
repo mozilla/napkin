@@ -3,9 +3,10 @@ var screens = require('../lib/screens');
 var components = require('../lib/components');
 var elements = require('../lib/elements');
 var users = require('../lib/users');
+var utils = require('../lib/utils');
 
 module.exports = function(app, nconf, db) {
-  app.get('/', function (req, res) {
+  app.get('/', function(req, res) {
     if (req.session.email) {
       delete req.session.sharedId;
       res.render('index', {
@@ -20,7 +21,7 @@ module.exports = function(app, nconf, db) {
 
   // TODO: add validation for parameters
   app.get('/prototype/project/:projectId/screen/:screenId',
-    confirmScaffoldExistence, function(req, res) {
+    confirmAuthentication, confirmScaffoldExistence, function(req, res) {
       var projectId = req.project.id;
       var screenId = req.screen.id;
 
@@ -62,10 +63,22 @@ module.exports = function(app, nconf, db) {
       });
     });
 
-  projects.generateRESTRoutes(app, db);
-  screens.generateRESTRoutes(app, db);
-  components.generateRESTRoutes(app, db);
-  elements.generateRESTRoutes(app, db);
+  projects.generateRESTRoutes(app, db, confirmAuthentication);
+  screens.generateRESTRoutes(app, db, confirmAuthentication);
+  components.generateRESTRoutes(app, db, confirmAuthentication);
+  elements.generateRESTRoutes(app, db, confirmAuthentication);
+
+  /* Confirms that the current user is authenticated. If he/she is not,
+   * redirects to 404 page. This is meant to be used as Express middleware.
+   * Requires: web request, web response, next function to call when done
+   */
+  function confirmAuthentication(req, res, next) {
+    if (req.session.email) {
+      next();
+    } else {
+      utils.render404(req, res);
+    }
+  }
 
   /* Confirms that the ids in req correspond to existing scaffolds. Also
    * extracts the existing scaffolds into the request object This is meant to be
@@ -83,7 +96,7 @@ module.exports = function(app, nconf, db) {
         if (err) {
           next(err);
         } else if (!project) {
-          next(new Error('Project could not be found.'));
+          utils.render404(req, res);
         } else {
           req.project = project;
 
@@ -103,7 +116,7 @@ module.exports = function(app, nconf, db) {
         if (err) {
           next(err);
         } else if (!screen) {
-          next(new Error('Screen could not be found.'));
+          utils.render404(req, res);
         } else {
           req.screen = screen;
 
