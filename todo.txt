@@ -5,7 +5,6 @@
 | / Task completed   |
 ======================
 
-- Screens should disappear when active project is deleted
 - Validate action is an actual screen ID
 - Improve sharing page sidebar
 - Add links on sharing page for visibility and return to prototype
@@ -33,3 +32,4 @@
 / Delete component while it is active
 / Implement auth for screen sharing page
 / Rename login to log-in and logout to log-out
+/ Screens should disappear when active project is deleted
