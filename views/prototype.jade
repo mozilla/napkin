@@ -10,25 +10,34 @@ block sidebar
   else
     a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page
 
+block content
+  if sharing && !authenticated
+    h2 Authentication Required
+    p You may not view this page unless you are authenticated.
+
+    != partial('helpers/share-login-form')
+
 block scripts
-  script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
-  script(src='/javascripts/json2.js')
-  script(src='/javascripts/underscore.min.js')
-  script(src='/javascripts/backbone.min.js')
-  script(src='/javascripts/tooltip-errors.js')
-  script(src='/javascripts/prototype.js')
+  if !sharing || (sharing && authenticated)
+    script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
+    script(src='/javascripts/json2.js')
+    script(src='/javascripts/underscore.min.js')
+    script(src='/javascripts/backbone.min.js')
+    script(src='/javascripts/tooltip-errors.js')
+    script(src='/javascripts/prototype.js')
+
+    script
+      $(function() {
+        NapkinClient(window, document, $, {
+          projectId: #{projectId},
+          screenId: #{screenId},
+          sharing: #{sharing}
+        });
+      });
 
   if sharing
     script(src='https://browserid.org/include.js')
-
-  script
-    jQuery(function() {
-      NapkinClient(window, document, jQuery, {
-        projectId: #{projectId},
-        screenId: #{screenId},
-        sharing: #{sharing}
-      });
-    });
+    script(src='/javascripts/share-login.js')
 
   // layouts and lists
   != partial('templates/layouts/layout')

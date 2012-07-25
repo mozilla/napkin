@@ -38,7 +38,10 @@ function NapkinClient(window, document, $, data, undefined) {
     return object;
   }; 
 
+  var Screen = Backbone.Model.extend({ urlRoot: '/projects/' + data.projectId +
+    '/screens' });
   var Component = Backbone.Model.extend({});
+
   var ComponentGroup = Backbone.Collection.extend({
     model: Component,
     url: '/projects/' + data.projectId + '/screens/' + data.screenId +
@@ -68,7 +71,7 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     render: function() {
-      this.$el.html(this.template({}));
+      this.$el.html(this.template(currentScreen.toJSON()));
       if (!data.sharing) {
         this.$('.drag-element').draggable(this.dragOptions);
       }
@@ -648,21 +651,22 @@ function NapkinClient(window, document, $, data, undefined) {
     },
 
     applyComponentConfig: function($form) {
-      var that = this;
       var $component = this.$activeComponent;
-
       var model = $component.data('model');
       var config = $form.serializeObject();
 
-      var $formSubmit = $('[type="submit"]');
-      var $confirmIcon = $('.icon-ok');
+      var $formSubmit = $form.find('[type="submit"]');
+      var $confirmIcon = $form.find('.icon-ok');
 
       $formSubmit.attr('disabled', 'true');
       $confirmIcon.hide();
-      model.set(config);
 
-      model.save({}, {
-        error: tooltipErrorHandler($form, 'right'),
+      model.save(config, {
+        error: function(model, message) {
+          tooltipErrorHandler($formSubmit, 'bottom')(model, message);
+          $formSubmit.removeAttr('disabled');
+        },
+
         success: function(component) {
           $formSubmit.removeAttr('disabled');
           $confirmIcon.show();
@@ -684,8 +688,7 @@ function NapkinClient(window, document, $, data, undefined) {
       var $popover = $element.data('popover').tip();
       var updatedProperties = $('form', $popover).serializeObject();
 
-      model.set(updatedProperties);
-      model.save({}, {
+      model.save(updatedProperties, {
         error: tooltipErrorHandler($element, 'right'),
         success: function(model) {
           $element.tooltip('hide');
@@ -734,24 +737,34 @@ function NapkinClient(window, document, $, data, undefined) {
     }
   });
 
+  // screen that is currently being viewed
+  var currentScreen = new Screen({ id: data.screenId });
+
   var AppView = Backbone.View.extend({
     el: $('body'),
 
     events: {
       'click .close-popover': 'closePopover',
-      'submit .popover-content form': 'applyElementEdits',
+      'submit .screen-config': 'applyScreenConfig',
       'submit .component-config': 'applyComponentConfig',
+      'submit .popover-content form': 'applyElementEdits',
       'click .popover-content .btn-danger': 'removeElement',
       'keydown': 'processKeyShortcuts'
     },
 
     initialize: function() {
+      var that = this;
+
       if (data.sharing) {
         // events are unnecessary if sharing
         this.events = {};
       } else {
         this.componentListView = new ComponentListView();
-        $('#sidebar').append(this.componentListView.render().$el);
+        currentScreen.fetch({
+          success: function() {
+            $('#sidebar').append(that.componentListView.render().$el);
+          }
+        });
       }
 
       this.layoutView = new LayoutView();
@@ -792,16 +805,48 @@ function NapkinClient(window, document, $, data, undefined) {
       this.layoutView.trigger('closePopover');
     },
 
-    // apply edits to element when edit form is submitted
-    applyElementEdits: function(event) {
+    // apply screen configuration when config form is submitted
+    applyScreenConfig: function(event) {
       event.preventDefault();
-      this.layoutView.trigger('applyElementEdits');
+      var $form = $(event.currentTarget);
+      var config = $form.serializeObject();
+
+      config.secure = !!config.secure;
+
+      var $formSubmit = $form.find('[type="submit"]');
+      var $confirmIcon = $form.find('.icon-ok');
+
+      $formSubmit.attr('disabled', 'true');
+      $confirmIcon.hide();
+
+      currentScreen.save(config, {
+        error: function(model, message) {
+          tooltipErrorHandler($formSubmit, 'bottom')(model, message);
+          $formSubmit.removeAttr('disabled');
+        },
+
+        success: function(screen) {
+          $formSubmit.removeAttr('disabled');
+          $confirmIcon.show();
+
+          setTimeout(function() {
+            $confirmIcon.hide();
+          }, 1500);
+        },
+        wait: true
+      });
     },
 
     // apply component configuration when config form is submitted
     applyComponentConfig: function(event) {
       event.preventDefault();
       this.layoutView.trigger('applyComponentConfig', $(event.currentTarget));
+    },
+
+    // apply edits to element when edit form is submitted
+    applyElementEdits: function(event) {
+      event.preventDefault();
+      this.layoutView.trigger('applyElementEdits');
     },
 
     // remove element when delete button is clicked
@@ -841,19 +886,4 @@ function NapkinClient(window, document, $, data, undefined) {
   });
 
   new AppView();
-
-  if (data.sharing) {
-    // Browser ID login
-    $('[class^="span"]').on('click', '.login-form a', function(event) {
-      event.preventDefault(); 
-      var $form = $(this).parent();
-
-      navigator.id.getVerifiedEmail(function(assertion) {
-        if (assertion) {
-          $form.find('input[name="bid_assertion"]').val(assertion);
-          $form.submit();
-        }
-      });
-    });
-  }
 }

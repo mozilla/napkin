@@ -4,6 +4,20 @@ script#component-list-template(type='text/template')
     h3 Article
     p Lorem ipsum dolor sit amet consectetur malesuada.
 
-  .drag-element.form(data-type='form')
+  .drag-element.form.last-component(data-type='form')
     h3 Form
     input(type='text', name='text-box')
+
+  h2 Screen Configuration
+  form.screen-config
+    .field
+      label(for='secure') Require user authentication to view?
+      <% if (secure) { %>
+      input#secure(type='checkbox', name='secure', value='true', checked='true')
+      <% } else { %>
+      input#secure(type='checkbox', name='secure', value='true')
+      <% } %>
+
+    button.btn.btn-danger(type='submit') Save
+    i.icon-white.icon-ok
+

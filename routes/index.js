@@ -54,12 +54,19 @@ module.exports = function(app, nconf, db) {
 
   app.get('/share/:userId/project/:projectId/screen/:screenId',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
+      var authenticated = true;
+      if (req.screen.secure && (!req.session.auth ||
+          !req.session.auth[req.project.id])) {
+        authenticated = false;
+      }
+
       res.render('prototype', {
         pageId: 'share',
         userId: req.params.userId,
         projectId: req.project.id,
         projectAuthor: req.project.authorId,
         screenId: req.screen.id,
+        authenticated: authenticated,
         sharing: true
       });
     });
