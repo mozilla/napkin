@@ -1,3 +1,5 @@
+var utils = require('./lib/utils');
+
 // Module dependencies.
 module.exports = function(app, configurations, express) {
   var clientSessions = require('client-sessions');
@@ -37,8 +39,10 @@ module.exports = function(app, configurations, express) {
     }));
 
     app.use(express.static(__dirname + '/public'));
-
     app.use(app.router);
+
+    // last handler; assume 404 at this point 
+    app.use(utils.render404);
   });
 
   app.configure('development, test', function(){

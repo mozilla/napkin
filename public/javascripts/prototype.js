@@ -177,10 +177,10 @@ function NapkinClient(window, document, $, data, undefined) {
           // one being added; otherwise, simply select the component
           if (existingModel) {
             if (existingModel.get('type') === componentType) {
-              layoutView.selectComponentElement($this, existingModel);
+              layoutView.bindComponentModel($this, existingModel);
               return false;
             } else {
-              layoutView.resetComponentElement($this);
+              layoutView.unbindComponentModel($this);
             }
           }
 
@@ -189,7 +189,7 @@ function NapkinClient(window, document, $, data, undefined) {
             type: $component.data('type')
           }, {
             success: function(model) {
-              layoutView.selectComponentElement($this, model);
+              layoutView.bindComponentModel($this, model);
             },
 
             // wait for server to respond to get id of component
@@ -244,7 +244,7 @@ function NapkinClient(window, document, $, data, undefined) {
       return this;
     },
 
-    selectComponentElement: function($component, model) {
+    bindComponentModel: function($component, model) {
       $component.data('model', model);
       $component.addClass(model.get('type') + '-container');
       $component.addClass('active');
@@ -254,12 +254,13 @@ function NapkinClient(window, document, $, data, undefined) {
       this.trigger('setActiveComponent', $component);
     },
 
-    resetComponentElement: function($component) {
+    unbindComponentModel: function($component) {
       var model = $component.data('model');
       model.destroy();
       $component.removeClass(model.get('type') + '-container');
+      $component.removeData('model');
 
-      $component.removeClass('active');
+      this.resetActiveComponent($component);
       $component.addClass('empty');
       $component.empty();
     },
@@ -804,6 +805,7 @@ function NapkinClient(window, document, $, data, undefined) {
 
     // remove element when delete button is clicked
     removeElement: function(event) {
+      event.preventDefault();
       this.layoutView.trigger('removeElement');
     },
 
@@ -816,7 +818,7 @@ function NapkinClient(window, document, $, data, undefined) {
           if (this.layoutView.$activeElement) {
             this.layoutView.trigger('removeElement');
           } else if (this.layoutView.$activeComponent) {
-            this.layoutView.resetComponentElement(this.layoutView.$activeComponent);
+            this.layoutView.unbindComponentModel(this.layoutView.$activeComponent);
           }
           event.preventDefault();
         }
@@ -838,4 +840,19 @@ function NapkinClient(window, document, $, data, undefined) {
   });
 
   new AppView();
+
+  if (data.sharing) {
+    // Browser ID login
+    $('[class^="span"]').on('click', '.login-form a', function(event) {
+      event.preventDefault(); 
+      var $form = $(this).parent();
+
+      navigator.id.getVerifiedEmail(function(assertion) {
+        if (assertion) {
+          $form.find('input[name="bid_assertion"]').val(assertion);
+          $form.submit();
+        }
+      });
+    });
+  }
 }

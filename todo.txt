@@ -3,15 +3,15 @@
 | - Open task        |
 | ~ Task in progress |
 | / Task completed   |
+| * Continuous task  |
 ======================
 
 - Validate action is an actual screen ID
-- 404 page for invalid projectId/screenId/etc.
-- Should auth be implemented for screen sharing page?
-- Improve sharing page sidebar
-- Add links on sharing page for visibility and return to prototype
-- Add screen flag for being logged in to view it
-- For all forms on the page, make sure their field ids are by default in the usedIds hash
+- Add link on sharing page for visibility
+- Add screen flag for must be authenticated
+
+* Make sure routes contain delete req.session.sharedId if they are not for shared pages
+* For all forms on the page, make sure their field ids are by default in the usedIds hash
 
 / Restructure files in new folders before commit
 / Make form names unique
@@ -29,3 +29,10 @@
 / Permissions for editing project + screen
 / Ensure project and screen exist to prototype screen page
 / Add validation for projectId and screenId paramters in route
+/ 404 page for invalid projectId/screenId/etc.
+/ Fix submit links
+/ Delete component while it is active
+/ Implement auth for screen sharing page
+/ Rename login to log-in and logout to log-out
+/ Screens should disappear when active project is deleted
+/ Add link on sharing page for return to prototype
