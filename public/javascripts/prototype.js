@@ -258,7 +258,9 @@ function NapkinClient(window, document, $, data, undefined) {
       var model = $component.data('model');
       model.destroy();
       $component.removeClass(model.get('type') + '-container');
+
       $component.removeData('model');
+      $component.removeData('type');
 
       this.resetActiveComponent($component);
       $component.addClass('empty');
@@ -472,10 +474,9 @@ function NapkinClient(window, document, $, data, undefined) {
       var $element = $(elementTemplate(elementData));
       var row = $component.data('position').row;
 
-      var placement = 'right';
-      if (row === 0) {
-        placement = 'bottom';
-      } else if (row === 2) {
+      // TODO: change row === 2 to row === numRows when implementing layouts
+      var placement = 'bottom';
+      if (row === 2) {
         placement = 'top';
       }
 
