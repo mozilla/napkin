@@ -258,7 +258,9 @@ function NapkinClient(window, document, $, data, undefined) {
       var model = $component.data('model');
       model.destroy();
       $component.removeClass(model.get('type') + '-container');
+
       $component.removeData('model');
+      $component.removeData('type');
 
       this.resetActiveComponent($component);
       $component.addClass('empty');
