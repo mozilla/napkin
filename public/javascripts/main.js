@@ -146,11 +146,6 @@ function NapkinClient(window, document, $, data, undefined) {
       this.activeProjectId = null;
       this.url = null;
       this.reset();
-    },
-
-    // sort screens by title
-    comparator: function(screen) {
-      return screen.get('title');
     }
   });
 
