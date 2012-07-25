@@ -474,10 +474,9 @@ function NapkinClient(window, document, $, data, undefined) {
       var $element = $(elementTemplate(elementData));
       var row = $component.data('position').row;
 
-      var placement = 'right';
-      if (row === 0) {
-        placement = 'bottom';
-      } else if (row === 2) {
+      // TODO: change row === 2 to row === numRows when implementing layouts
+      var placement = 'bottom';
+      if (row === 2) {
         placement = 'top';
       }
 
