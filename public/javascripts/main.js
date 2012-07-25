@@ -81,6 +81,8 @@ function NapkinClient(window, document, $, data, undefined) {
       if (event) {
         event.preventDefault();
       }
+
+      this.forceInactive();
       this.model.destroy();
     },
 
@@ -95,11 +97,24 @@ function NapkinClient(window, document, $, data, undefined) {
       }
     },
 
+    // make this project active
     forceActive: function() {
       this.$el.siblings().removeClass('active');
       this.$el.addClass('active');
       this.options.screens.setActiveProject(this.model.id);
       $addScreen.show();
+    },
+
+    // make this project inactive
+    forceInactive: function() {
+      if (!this.$el.hasClass('active')) {
+        // this project is not active; do nothing
+        return;
+      }
+
+      this.$el.removeClass('active');
+      this.options.screens.resetActiveProject();
+      $addScreen.hide();
     }
   });
 
@@ -124,6 +139,13 @@ function NapkinClient(window, document, $, data, undefined) {
       this.activeProjectId = projectId;
       this.url = this.urlTemplate({ projectId: projectId });
       this.fetch();
+    },
+
+    // make the currently active project inactive
+    resetActiveProject: function() {
+      this.activeProjectId = null;
+      this.url = null;
+      this.reset();
     },
 
     // sort screens by title
