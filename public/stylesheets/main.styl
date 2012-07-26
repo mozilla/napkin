@@ -313,7 +313,7 @@ header a
 .elements h2
   margin-bottom 10px
 
-.elements ul
+.elements ul, .last-component
   margin-bottom 20px
 
 .drag-element
@@ -370,7 +370,7 @@ header a
 .elements form
   overflow hidden
 
-.elements form button
+.elements form button, .screen-config button
   float right
 
 .form-container
@@ -391,11 +391,20 @@ header a
   width 180px
   margin 5px 0
 
-.component-config .icon-ok
+.component-config .icon-ok, .screen-config .icon-ok
   float right
   margin-top 7px
   margin-right 10px
   display none
+
+.screen-config .icon-ok
+  margin-top 16px
+
+.screen-config input[type='checkbox']
+  margin-left 10px
+
+.screen-config [type='submit']
+  margin-top 10px
 
 #prototype-header
   margin-bottom 20px
