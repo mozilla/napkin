@@ -131,7 +131,9 @@ function NapkinClient(window, document, $, data, undefined) {
   var componentGroup = new ComponentGroup();
   var LayoutView = Backbone.View.extend({
     el: $('#content'),
+
     template: _.template($('#layout-template').html()),
+    componentActionTemplate: _.template($('#component-action-template').html()),
 
     clickedActiveComponent: false,
     $componentClicked: null,
@@ -316,7 +318,7 @@ function NapkinClient(window, document, $, data, undefined) {
         success: function(collection) {
           if (collection.models.length === 0) {
             if (!data.sharing) {
-              $component.text(componentModel.get('type'));
+              $component.append(componentModel.get('type'));
             }
           } else {
             $component.removeClass('empty');
@@ -465,7 +467,7 @@ function NapkinClient(window, document, $, data, undefined) {
       if ($component.hasClass('empty')) {
         $component.removeClass('empty');
         // clear out the type label that exists as text inside the component
-        $component.text('');
+        $component.html(this.componentActionTemplate({}));
       }
 
       var templateId = element.get('type') + '-element-template';
@@ -505,7 +507,7 @@ function NapkinClient(window, document, $, data, undefined) {
       var that = this;
 
       // clear out any leftover elements
-      $component.empty();
+      $component.html(this.componentActionTemplate({}));
 
       var elementGroup = $component.data('elementGroup');
       var element = elementGroup.where({ head: true })[0];
@@ -726,10 +728,10 @@ function NapkinClient(window, document, $, data, undefined) {
               next.set('head', true);
               next.save({}, { wait: true });
             } else if (!data.sharing) {
-              // this is also the last element; add the empty class to the
-              // component and the type label
+              // this is also the last element; add the type label and an empty
+              // class to the component
+              $component.append($component.data('model').get('type'));
               $component.addClass('empty');
-              $component.text($component.data('model').get('type'));
             }
           }
 
@@ -746,6 +748,7 @@ function NapkinClient(window, document, $, data, undefined) {
     el: $('body'),
 
     events: {
+      'click .delete-component': 'deleteActiveComponent',
       'click .close-popover': 'closePopover',
       'submit .screen-config': 'applyScreenConfig',
       'submit .component-config': 'applyComponentConfig',
@@ -817,6 +820,16 @@ function NapkinClient(window, document, $, data, undefined) {
       }
     },
 
+    deleteActiveComponent: function(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      if (this.layoutView.$activeComponent) {
+        this.layoutView.unbindComponentModel(this.layoutView.$activeComponent);
+      }
+    },
+
     // close popover when close popover link is clicked
     closePopover: function(event) {
       event.preventDefault();
@@ -882,7 +895,7 @@ function NapkinClient(window, document, $, data, undefined) {
           if (this.layoutView.$activeElement) {
             this.layoutView.trigger('removeElement');
           } else if (this.layoutView.$activeComponent) {
-            this.layoutView.unbindComponentModel(this.layoutView.$activeComponent);
+            this.deleteActiveComponent();
           }
           event.preventDefault();
         }
