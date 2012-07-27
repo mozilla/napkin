@@ -67,7 +67,9 @@ function NapkinClient(window, document, $, data, undefined) {
     template: _.template($('#component-list-template').html()),
 
     dragOptions: {
-      revert: 'invalid'
+      revert: 'invalid',
+      // don't cancel if input is dragged
+      cancel: ''
     },
 
     render: function() {
