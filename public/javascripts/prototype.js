@@ -391,7 +391,7 @@ function NapkinClient(window, document, $, data, undefined) {
       // active component may not be defined if nothing is in focus
       if (this.$activeComponent) {
         this.$activeComponent.removeClass('active');
-        this.trigger('blurComponent');
+        this.trigger('resetActiveComponent');
       }
 
       this.$activeComponent = null;
@@ -772,10 +772,11 @@ function NapkinClient(window, document, $, data, undefined) {
       componentGroup.fetch(); // fetch all components for the layout
 
       this.layoutView.bind('setActiveComponent', this.setActiveComponent, this);
-      this.layoutView.bind('blurComponent', this.blurComponent, this);
+      this.layoutView.bind('resetActiveComponent', this.resetActiveComponent, this);
     },
 
     setActiveComponent: function($component) {
+      var that = this;
       var type = $component.data('type');
       this.componentListView.$el.hide();
 
@@ -789,13 +790,28 @@ function NapkinClient(window, document, $, data, undefined) {
       $('#sidebar').append(this.elementListView.render().$el);
       this.elementListView.centerButtons();
       this.elementListView.populateSelectText();
+
+      var $backButton = this.$('#back');
+      if ($backButton.length > 0) {
+        $backButton.find('span').text('components');
+        $backButton.click(function(event) {
+          event.preventDefault();
+          that.layoutView.resetActiveComponent();
+        });
+      }
     },
 
-    blurComponent: function() {
+    resetActiveComponent: function() {
       this.componentListView.$el.show();
       if (this.elementListView) {
         this.elementListView.unbind('addElement');
         this.elementListView.remove();
+      }
+
+      var $backButton = this.$('#back');
+      if ($backButton.length > 0) {
+        $backButton.find('span').text('project page');
+        $backButton.unbind('click');
       }
     },
 
