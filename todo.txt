@@ -6,6 +6,7 @@
 | * Continuous task  |
 ======================
 
+- Make default selection for action the current screen
 - Validate action is an actual screen ID
 - Add link on sharing page for visibility
 - Add screen flag for must be authenticated
