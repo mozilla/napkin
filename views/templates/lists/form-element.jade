@@ -4,22 +4,26 @@ script#form-element-list-template(type='text/template')
     li
       .element(data-type='input-text', data-name='input-text')
         label(for='input-text') Text Input: 
-        input(type='text', name='input-text', tabindex='-1')
+        input(type='text', name='input-text', tabindex='-1',
+          disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-radio', data-name='input-radio')
         label(for='input-radio') Radio Input: 
-        input.radio(type='radio', name='input-radio', tabindex='-1')
+        input.radio(type='radio', name='input-radio', tabindex='-1',
+          disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-checkbox', data-name='input-checkbox')
         label(for='input-checkbox') Checkbox Input: 
-        input.checkbox(type='checkbox', name='input-checkbox', tabindex='-1')
+        input.checkbox(type='checkbox', name='input-checkbox',
+          tabindex='-1', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='textarea', data-name='textarea')
         label(for='textarea') Textarea: 
-        textarea(rows='8', cols='20', name='textarea', tabindex='-1')
+        textarea(rows='8', cols='20', name='textarea', tabindex='-1',
+          disabled='disabled')
       a.btn.btn-success(href='#add-element') +
 
   if !sharing
