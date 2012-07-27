@@ -282,6 +282,7 @@ header a
   outline none
 
 .drop-target
+  position relative
   border 1px dashed #999
   border-radius(5px)
   margin-bottom 20px
@@ -319,6 +320,7 @@ header a
 .drag-element
   text-align center
   cursor crosshair
+  z-index 100
 
 .article-container
   border-color #4380d3
@@ -424,6 +426,13 @@ header a
 
 #back
   margin-bottom 15px
+
+.component-actions
+  position absolute
+  bottom 5px
+  right 5px
+  line-height 0
+  opacity 0.7
 
 img.live-element, img.share-element
   margin-bottom 10px
