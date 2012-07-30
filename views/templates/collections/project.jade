@@ -1,6 +1,7 @@
-script#project-template(type='text/template')
-  a(href='#edit-project') <%- title %>
-    i.icon-pencil.icon-white
-    i.icon-trash.icon-white
-    i.icon-chevron-right
-  input.edit(type='text', value!='<%- title %>')
+script#project-template(type='text/ejs')
+  li(class!="<%= attr('editing') %> <%= attr('active') %>")
+    a(href!="#project/<%= project.attr('id') %>") <%= project.attr('title') %>
+      i.icon-pencil.icon-white
+      i.icon-trash.icon-white
+      i.icon-chevron-right
+    input.edit(type='text', value!="<%= project.attr('title') %>")
