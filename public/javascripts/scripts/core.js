@@ -1,4 +1,4 @@
-(function(window, document, $, undefined) {
+require(['jquery'], function($) {
   $(function() {
     var $window = $(window);
     var $body = $('body');
@@ -46,4 +46,4 @@
       $this.siblings('.selection').text($this.find('option:selected').text());
     });
   });
-})(window, document, jQuery);
+});

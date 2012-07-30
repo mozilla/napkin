@@ -1,25 +1,22 @@
-/* ===================================================
- * bootstrap-transition.js v2.0.4
- * http://twitter.github.com/bootstrap/javascript.html#transitions
- * ===================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
-
-
-!function ($) {
-
+require(['jquery'], function($) {
+  /* ===================================================
+   * bootstrap-transition.js v2.0.4
+   * http://twitter.github.com/bootstrap/javascript.html#transitions
+   * ===================================================
+   * Copyright 2012 Twitter, Inc.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   * http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   * ========================================================== */
   $(function () {
 
     "use strict"; // jshint ;_;
@@ -58,30 +55,25 @@
 
   })
 
-}(window.jQuery);
-/* ===========================================================
- * bootstrap-tooltip.js v2.0.4
- * http://twitter.github.com/bootstrap/javascript.html#tooltips
- * Inspired by the original jQuery.tipsy by Jason Frame
- * ===========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
-
-
-!function ($) {
-
+  /* ===========================================================
+   * bootstrap-tooltip.js v2.0.4
+   * http://twitter.github.com/bootstrap/javascript.html#tooltips
+   * Inspired by the original jQuery.tipsy by Jason Frame
+   * ===========================================================
+   * Copyright 2012 Twitter, Inc.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   * http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   * ========================================================== */
   "use strict"; // jshint ;_;
 
 
@@ -334,30 +326,24 @@
   , delay: 0
   }
 
-}(window.jQuery);
-
-/* ===========================================================
- * bootstrap-popover.js v2.0.4
- * http://twitter.github.com/bootstrap/javascript.html#popovers
- * ===========================================================
- * Copyright 2012 Twitter, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =========================================================== */
-
-
-!function ($) {
-
+  /* ===========================================================
+   * bootstrap-popover.js v2.0.4
+   * http://twitter.github.com/bootstrap/javascript.html#popovers
+   * ===========================================================
+   * Copyright 2012 Twitter, Inc.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   * http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   * =========================================================== */
   "use strict"; // jshint ;_;
 
 
@@ -438,5 +424,4 @@
   , content: ''
   , template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
   })
-
-}(window.jQuery);
+});
