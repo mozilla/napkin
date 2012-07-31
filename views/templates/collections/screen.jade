@@ -1,8 +1,12 @@
-script#screen-template(type='text/template')
-  h4 <%- title %>
-    a(href='#edit-screen')
-      i.icon-pencil
-      i.icon-trash
-  input.edit(type='text', value!='<%- title %>')
-  a(href!='/prototype/project/<%- projectId %>/screen/<%- id %>')
-    img(src='http://placehold.it/220x220', alt='Screen placeholder')
+script#screen-row-template(type='text/ejs')
+  .row.screen-row
+
+script#screen-template(type='text/ejs')
+  .span3.screen(class!="<%= attr('editing') %>")
+    h4 <%= screen.attr('title') %>
+      a(href='#edit-screen')
+        i.icon-pencil
+        i.icon-trash
+    input.edit(type='text', value!="<%= screen.attr('title') %>")
+    a(href!="/prototype/project/<%= attr('projectId') %>/screen/<%= screen.attr('id') %>")
+      img(src='http://placehold.it/220x220', alt='Screen placeholder')

@@ -1,4 +1,4 @@
-(function(window, document, $, undefined) {
+require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], function($) {
   $(function() {
     var $body = $('body');
     var $loginForm = $('#login-form');
@@ -43,4 +43,6 @@
       placement: 'bottom'
     }).popover('show');
   });
-})(window, document, jQuery);
+});
+
+require(['scripts/core', 'lib/bootstrap.min']);
