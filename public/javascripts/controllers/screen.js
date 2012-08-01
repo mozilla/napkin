@@ -1,13 +1,13 @@
-define(['can', './extended', 'helpers/errors'], function(can, ExtendedControl, errors) {
+define(['can', './extended', 'helpers/errors', 'can.super'], function(can, ExtendedControl, errors) {
   return ExtendedControl({
     init: function($element, options) {
+      this._super($element, options);
       this.viewData = new can.Observe(options);
       this.screen = this.viewData.screen;
       this.screen.attr('projectId', this.options.projectId);
 
       $element.append(can.view('screen-template', this.viewData));
       this.setElement($element.find('.screen').last());
-      window.sc = this;
     },
 
     // to begin editing a project

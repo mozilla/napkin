@@ -19,7 +19,7 @@ html
       #sidebar.clearfix
         header
           h1
-            a(href='/') Napkin
+            a(href='/', tabindex='-1') Napkin
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
@@ -27,7 +27,7 @@ html
                 img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
             else
               form#login-form(method='post', action='/log-in')
-                a(href='#login')
+                a(href='#login', tabindex='-1')
                   img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
                 input(type='hidden', name='bid_assertion', value='1')
 

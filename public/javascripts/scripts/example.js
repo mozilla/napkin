@@ -1,3 +1,7 @@
+require.config({
+  baseUrl: '/javascripts/'
+});
+
 require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], function($) {
   $(function() {
     var $body = $('body');

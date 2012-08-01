@@ -6,14 +6,35 @@
 | * Continuous task  |
 ======================
 
-CanJS migration
-- Check script tags
-
-
+- Keyboard shortcuts
+- Optimize requests
+- Change layout object to just row and col
+- Make server return projects in order
 - Make default selection for action the current screen
 - Validate action is an actual screen ID
 - Add link on sharing page for visibility
 - Add screen flag for must be authenticated
+
+CanJS migration
+/ Better way to merge URL data with screen (note: bad fn name getURLData)
+/ Focus component when added
+/ Add element to empty component
+/ isolatedKeyUp event
+/ tabindex for sidebar
+/ JS on not found page
+/ Get rid of third param in can.extend
+/ Optimize screen page requests upon screen deletion
+/ Optimize requests
+/ Check script tags
+/ Make destroy take params option
+/ Back button
+/ Look over dependencies
+/ Listen to change events on model.List?
+/ Share login script
+/ Sharing
+/ Component config submit
+
+---------------------
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash

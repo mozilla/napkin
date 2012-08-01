@@ -4,6 +4,7 @@ define(['jquery'], function(jQuery) {
 // (c) 2012 Bitovi  
 // MIT license  
 // [http://canjs.us/](http://canjs.us/)
+  window.can = {};
 
 	// jquery.js
 	// ---------
@@ -902,11 +903,14 @@ define(['jquery'], function(jQuery) {
 			// Get the url with any templated values filled out.
 			ajaxOb.url = can.sub(ajaxOb.url, ajaxOb.data, true);
 
+      ajaxOb.data = JSON.stringify(ajaxOb.data);
 			return can.ajax(can.extend({
 				type: type || "post",
-				dataType: dataType ||"json",
+				dataType: dataType || "json",
 				success : success,
-				error: error
+				error: error,
+        contentType: 'application/json',
+        processData: false
 			}, ajaxOb ));
 		},
 		makeRequest = function( self, type, success, error, method ) {
@@ -2987,4 +2991,6 @@ define(['jquery'], function(jQuery) {
 			});
 		}
 	});
+
+  return can;
 });

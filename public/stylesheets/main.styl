@@ -72,6 +72,9 @@ input[type='text'], textarea
 textarea
   height 100px
 
+a.btn, a.btn:hover, a.btn:active, a.btn:focus
+  outline none
+
 #main
   width 1300px
 
@@ -281,23 +284,23 @@ header a
   box-shadow(0 0 8px rgba(82, 168, 236, 0.6))
   outline none
 
-.drop-target
+.component-location
   position relative
   border 1px dashed #999
   border-radius(5px)
   margin-bottom 20px
 
-.drop-target
+.component-location
   min-height 200px
   cursor pointer
 
-.drop-target.drop-hover
+.component-hover
   background #ddd
 
-.drop-target.active
+.component-location.active
   border-style solid
 
-.drop-target.empty
+.component-location.empty
   color #aaa
   font-size 25px
   letter-spacing 1px
@@ -306,7 +309,14 @@ header a
   text-align center
   text-transform uppercase
 
-.drag-element, .elements ul, #sidebar .elements form
+#share .component-location
+  border none
+  cursor default
+
+#share .component-location.empty
+  display none
+
+.component, .elements ul, #sidebar .elements form
   margin 0 -21px
   padding 20px 40px
   box-shadow inset 0 0 2px #222
@@ -314,10 +324,10 @@ header a
 .elements h2
   margin-bottom 10px
 
-.elements ul, .last-component
+.elements ul, .component.last
   margin-bottom 20px
 
-.drag-element
+.component
   text-align center
   cursor crosshair
   z-index 100
@@ -372,7 +382,7 @@ header a
 .elements form
   overflow hidden
 
-.elements form button, .screen-config button
+.elements form button, #screen-config button
   float right
 
 .form-container
@@ -393,19 +403,19 @@ header a
   width 180px
   margin 5px 0
 
-.component-config .icon-ok, .screen-config .icon-ok
+.component-config .icon-ok, #screen-config .icon-ok
   float right
   margin-top 7px
   margin-right 10px
   display none
 
-.screen-config .icon-ok
+#screen-config .icon-ok
   margin-top 16px
 
-.screen-config input[type='checkbox']
+#screen-config input[type='checkbox']
   margin-left 10px
 
-.screen-config [type='submit']
+#screen-config [type='submit']
   margin-top 10px
 
 #prototype-header
