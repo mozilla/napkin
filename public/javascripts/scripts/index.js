@@ -2,7 +2,8 @@ require.config({
   baseUrl: '/javascripts/',
   paths: {
     can: 'lib/can.jquery.min',
-    'can.super': 'lib/can.construct.super'
+    'can.super': 'lib/can.construct.super',
+    'can.sort': 'lib/can.observe.list.sort'
   }
 });
 

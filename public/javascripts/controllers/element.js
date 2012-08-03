@@ -8,7 +8,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         this._super($element, options);
         this.elementModel = options.elementModel;
 
-        this.componentRow = options.component.attr('layout').row;
+        this.componentRow = options.component.attr('row');
         this.componentId = options.component.attr('id');
 
         if (options.component.attr('type') === 'form') {
@@ -85,10 +85,10 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
       getPreviousElement: function() {
         var $prev = this.element.prev();
 
-        if ($prev) {
+        if ($prev.length > 0) {
           return $prev.data('model');
         }
-        return undefined;
+        return null;
       },
 
       getNextElement: function() {
@@ -99,10 +99,10 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
           $next = $next.next();
         }
 
-        if ($next) {
+        if ($next.length > 0) {
           return $next.data('model');
         }
-        return undefined;
+        return null;
       },
 
       // given the current state of this element in the DOM, update the element

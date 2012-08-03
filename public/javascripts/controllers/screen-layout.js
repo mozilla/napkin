@@ -68,7 +68,7 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
 
       addComponent: function(component) {
         // select the component via the data-position attribute added earlier
-        var positionAttr = component.layout.row + ':' + component.layout.col;
+        var positionAttr = component.row + ':' + component.col;
         var $componentLocation = this.$('[data-position="' + positionAttr + '"]');
 
         var componentControl = new ComponentControl($componentLocation,
@@ -114,10 +114,8 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
         }
 
         // create new component and an associated control
-        var component = new ComponentModel({
-          type: componentType,
-          layout: $componentLocation.data('position')
-        });
+        var component = new ComponentModel(can.extend({ type: componentType },
+          $componentLocation.data('position')));
 
         component.withRouteData()
           .save()
