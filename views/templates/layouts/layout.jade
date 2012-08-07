@@ -1,4 +1,4 @@
-script#layout-template(type='text/template')
+script#layout-template(type='text/ejs')
   if !sharing
     #prototype-header
       h2 &lsquo;#{screenHash[screenId].title}&rsquo; screen prototype
@@ -7,15 +7,15 @@ script#layout-template(type='text/template')
         | Share Screen
 
   .row
-    .span4.drop-target.empty
-    .span4.drop-target.empty
-    .span4.drop-target.empty
+    .span4.component-location.empty
+    .span4.component-location.empty
+    .span4.component-location.empty
 
   .row
-    .span4.drop-target.empty
-    .span8.drop-target.empty
+    .span4.component-location.empty
+    .span8.component-location.empty
 
   .row
-    .span4.drop-target.empty
-    .span4.drop-target.empty
-    .span4.drop-target.empty
+    .span4.component-location.empty
+    .span4.component-location.empty
+    .span4.component-location.empty

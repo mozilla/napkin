@@ -1,15 +1,16 @@
-define(['jquery', 'can', './extended', 'models/project', './project', 'helpers/errors'],
+define(['jquery', 'can', './extended', 'models/project', './project',
+        'helpers/errors', 'can.super'],
   function($, can, ExtendedControl, ProjectModel, ProjectControl, errors) {
     can.route.ready(false);
 
     return ExtendedControl({
       init: function($element, options) {
+        this._super($element, options);
         var $projects = $('#projects');
 
         // create a ProjectControl for each project
-        ProjectModel.findAll({})
+        ProjectModel.findAll()
           .then(function(projects) {
-            this.projects = projects;
             can.each(projects, function(project, index) {
               new ProjectControl($projects, { project: project });
             });

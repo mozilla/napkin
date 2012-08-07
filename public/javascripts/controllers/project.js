@@ -1,6 +1,7 @@
-define(['can', './extended', 'helpers/errors'], function(can, ExtendedControl, errors) {
+define(['can', './extended', 'helpers/errors', 'can.super'], function(can, ExtendedControl, errors) {
   return ExtendedControl({
     init: function($element, options) {
+      this._super($element, options);
       this.viewData = new can.Observe(options);
       this.project = this.viewData.project;
 

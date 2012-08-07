@@ -1,7 +1,7 @@
-script#textarea-popover-template(type='text/template')
+script#textarea-popover-template(type='text/ejs')
   form
     .field
       label(for='name') Name:
-      input#name(name='name', type='text', value!='<%- name %>')
+      input#name(name='name', type='text', value!='<%= name %>')
 
     != partial('templates/popovers/footer')

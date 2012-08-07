@@ -1,4 +1,4 @@
-script#auth-element-template(type='text/template')
+script#auth-element-template(type='text/ejs')
   if sharing
     if session.auth && session.auth[projectId]
       a(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')

@@ -1,18 +1,18 @@
-script#component-list-template(type='text/template')
+script#component-list-template(type='text/ejs')
   h2 Components
-  .drag-element.article(data-type='article')
+  .component.article(data-type='article')
     h3 Article
     p Lorem ipsum dolor sit amet consectetur malesuada.
 
-  .drag-element.form.last-component(data-type='form')
+  .component.form.last(data-type='form')
     h3 Form
     input(type='text', name='text-box', disabled='disabled')
 
   h2 Screen Configuration
-  form.screen-config
+  form#screen-config
     .field
       label(for='secure') Require user authentication to view?
-      <% if (secure) { %>
+      <% if (attr('secure')) { %>
       input#secure(type='checkbox', name='secure', value='true', checked='true')
       <% } else { %>
       input#secure(type='checkbox', name='secure', value='true')
@@ -21,7 +21,8 @@ script#component-list-template(type='text/template')
     button.btn.btn-danger(type='submit') Save
     i.icon-white.icon-ok
 
-script#component-action-template(type='text/template')
+script#component-action-template(type='text/ejs')
   .component-actions
-    a.delete-component(href='#delete')
-      i.icon-trash
+    if !sharing
+      a.delete-component(href='#delete', tabindex='-1')
+        i.icon-trash
