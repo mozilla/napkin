@@ -26,8 +26,8 @@ html
               a.persona-button(href='/log-out', tabindex='-1')
                 span Sign out
             else
-              form#login-form(method='post', action='/log-in')
-                a.persona-button(href='#login', tabindex='-1')
+              form.login-form(method='post', action='/log-in')
+                a.persona-button(href='#log-in', tabindex='-1')
                   span Sign in
                 input(type='hidden', name='bid_assertion', value='1')
 

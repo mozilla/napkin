@@ -4,7 +4,7 @@ require.config({
 
 require(['jquery', 'https://browserid.org/include.js'], function($) {
   $(function() {
-    var $loginForm = $('#login-form');
+    var $loginForm = $('header .login-form');
 
     // Browser ID login
     $loginForm.on('click', 'a', function(event) {

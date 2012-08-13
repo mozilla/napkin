@@ -1,9 +1,11 @@
 script#auth-element-template(type='text/ejs')
   if sharing
     if session.auth && session.auth[projectId]
-      a(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')
-        img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+      a.persona-button.share-element(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')
+        span Sign out
     else
       != partial('helpers/share-login-form')
   else
-    img.live-element(src='/images/browser-id-sign-in.png', alt='BrowserID Sign In')
+    .live-element.auth
+      a.persona-button(href='#log-in')
+        span Sign in
