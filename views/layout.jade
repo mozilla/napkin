@@ -23,12 +23,12 @@ html
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
-              a(href='/log-out', tabindex='-1')
-                img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+              a.persona-button(href='/log-out', tabindex='-1')
+                span Sign out
             else
               form#login-form(method='post', action='/log-in')
-                a(href='#login', tabindex='-1')
-                  img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
+                a.persona-button(href='#login', tabindex='-1')
+                  span Sign in
                 input(type='hidden', name='bid_assertion', value='1')
 
         block sidebar
