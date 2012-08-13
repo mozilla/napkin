@@ -14,7 +14,10 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
     '.icon-pencil click': function($element, event) {
       event.preventDefault();
       this.viewData.attr('editing', 'editing');
-      this.$('.edit').focus();
+
+      var $edit = this.$('.edit');
+      $edit.focus();
+      $edit.select();
     },
 
     // to edit a screen
@@ -28,6 +31,15 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
           .then(function(screen) {
             self.viewData.removeAttr('editing');
           }, errors.tooltipHandler($element));
+      }
+    },
+
+    // to stop editing a screen
+    '.icon-remove click': function($element, event) {
+      event.preventDefault();
+      if (this.viewData.attr('editing')) {
+        this.viewData.removeAttr('editing');
+        this.$('.edit').val(this.screen.attr('title'));
       }
     },
 

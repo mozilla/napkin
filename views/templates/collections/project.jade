@@ -1,7 +1,8 @@
 script#project-template(type='text/ejs')
-  li(class!="<%= attr('editing') %> <%= attr('active') %>")
+  li(class!="clearfix <%= attr('editing') %> <%= attr('active') %>")
     a(href!="#project/<%= project.attr('id') %>") <%= project.attr('title') %>
       i.icon-pencil.icon-white
       i.icon-trash.icon-white
       i.icon-chevron-right
     input.edit(type='text', value!="<%= project.attr('title') %>")
+    i.icon-remove

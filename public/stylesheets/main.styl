@@ -172,7 +172,7 @@ header a
   top 7px
   right 7px
 
-#projects .edit
+#projects .edit, #projects .icon-remove
   display none
 
 #projects .editing
@@ -183,7 +183,14 @@ header a
 
 #projects .editing .edit
   display block
+  float left
   margin-bottom 0
+
+#projects .editing .icon-remove
+  display block
+  float right
+  margin-top 10px
+  margin-right 20px
 
 #add-project-form label
   display block
@@ -268,13 +275,22 @@ header a
 
 .screen .edit
   display none
-  width 204px
+  width 180px
+
+.screen .icon-remove
+  display none
+  margin-top 9px
 
 .screen.editing h4
   display none
 
 .screen.editing .edit
   display block
+  float left
+
+.screen.editing .icon-remove
+  display block
+  float right
 
 #projects a:hover .icon-white, #projects .active .icon-white
   display inline-block
