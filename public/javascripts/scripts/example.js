@@ -5,7 +5,7 @@ require.config({
 require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], function($) {
   $(function() {
     var $body = $('body');
-    var $loginForm = $('#login-form');
+    var $loginForm = $('header .login-form');
     var $sidebar = $('#sidebar');
 
     // Browser ID login
