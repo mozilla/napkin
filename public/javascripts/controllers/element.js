@@ -255,6 +255,17 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         }
       },
 
+      '{window} .popover-content textarea keydown': function($textarea, event) {
+        if (this.element.hasClass('active')) {
+          if ((event.ctrlKey || event.metaKey) && event.which === 13) {
+            event.preventDefault();
+
+            // submit the element edit form
+            $textarea.parent().submit();
+          }
+        }
+      },
+
       '{window} .popover-content .btn-danger click': function($btn, event) {
         if (this.element.hasClass('active')) {
           this.destroyElement();
