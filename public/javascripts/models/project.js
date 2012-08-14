@@ -8,7 +8,7 @@ define(['can', 'can.sort'], function(can) {
   }, {});
 
   ProjectModel.List = can.Model.List({
-    // sort by project ID for correct order
+    // sort by project id for correct order
     comparator: 'id'
   });
 

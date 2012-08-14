@@ -1,6 +1,6 @@
 define(['can', './extended', './component', 'models/component', 'helpers/screen-utils',
-        'can.super', 'jquery.ui'],
-  function(can, ExtendedControl, ComponentControl, ComponentModel, screenUtils) {
+        'helpers/errors', 'can.super', 'jquery.ui'],
+  function(can, ExtendedControl, ComponentControl, ComponentModel, screenUtils, errors) {
     return ExtendedControl({
       dropOptions: {
         hoverClass: 'component-hover',
@@ -124,9 +124,7 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
               { component: component });
             self.setComponentControl($componentLocation, componentControl);
             componentControl.select();
-          }, function(xhr) {
-            // TODO: handle error
-          });
+          }, errors.tooltipHandler($component));
       }
     });
   });

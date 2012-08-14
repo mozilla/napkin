@@ -25,32 +25,6 @@ define(['can', 'helpers/screen-utils'], function(can, screenUtils) {
           return self[name].apply(self, args);
         }
       };
-    },
-
-    findAllAndCache: function(params, element) {
-      var self = this;
-      var args = Array.prototype.slice.call(arguments, 0);
-
-      self.findAll(params) 
-        .then(function(models) {
-          // cache models for further use
-          self.cachedModels = models;
-        }, function(xhr) {
-          // TODO: error handler
-        });
-    },
-
-    // calls filterFn on each cached model, returning the ones that make
-    // filterFn return a truthy value
-    filter: function(filterFn) {
-      var models = [];
-
-      self.cachedModels.each(function(model) {
-        if (filterFn(model)) {
-          models.push(model);
-        }
-      });
-      return models;
     }
   }, {
     // run save/destory with URL data from screenUtils

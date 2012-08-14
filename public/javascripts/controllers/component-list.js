@@ -1,6 +1,6 @@
 define(['jquery', 'can', './switch', 'helpers/screen-utils', 'models/screen',
-        'can.super', 'jquery.serialize', 'jquery.ui'],
-  function($, can, SwitchControl, screenUtils, ScreenModel) {
+        'helpers/errors', 'can.super', 'jquery.serialize', 'jquery.ui'],
+  function($, can, SwitchControl, screenUtils, ScreenModel, errors) {
     return SwitchControl({
       init: function($element, options) {
         this._super($element, options);
@@ -55,7 +55,8 @@ define(['jquery', 'can', './switch', 'helpers/screen-utils', 'models/screen',
               $check.hide();
             }, 1000);
           }, function(xhr) {
-            // TODO: handle error
+            $submit.removeAttr('disabled');
+            errors.tooltipHandler($submit)(xhr);
           });
       }
     });
