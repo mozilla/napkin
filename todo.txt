@@ -10,12 +10,14 @@
 - Optimize requests
 - Validate action is an actual screen ID
 - Add link on sharing page for visibility
+- Sort screens by ID on client side
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash
 
 / Change layout object to just row and col
 / Sort projects by ID on client side
+/ Add callback to function documentation comments
 
 CanJS migration
 / Better way to merge URL data with screen (note: bad fn name getURLData)
