@@ -16,6 +16,7 @@
 
 / Change layout object to just row and col
 / Sort projects by ID on client side
+/ Sort screens by ID on client side
 
 CanJS migration
 / Better way to merge URL data with screen (note: bad fn name getURLData)
