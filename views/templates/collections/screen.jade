@@ -12,4 +12,9 @@ script#screen-template(type='text/ejs')
     i.icon-remove
 
     a(href!="/prototype/project/<%= attr('projectId') %>/screen/<%= screen.attr('id') %>")
+      <% if (screen.attr('screenshotCreated')) { %>
+      <% var imageSrc = attr('projectId') + '-' + screen.attr('id') + '.png'; %>
+      img(src!="/screenshots/#{session.id}-<%= imageSrc %>", alt='Screen screenshot')
+      <% } else { %>
       img(src='http://placehold.it/220x220', alt='Screen placeholder')
+      <% } %>

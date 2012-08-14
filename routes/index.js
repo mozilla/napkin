@@ -8,6 +8,7 @@ var utils = require('../lib/utils');
 module.exports = function(app, nconf, db) {
   var extractSharedEmail = utils.extractSharedEmail(db);
   var confirmScaffoldExistence = utils.confirmScaffoldExistence(db);
+  var rootUrl = nconf.get('domain') + ':' + nconf.get('port');
 
   app.get('/', function(req, res) {
     if (req.session.email) {
@@ -49,6 +50,10 @@ module.exports = function(app, nconf, db) {
           screenHash: screenHash,
           sharing: false
         });
+
+        var url = rootUrl + req.path.replace('/prototype',
+          '/share/' + req.session.id);
+        screens.generateScreenshot(req, db, req.screen.id, url);
       });
     });
 
