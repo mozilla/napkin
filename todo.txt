@@ -6,9 +6,7 @@
 | * Continuous task  |
 ======================
 
-- Keyboard shortcuts
 - Optimize requests
-- Validate action is an actual screen ID
 - Add link on sharing page for visibility
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
@@ -16,6 +14,8 @@
 
 / Change layout object to just row and col
 / Sort projects by ID on client side
+/ Validate action is an actual screen ID
+/ Keyboard shortcuts
 
 CanJS migration
 / Better way to merge URL data with screen (note: bad fn name getURLData)

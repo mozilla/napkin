@@ -1,6 +1,6 @@
 define(['can', './extended', './element', 'models/element', 'helpers/screen-utils',
-        'can.super', 'jquery.ui'],
-  function(can, ExtendedControl, ElementControl, ElementModel, screenUtils) {
+        'helpers/errors', 'can.super', 'jquery.ui'],
+  function(can, ExtendedControl, ElementControl, ElementModel, screenUtils, errors) {
     return ExtendedControl({
       init: function($element, options) {
         this._super($element, options);
@@ -238,9 +238,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
               } else {
                 addElement();
               }
-            }, function(xhr) {
-              // TODO: handle error
-            });
+            }, errors.tooltipHandler($element));
         }
       },
 
