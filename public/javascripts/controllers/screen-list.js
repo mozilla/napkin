@@ -32,19 +32,7 @@ define(['can', './extended', 'models/screen', './screen', 'helpers/errors', 'can
         var screens = self.cachedScreens;
 
         screens.bind('change', function(event, what, how, data) {
-          if (how === 'add') {
-            var index = parseInt(what, 10);
-            var screen = data[0];
-
-            if (index === screens.length - 1) {
-              // added to end; simply render another screen
-              self.renderScreen(screen);
-            } else {
-              // added somewhere in middle; rerender everything
-              self.clearScreens();
-              self.renderEachScreen();
-            }
-          } else if (how === 'remove') {
+          if (how === 'remove') {
             self.clearScreens();
             self.renderEachScreen();
           }
@@ -93,6 +81,7 @@ define(['can', './extended', 'models/screen', './screen', 'helpers/errors', 'can
         screen.save()
           .then(function(screen) {
             self.cachedScreens.push(screen);
+            self.renderScreen(screen);
             $input.val('');
           }, errors.tooltipHandler($input));
       }
