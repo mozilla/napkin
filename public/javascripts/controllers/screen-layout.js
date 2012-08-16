@@ -1,6 +1,8 @@
 define(['can', './extended', './component', 'models/component', 'helpers/screen-utils',
-        'helpers/errors', 'can.super', 'jquery.ui'],
-  function(can, ExtendedControl, ComponentControl, ComponentModel, screenUtils, errors) {
+        'helpers/errors', 'helpers/shared-models', 'helpers/utils', 'can.super',
+        'jquery.ui'],
+  function(can, ExtendedControl, ComponentControl, ComponentModel, screenUtils, errors,
+           sharedModels, utils) {
     return ExtendedControl({
       dropOptions: {
         hoverClass: 'component-hover',
@@ -9,9 +11,26 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
 
       init: function($element, options) {
         this._super($element, options);
-        $element.html(can.view('layout-template', {}));
+        var self = this;
 
+        sharedModels.getCurrentScreen()
+          .then(function(screen) {
+            self.screen = screen;
+            self.render();
+
+            // change could be called in rapid succession if, say, a splice
+            // call both removes and adds an element; because this can cause
+            // issues, debounce the callback
+            screen.layout.bind('change', utils.debounce(function() {
+              self.render();
+            }, self, 50));
+          });
+      },
+
+      render: function() {
+        this.element.html(can.view('layout-template', this.screen));
         this.configureDropTargets();
+
         this.markComponentPositions();
         this.addAllComponents();
       },
@@ -54,22 +73,37 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
       addAllComponents: function() {
         var self = this;
 
-        ComponentModel.withRouteData()
-          .findAll()
-          .then(function(components) {
-            // add each component
-            components.each(function(component, index) {
-              self.addComponent(component);
+        if (self.cachedComponents) {
+          // already have components; add each one
+          self.addEachComponent();
+        } else {
+          ComponentModel.withRouteData()
+            .findAll()
+            .then(function(components) {
+              self.cachedComponents = components;
+              self.addEachComponent();
+            }, function(xhr) {
+              // TODO: handle error
             });
-          }, function(xhr) {
-            // TODO: handle error
-          });
+        }
+      },
+
+      addEachComponent: function() {
+        var self = this;
+        self.cachedComponents.each(function(component, index) {
+          self.addComponent(component);
+        });
       },
 
       addComponent: function(component) {
         // select the component via the data-position attribute added earlier
         var positionAttr = component.row + ':' + component.col;
         var $componentLocation = this.$('[data-position="' + positionAttr + '"]');
+
+        if ($componentLocation.length === 0) {
+          // invalid location; ignore this component
+          return;
+        }
 
         var componentControl = new ComponentControl($componentLocation,
           { component: component });

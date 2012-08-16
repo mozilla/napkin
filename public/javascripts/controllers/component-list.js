@@ -1,14 +1,12 @@
-define(['jquery', 'can', './switch', 'helpers/screen-utils', 'models/screen',
-        'helpers/errors', 'can.super', 'jquery.serialize', 'jquery.ui'],
-  function($, can, SwitchControl, screenUtils, ScreenModel, errors) {
+define(['jquery', 'can', './switch', 'helpers/shared-models', 'helpers/errors',
+        './layout-modification', 'can.super', 'jquery.serialize', 'jquery.ui'],
+  function($, can, SwitchControl, sharedModels, errors, LayoutModificationControl) {
     return SwitchControl({
       init: function($element, options) {
         this._super($element, options);
         var self = this;
-        var urlData = screenUtils.getUrlData();
 
-        ScreenModel.withRouteData()
-          .findOne({ id: urlData.screenId })
+        sharedModels.getCurrentScreen()
           .then(function(screen) {
             self.screen = screen;
             self.activate();
@@ -24,9 +22,12 @@ define(['jquery', 'can', './switch', 'helpers/screen-utils', 'models/screen',
       },
 
       render: function() {
-        var urlData = screenUtils.getUrlData();
         this.element.html(can.view('component-list-template', this.screen));
         this.$('.component').draggable(this.dragOptions);
+
+        // to control screen layout modifications
+        new LayoutModificationControl(this.$('#layout-modifications'), {});
+        this.$('.dropdown-toggle').dropdown();
       },
 
       '#screen-config submit': function($form, event) {

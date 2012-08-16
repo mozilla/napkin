@@ -6,16 +6,10 @@ script#layout-template(type='text/ejs')
         i.icon-globe
         | Share Screen
 
+  <% var layout = attr('layout'); %>
+  <% layout.each(function(colLengths) { %>
   .row
-    .span4.component-location.empty
-    .span4.component-location.empty
-    .span4.component-location.empty
-
-  .row
-    .span4.component-location.empty
-    .span8.component-location.empty
-
-  .row
-    .span4.component-location.empty
-    .span4.component-location.empty
-    .span4.component-location.empty
+    <% colLengths.each(function(length) { %>
+    div(class!='span<%= length %> component-location empty')
+    <% }); %>
+  <% }); %>

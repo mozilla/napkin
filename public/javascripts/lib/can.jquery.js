@@ -787,9 +787,7 @@ define(['jquery'], function(jQuery) {
 
 		// Converts to an `array` of arguments.
 		getArgs = function( args ) {
-			return args[0] && can.isArray(args[0]) ?
-				args[0] :
-				can.makeArray(args);
+			return can.makeArray(args);
 		};
 	// Create `push`, `pop`, `shift`, and `unshift`
 	can.each({

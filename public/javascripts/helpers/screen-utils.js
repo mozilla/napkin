@@ -15,7 +15,7 @@ define(function() {
         return false;
       }
 
-      // cache Url data, as it does not change
+      // cache url data, as it does not change
       this.cachedScreenUrlData = {
         projectId: parseInt(matches[4], 10),
         screenId: parseInt(matches[5], 10),
