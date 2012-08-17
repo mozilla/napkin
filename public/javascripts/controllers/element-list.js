@@ -1,5 +1,5 @@
-define(['jquery', 'can', './switch', 'can.super', 'jquery.serialize', 'helpers/errors'],
-  function($, can, SwitchControl, screenUtils, ScreenModel, errors) {
+define(['jquery', 'can', './switch', 'helpers/errors', 'can.super', 'jquery.serialize'],
+  function($, can, SwitchControl, errors) {
     return SwitchControl({
       init: function($element, options) {
         this._super($element, options);
