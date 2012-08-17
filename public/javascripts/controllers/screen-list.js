@@ -11,6 +11,12 @@ define(['can', './extended', 'models/screen', './screen', 'helpers/errors', 'can
         this.projectId = data.projectId;
         this.renderAllScreens();
       },
+      
+      'route': function(data) {
+        // revert to hidden state when empty route is triggered
+        this.element.hide();
+        this.projectId = null;
+      },
 
       numScreens: 0,
       renderAllScreens: function() {
