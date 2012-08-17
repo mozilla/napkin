@@ -36,8 +36,8 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         }
 
         var templateId = this.elementModel.attr('type') + '-popover-template';
-
         var placement = 'bottom';
+
         // TODO: change this when layout additions kick in
         if (this.componentRow === 3) {
           placement = 'top';
