@@ -8,9 +8,9 @@ require.config({
   }
 });
 
-require(['controllers/screen-actions', 'controllers/screen-layout',
-         'controllers/window', 'helpers/screen-utils'],
-  function(ScreenActionsControl, ScreenLayoutControl, WindowControl, screenUtils) {
+require(['controllers/window', 'controllers/screen-layout',
+         'controllers/screen-actions', 'helpers/screen-utils'],
+  function(WindowControl, ScreenLayoutControl, ScreenActionsControl, screenUtils) {
     new WindowControl(window, {});
     new ScreenLayoutControl('#content', {});
 

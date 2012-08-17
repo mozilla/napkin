@@ -36,6 +36,8 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           self.prepareForAddition();
           self.traverseElementLinkedList();
         } else {
+          // TODO: optimize this when layout row is removed (new request for
+          // every moved component)
           ElementModel.withRouteData()
             .findAll({ componentId: componentId })
             .then(function(elements) {
@@ -249,6 +251,34 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
       '.icon-trash click': function($element, event) {
         event.preventDefault();
         this.remove();
+      },
+
+      '{content} deleteComponentRequested': function($element, event, location) {
+        // remove this component if it corresponds to the given location
+        if (location.row === this.component.attr('row') && location.col ===
+            this.component.attr('col')) {
+          this.remove();
+        }
+      },
+
+      '{content} deleteRowRequested': function($element, event, row) {
+        var componentRow = this.component.attr('row');
+
+        // remove this component if it is in the given row
+        if (componentRow === row) {
+          this.remove();
+        }
+
+        // move this component up one row if it is below the given row
+        if (componentRow > row) {
+          this.component.attr('row', componentRow - 1);
+          this.component.withRouteData()
+            .save()
+            .then(function(component) {
+            }, function(xhr) {
+              // TODO: handle error
+            });
+        }
       },
 
       '{window} isolatedKeyDown': function($window, event, keyEvent) {
