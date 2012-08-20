@@ -245,7 +245,16 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
           var self = this;
 
           var formData = $form.serializeObject();
-          self.elementModel.attr(formData);
+          for (var attr in formData) {
+            var oldValue = self.elementModel.attr(attr);
+
+            // make the new value's type match the old value's type
+            if (typeof oldValue === 'number' && typeof formData[attr] === 'string') {
+              formData[attr] = +formData[attr];
+            }
+
+            self.elementModel.attr(attr, formData[attr]);
+          }
 
           self.elementModel.withRouteData({ componentId: self.componentId })
             .save()
@@ -273,7 +282,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
       },
 
       '{window} isolatedKeyDown': function($window, event, keyEvent) {
-        if (this.element.hasClass('active')) {
+        if (this.element && this.element.hasClass('active')) {
           // escape key
           if (keyEvent.which === 27) {
             this.deactivate();
