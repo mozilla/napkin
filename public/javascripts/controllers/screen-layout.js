@@ -44,10 +44,7 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
         var self = this;
         this.$('.component-location').each(function() {
           var $this = $(this);
-          $this.droppable(self.dropOptions)
-            // for convenience, apply padding here, as width is easily modifiable
-            .css({ padding: '10px 15px' })
-            .width($this.width() - 30);
+          $this.droppable(self.dropOptions);
         });
       },
 
