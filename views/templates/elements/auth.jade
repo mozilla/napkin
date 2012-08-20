@@ -8,5 +8,5 @@ script#auth-element-template(type='text/ejs')
       != partial('helpers/share-login-form')
   else
     .live-element.auth
-      a.persona-button(href='#log-in')
+      a.persona-button(href='#log-in', tabindex='-1')
         span Sign in
