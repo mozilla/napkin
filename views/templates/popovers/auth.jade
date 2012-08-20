@@ -1,4 +1,7 @@
 script#auth-popover-template(type='text/ejs')
   form
-    p The auth element is standalone; there are no edit options!
-    != partial('templates/popovers/footer', { apply: false })
+    .field
+      label(for='redirect') On login, redirect to screen:
+      != partial('templates/helpers/screen-selection', { selected: 'this.redirect', name: 'redirect' })
+
+    != partial('templates/popovers/footer')

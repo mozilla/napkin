@@ -32,6 +32,8 @@ module.exports = function(app, nconf, db) {
   app.post('/share/:userId/project/:projectId/screen/:screenId/log-in',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
     auth.verify(req, nconf, function(err, email) {
+      // the screen to redirect to
+      var redirectScreen = req.query.redirect || req.screen.id;
       if (err) {
         throw err;
       }
@@ -43,7 +45,7 @@ module.exports = function(app, nconf, db) {
 
         req.session.auth[req.project.id] = email;
         res.redirect('/share/' + req.params.userId + '/project/' +
-          req.project.id + '/screen/' + req.screen.id);
+          req.project.id + '/screen/' + redirectScreen);
       }
     });
   });

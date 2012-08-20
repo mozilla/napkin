@@ -1,8 +1,9 @@
 script#auth-element-template(type='text/ejs')
   if sharing
     if session.auth && session.auth[projectId]
-      a.persona-button.share-element(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')
-        span Sign out
+      .auth
+        a.persona-button.share-element(href='/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-out')
+          span Sign out
     else
       != partial('helpers/share-login-form')
   else

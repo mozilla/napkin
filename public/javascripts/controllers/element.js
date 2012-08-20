@@ -72,6 +72,12 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         if (!this.element.hasClass('active')) {
           this.element.popover('show');
           this.element.addClass('active');
+
+          // add text to selection div inside popover select box
+          var $popover = this.element.data('popover').tip();
+          var $select = $popover.find('.field select');
+          $select.siblings('.selection')
+            .text($select.find('option:selected').text());
         }
       },
 

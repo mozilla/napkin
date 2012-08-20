@@ -1,0 +1,21 @@
+.field-select
+  .selection
+
+  if locals.black
+    i.icon-chevron-down.icon-white
+  else
+    i.icon-chevron-down
+
+  select(id=locals.name, name=locals.name)
+    <% if (!#{locals.selected}) { %>
+    option(value='')
+    <% } %>
+
+    - for (var screenId in screenHash) {
+    -   var screen = screenHash[screenId];
+    <% if (#{locals.selected} === #{screenId}) { %>
+    option(value=screenId, selected='true')= screen.title
+    <% } else { %>
+    option(value=screenId)= screen.title
+    <% } %>
+    - }
