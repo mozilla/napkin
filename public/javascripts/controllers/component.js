@@ -168,6 +168,9 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           var $element = $(ui.item);
           var elementControl = $element.data('controls')[0];
           elementControl.removeElementFromLinkedList();
+
+          this.originalPrev = $element.prev();
+          this.content.trigger('deactivateElementRequested');
         }
       },
 
@@ -176,10 +179,11 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           var $element = $(ui.item);
           var elementControl = $element.data('controls')[0];
           elementControl.updateElementPosition();
-          
-          // activate this element, but first deactivate the rest
-          $componentLocation.click();
-          elementControl.activate();
+
+          if (this.originalPrev.is($element.prev())) {
+            // element wasn't moved; treat this as a click and activate the popover
+            elementControl.activate();
+          }
         }
       },
 
@@ -254,6 +258,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
 
       '.icon-trash click': function($element, event) {
         event.preventDefault();
+        this.content.trigger('deactivateElementRequested');
         this.remove();
       },
 

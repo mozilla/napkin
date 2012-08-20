@@ -242,6 +242,10 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         }
       },
 
+      '{content} deactivateElementRequested': function($element, event) {
+        this.deactivate();
+      },
+
       '{window} .close-popover click': function($element, event) {
         event.preventDefault();
         this.deactivate();
