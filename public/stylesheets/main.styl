@@ -14,6 +14,14 @@ box-shadow()
   -o-box-shadow arguments
   -webkit-box-shadow arguments
 
+box-sizing()
+  box-sizing arguments
+  -khtml-box-sizing arguments
+  -moz-box-sizing arguments
+  -ms-box-sizing arguments
+  -o-box-sizing arguments
+  -webkit-box-sizing arguments
+
 body, input
   font 13px/1.5 "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif
 
@@ -76,7 +84,7 @@ a.btn, a.btn:hover, a.btn:active, a.btn:focus
   outline none
 
 #main
-  width 1300px
+  min-width 750px
 
 #sidebar
   background url(/images/texture.jpg) repeat
@@ -307,6 +315,11 @@ header a
   border 1px dashed #999
   border-radius(5px)
   margin-bottom 20px
+  box-sizing(border-box)
+  padding 10px 15px
+
+#share .component-location
+  padding 0
 
 .component-location
   min-height 200px
@@ -384,9 +397,6 @@ header a
 .share-element input[type="text"], .share-element textarea
   display block
 
-.share-element input[type="text"], .share-element textarea
-  width 270px
-
 #share .row
   margin-bottom 20px
 
@@ -436,6 +446,7 @@ header a
   margin-left -10px 
 
 [class^='layout-span']
+  float left
   display block
   width 20px
   height 20px
