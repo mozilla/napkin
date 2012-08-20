@@ -27,24 +27,10 @@ script#form-element-list-template(type='text/ejs')
     form.component-config
       .field
         label(for='action') On submit, redirect to screen:
-        .field-select
-          .selection
-          i.icon-chevron-down.icon-white
-          select#action(name='action')
-            <% if (!this.action) { %>
-            option(value='')
-            <% } %>
 
-            - for (var screenId in screenHash) {
-            -   var screen = screenHash[screenId];
-            // can't use attr('action') due to bug in CanJS with
-            // attr() inside if statement
-            <% if (this.action === #{screenId}) { %>
-            option(value=screenId, selected='true')= screen.title
-            <% } else { %>
-            option(value=screenId)= screen.title
-            <% } %>
-            - };
+        // can't use attr('action') to check selected element due to bug in
+        // CanJS with attr() inside if statement
+        != partial('templates/helpers/screen-selection', { selected: 'this.action', black: true, name: 'action' })
 
       button.btn.btn-danger(type='submit') Save
       i.icon-white.icon-ok
