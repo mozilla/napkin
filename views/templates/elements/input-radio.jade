@@ -7,4 +7,5 @@ script#input-radio-element-template(type='text/ejs')
   else
     .live-element.field
       label(for!='<%= elementId %>') <%= name %>: 
-      input(type='radio', name!='<%= elementId %>', id!='<%= elementId %>', tabindex='-1')
+      input(type='radio', name!='<%= elementId %>', id!='<%= elementId %>',
+        disabled='disabled')

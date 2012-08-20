@@ -223,6 +223,8 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
 
       '{content} .live-element click': function($element, event) {
         if ($element.is(this.element)) {
+          event.preventDefault();
+
           if (this.element.hasClass('active')) {
             // if already activated, deactivate
             this.deactivate();
