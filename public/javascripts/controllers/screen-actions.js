@@ -5,8 +5,10 @@ define(['jquery', 'can', './extended', './component-list', './element-list', 'ca
         this._super($element, options);
         
         // used for event handlers
-        this.content = $('#content');
-        this.back = $('#back');
+        this.off();
+        this.options.content = $('#content');
+        this.options.back = $('#back');
+        this.on();
 
         // by default, the component list should be shown
         this.activateComponentList();
@@ -17,7 +19,7 @@ define(['jquery', 'can', './extended', './component-list', './element-list', 'ca
           this.elementListControl.deactivate();
         }
 
-        this.back.find('span').text('project page');
+        this.options.back.find('span').text('project page');
         if (this.componentListControl) {
           this.componentListControl.activate();
         } else {
@@ -30,7 +32,7 @@ define(['jquery', 'can', './extended', './component-list', './element-list', 'ca
           this.componentListControl.deactivate();
         }
 
-        this.back.find('span').text('component list');
+        this.options.back.find('span').text('component list');
         if (this.elementListControl) {
           this.elementListControl.activate();
           this.elementListControl.setComponentModel(component);

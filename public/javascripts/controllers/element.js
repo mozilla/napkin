@@ -20,7 +20,9 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         this.element.data('model', this.elementModel);
 
         // for event handlers
-        this.content = $('#content');
+        this.off();
+        this.options.content = $('#content');
+        this.on();
       },
 
       appendAndSetElement: function() {
@@ -152,8 +154,6 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
       },
 
       removeElementFromLinkedList: function() {
-        event.preventDefault();
-
         var elementModel = this.elementModel;
         var previousElement = this.getPreviousElement(); 
 
@@ -313,6 +313,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
 
           // backspace key
           if (keyEvent.which === 8) {
+            keyEvent.preventDefault();
             this.destroyElement();
           }
         }
