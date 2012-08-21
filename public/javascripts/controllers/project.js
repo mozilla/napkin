@@ -8,8 +8,8 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
       $element.append(can.view('project-template', this.viewData));
       this.setElement($element.children().last());
       
-      // for event handlers
-      this.sidebar = $('#sidebar');
+      // for event handlers; need $ due to firefox sidebar native
+      this.$sidebar = $('#sidebar');
     },
 
     'project/:projectId route': function(data) {
@@ -55,7 +55,7 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
     },
 
     // to delete a project
-    '{sidebar} .icon-trash click': function($element, event) {
+    '{$sidebar} .icon-trash click': function($element, event) {
       event.preventDefault();
       event.stopPropagation();
 
