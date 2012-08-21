@@ -154,8 +154,6 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
       },
 
       removeElementFromLinkedList: function() {
-        event.preventDefault();
-
         var elementModel = this.elementModel;
         var previousElement = this.getPreviousElement(); 
 
@@ -315,6 +313,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
 
           // backspace key
           if (keyEvent.which === 8) {
+            keyEvent.preventDefault();
             this.destroyElement();
           }
         }
