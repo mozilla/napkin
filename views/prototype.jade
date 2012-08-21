@@ -1,5 +1,8 @@
 extend layout
 
+block styles
+  link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
+
 block sidebar
   if sharing
     if projectAuthor === session.id
