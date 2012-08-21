@@ -8,7 +8,8 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
 
         // used for event handlers
         this.content = $('#content');
-        this.sidebar = $('#sidebar');
+        // need $ due to firefox sidebar native
+        this.$sidebar = $('#sidebar');
 
         var type = this.getType();
         this.element.addClass('has-component');
@@ -205,7 +206,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         }
       },
 
-      '{sidebar} .element addRequested': function($element, event) {
+      '{$sidebar} .element addRequested': function($element, event) {
         if (this.element.hasClass('active')) {
           var self = this;
           // gather all element data
@@ -254,7 +255,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         }
       },
 
-      '{sidebar} #back click': function($element, event) {
+      '{$sidebar} #back click': function($element, event) {
         this.deselect(true);
       },
 
