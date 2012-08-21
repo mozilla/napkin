@@ -20,7 +20,9 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
         this.element.data('model', this.elementModel);
 
         // for event handlers
-        this.content = $('#content');
+        this.off();
+        this.options.content = $('#content');
+        this.on();
       },
 
       appendAndSetElement: function() {

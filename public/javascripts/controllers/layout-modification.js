@@ -22,7 +22,9 @@ define(['jquery', 'can', './extended', 'helpers/shared-models', 'helpers/utils',
           });
 
         // for triggering events
-        this.content = $('#content');
+        this.off();
+        this.options.content = $('#content');
+        this.on();
       },
 
       render: function() {
@@ -72,7 +74,7 @@ define(['jquery', 'can', './extended', 'helpers/shared-models', 'helpers/utils',
         var oldRow = layout[rowIndex];
         // if the number of columns has been reduced, delete all excess components
         for (var colIndex = newRow.length; colIndex < oldRow.length; colIndex++) {
-          this.content.trigger('deleteComponentRequested', {
+          this.options.content.trigger('deleteComponentRequested', {
             row: rowIndex,
             col: colIndex
           });
@@ -93,7 +95,7 @@ define(['jquery', 'can', './extended', 'helpers/shared-models', 'helpers/utils',
           .data('row');
 
         rowIndex = parseInt(rowIndex, 10);
-        this.content.trigger('deleteRowRequested', rowIndex);
+        this.options.content.trigger('deleteRowRequested', rowIndex);
 
         var self = this;
         // wait slightly to update screen so that components are fully deleted/

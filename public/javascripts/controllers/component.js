@@ -7,9 +7,10 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         this.component = options.component;
 
         // used for event handlers
-        this.content = $('#content');
-        // need $ due to firefox sidebar native
-        this.$sidebar = $('#sidebar');
+        this.off();
+        this.options.content = $('#content');
+        this.options.$sidebar = $('#sidebar');
+        this.on();
 
         var type = this.getType();
         this.element.addClass('has-component');
@@ -153,7 +154,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           this.element.trigger('deselected', this.component);
 
           if (triggerDeselectedAll) {
-            this.content.trigger('deselectedAll', this.component);
+            this.options.content.trigger('deselectedAll', this.component);
           }
         }
       },
@@ -171,7 +172,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           elementControl.removeElementFromLinkedList();
 
           this.originalPrev = $element.prev();
-          this.content.trigger('deactivateElementRequested');
+          this.options.content.trigger('deactivateElementRequested');
         }
       },
 
@@ -261,7 +262,7 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
 
       '.icon-trash click': function($element, event) {
         event.preventDefault();
-        this.content.trigger('deactivateElementRequested');
+        this.options.content.trigger('deactivateElementRequested');
         this.remove();
       },
 

@@ -8,8 +8,10 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
       $element.append(can.view('project-template', this.viewData));
       this.setElement($element.children().last());
       
-      // for event handlers; need $ due to firefox sidebar native
-      this.$sidebar = $('#sidebar');
+      // for event handlers
+      this.off();
+      this.options.$sidebar = $('#sidebar');
+      this.on();
     },
 
     'project/:projectId route': function(data) {
