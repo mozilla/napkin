@@ -233,6 +233,8 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           element.withRouteData({ componentId: self.component.attr('id') })
             .save()
             .then(function(element) {
+              element.justCreated = true;
+
               // add element to this component
               function addElement() {
                 self.cachedElements.push(element);
