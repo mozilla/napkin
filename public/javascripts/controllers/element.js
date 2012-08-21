@@ -78,6 +78,17 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
           var $select = $popover.find('.field select');
           $select.siblings('.selection')
             .text($select.find('option:selected').text());
+
+          // if the element model was just created, the user likely wants to
+          // edit this element; in turn, immediately focus the first input/textarea
+          if (this.elementModel.justCreated) {
+            $popover.find('input, textarea')
+              .eq(0)
+              .focus();
+
+            // only do this once
+            this.elementModel.justCreated = false;
+          }
         }
       },
 
