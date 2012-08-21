@@ -8,4 +8,4 @@ script#textarea-element-template(type='text/ejs')
     .live-element.field
       label(for!='<%= elementId %>') <%= name %>: 
       textarea(rows='8', cols='20', name!='<%= elementId %>', id!='<%= elementId %>',
-        tabindex='-1')
+        disabled='disabled')

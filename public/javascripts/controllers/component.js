@@ -176,6 +176,10 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           var $element = $(ui.item);
           var elementControl = $element.data('controls')[0];
           elementControl.updateElementPosition();
+          
+          // activate this element, but first deactivate the rest
+          $componentLocation.click();
+          elementControl.activate();
         }
       },
 
