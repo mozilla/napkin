@@ -1,6 +1,6 @@
-define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.super',
-        'lib/bootstrap', 'jquery.ui'],
-  function(can, ExtendedControl, ElementModel, screenUtils) {
+define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/errors',
+        'can.super', 'lib/bootstrap', 'jquery.ui'],
+  function(can, ExtendedControl, ElementModel, screenUtils, errors) {
     return ExtendedControl({
       usedIds: {}
     }, {
@@ -27,7 +27,8 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
 
       appendAndSetElement: function() {
         var type = this.elementModel.attr('type');
-        this.element.append(can.view(type + '-element-template', this.elementModel));
+        this.options.container.append(can.view(type + '-element-template',
+          this.elementModel));
         this.setElement(this.$('.live-element').last());
       },
 
@@ -96,6 +97,9 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
 
       deactivate: function() {
         if (this.element.hasClass('active')) {
+          var $popover = this.element.data('popover').tip();
+          $popover.find('.btn-primary').tooltip('hide');
+
           this.element.popover('hide');
           this.element.removeClass('active');
         }
@@ -283,7 +287,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'can.supe
             .save()
             .then(function() {
               self.render();
-            });
+            }, errors.tooltipHandler($form.find('.btn-primary')));
         }
       },
 

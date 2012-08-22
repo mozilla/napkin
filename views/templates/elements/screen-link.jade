@@ -1,0 +1,7 @@
+script#screen-link-element-template(type='text/ejs')
+  if sharing
+    li.share-element
+      a(href!='/share/#{userId}/project/#{projectId}/screen/<%= screen %>') <%= text %>
+  else
+    li.live-element
+      a(href!='/prototype/project/#{projectId}/screen/<%= screen %>') <%= text %>

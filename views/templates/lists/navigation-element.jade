@@ -1,0 +1,21 @@
+script#navigation-element-list-template(type='text/ejs')
+  h2 Navigation Elements
+  ul
+    li
+      a.element(href='#', data-type='screen-link', data-screen='#{screenId}') Screen link
+      a.btn.btn-success(href='#add-element') +
+    li
+      a.element(href='#', data-type='external-link', data-url='http://example.com') External link
+      a.btn.btn-success(href='#add-element') +
+
+  if !sharing
+    h2 Form Configuration
+    form.component-config
+      .field
+        label(for='style') Navigation style:
+
+      button.btn.btn-danger(type='submit') Save
+      i.icon-white.icon-ok
+
+script#navigation-wrapper-template(type='text/ejs')
+  ul.nav.nav-pills.elements-container

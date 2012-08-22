@@ -34,6 +34,7 @@ block scripts
   != partial('templates/lists/component')
   != partial('templates/lists/article-element')
   != partial('templates/lists/form-element')
+  != partial('templates/lists/navigation-element')
 
   // article elements and popovers
   != partial('templates/elements/heading')
@@ -56,3 +57,11 @@ block scripts
     != partial('templates/popovers/input-radio')
     != partial('templates/popovers/input-checkbox')
     != partial('templates/popovers/textarea')
+
+  // navigation elements and popovers
+  != partial('templates/elements/screen-link')
+  != partial('templates/elements/external-link')
+
+  if !sharing
+    != partial('templates/popovers/screen-link')
+    != partial('templates/popovers/external-link')
