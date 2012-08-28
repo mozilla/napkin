@@ -69,6 +69,7 @@ ul, ol
 
 a
   text-decoration none
+  color #3366bb
 
 p
   margin-top 0
@@ -79,6 +80,7 @@ input[type='text'], textarea
 
 textarea
   height 100px
+  font inherit
 
 a.btn, a.btn:hover, a.btn:active, a.btn:focus
   outline none
@@ -332,6 +334,12 @@ header a
   min-height 200px
   cursor pointer
 
+#share .component-location
+  min-height 0
+
+.component-location.has-component
+  min-height 50px
+
 .component-hover
   background #ddd
 
@@ -374,13 +382,13 @@ header a
   cursor crosshair
 
 .article-container
-  border-color #4380d3
+  border-color #3c6900
 
 .article
   margin-top 10px
 
 .article, .article-elements ul, .article-elements form
-  background rgba(5, 49, 109, 0.2)
+  background rgba(60, 105, 0, 0.2)
 
 .article p
   margin 5px 0
@@ -434,7 +442,6 @@ header a
   border-color #ee3c7e
 
 .form, .form-elements ul, .form-elements form
-  border-color #8e244b
   background rgba(144, 0, 53, 0.2)
 
 .form-elements input[type='text'], .form-elements textarea
@@ -447,6 +454,41 @@ header a
 .form input[type='text']
   width 180px
   margin 5px 0
+
+.navigation-container
+  border-color #4380d3
+
+.navigation, .navigation-elements ul
+  background rgba(5, 49, 109, 0.2)
+
+.navigation ul
+  margin 5px 0 0
+
+.navigation li
+  float none
+  display inline-block
+
+.navigation-elements .element
+  display inline-block
+  background #08c
+  color #fff
+  padding 6px 12px
+  border-radius(5px)
+
+.navigation-container ul
+  margin 0
+
+.navigation-container .share-element a:hover
+  background #e0e0e0
+
+.navigation-container .live-element:hover
+  border-radius(5px)
+
+.navigation-container .live-element a:hover
+  background transparent
+
+.navigation-container .active a:hover
+  background #08c
 
 .component-config .icon-ok, #screen-config .icon-ok
   float right
@@ -490,10 +532,10 @@ header a
   overflow hidden
   margin-left 30px
 
-.dropdown-menu [class^='layout-span']
+#prototype .dropdown-menu [class^='layout-span']
   border-color #666
 
-.dropdown-menu li:hover [class^='layout-span']
+#prototype .dropdown-menu li:hover [class^='layout-span']
   border-color #fff
 
 .layout-actions

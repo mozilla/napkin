@@ -35,7 +35,6 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         var componentId = self.component.attr('id');
 
         if (self.cachedElements) {
-          self.prepareForAddition();
           self.traverseElementLinkedList();
         } else {
           // TODO: optimize this when layout row is removed (new request for
@@ -44,7 +43,6 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
             .findAll({ componentId: componentId })
             .then(function(elements) {
               self.cachedElements = elements;
-              self.prepareForAddition();
               self.traverseElementLinkedList();
             }, function(xhr) {
               // TODO: handle error
@@ -65,15 +63,6 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         }
       },
 
-      prepareForAddition: function() {
-        var elements = this.cachedElements;
-        if (elements.length > 0) {
-          this.setComponentEmpty(false);
-        } else {
-          this.setComponentEmpty(true);
-        }
-      },
-
       traverseElementLinkedList: function() {
         var self = this;
         var curElement;
@@ -81,6 +70,9 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         // id => element map
         var idElementMap = {};
         var elements = self.cachedElements;
+
+        var elementsContainer = self.element;
+        var originalContainerHTML;
 
         elements.each(function(element, index) {
           idElementMap[element.attr('id')] = element;
@@ -91,34 +83,45 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
           }
         });
 
+        // if there are elements to add
+        if (curElement) {
+          if (self.element.hasClass('empty')) {
+            // component is no longer empty
+            self.setComponentEmpty(false);
+          }
+
+          var wrapperId = self.component.attr('type') + '-wrapper-template';
+          // if the wrapper template exists, add it to this component
+          if ($('#' + wrapperId).length === 1) {
+            self.element.append(can.view(wrapperId, self.component));
+
+            // where the elements should be added to
+            elementsContainer = self.$('.elements-container');
+
+            // clear out the container, but save its contents to be added after
+            // all of the elements
+            originalContainerHTML = elementsContainer.html();
+            elementsContainer.html('');
+          }
+        }
+
         while (curElement) {
           // go through the linked list via the nextId attribute, adding each
           // element one-by-one
-          self.addElement(curElement);
+          self.addElement(curElement, elementsContainer);
           curElement = idElementMap[curElement.attr('nextId')];
         }
 
-        if (screenUtils.isSharePage()) {
-          var wrapperId = self.component.attr('type') + '-wrapper-template';
-
-          // if the wrapper template exists, add it to this component
-          if ($('#' + wrapperId).length === 1) {
-            // this is a wrapper; add the inner HTML as an attribute so that it
-            // can be inserted
-            this.component.attr('html', this.element.html());
-            this.element.html(can.view(wrapperId, this.component));
-          }
+        if (originalContainerHTML) {
+          elementsContainer.append(originalContainerHTML);
         }
       },
 
-      addElement: function(element) {
-        if (this.element.hasClass('empty')) {
-          this.setComponentEmpty(false);
-        }
-
+      addElement: function(element, container) {
         var type = element.attr('type');
         new ElementControl(this.element, {
           elementModel: element,
+          container: container,
           component: this.component
         });
       },
@@ -240,7 +243,8 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
               // add element to this component
               function addElement() {
                 self.cachedElements.push(element);
-                self.addElement(element);
+                self.setComponentEmpty(true);
+                self.traverseElementLinkedList();
               }
 
               if (lastElement) {

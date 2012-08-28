@@ -4,9 +4,15 @@ script#component-list-template(type='text/ejs')
     h3 Article
     p Lorem ipsum dolor sit amet consectetur malesuada.
 
-  .component.form.last(data-type='form')
+  .component.form(data-type='form')
     h3 Form
     input(type='text', name='text-box', disabled='disabled')
+
+  .component.navigation.last(data-type='navigation')
+    h3 Navigation
+    ul.nav.nav-pills
+      li.active
+        a(href='#') Home
 
   h2 Screen Configuration
   form#screen-config.clearfix

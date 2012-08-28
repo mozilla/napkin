@@ -1,0 +1,11 @@
+script#external-link-popover-template(type='text/ejs')
+  form
+    .field
+      label(for='text') Link text:
+      input#text(name='text', type='text', value!='<%= text %>')
+
+    .field
+      label(for='url') Link to URL:
+      input#url(name='url', type='text', value!='<%= url %>')
+
+    != partial('templates/popovers/footer')
