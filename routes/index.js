@@ -1,9 +1,11 @@
+var fs = require('fs');
 var projects = require('../lib/projects');
 var screens = require('../lib/screens');
 var components = require('../lib/components');
 var elements = require('../lib/elements');
 var users = require('../lib/users');
 var utils = require('../lib/utils');
+var exportProject = require('../export');
 
 module.exports = function(app, nconf, db) {
   var extractSharedEmail = utils.extractSharedEmail(db);
@@ -73,6 +75,16 @@ module.exports = function(app, nconf, db) {
         screenId: req.screen.id,
         authenticated: authenticated,
         sharing: true
+      });
+    });
+
+  app.get('/export/project/:projectId', utils.confirmAuthentication,
+    confirmScaffoldExistence, function(req, res) {
+      delete req.session.sharedId;
+      exportProject(req.project, req, db, function(zipFile) {
+        res.download(zipFile, function() {
+          fs.unlink(zipFile);
+        });
       });
     });
 

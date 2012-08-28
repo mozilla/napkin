@@ -1,0 +1,10 @@
+extend layout
+
+block content
+  h1 Authentication Required
+  p Authentication is required to view this page. Please log in using the button below.
+  
+  form.login-form(method='post', action='/log-in')
+    a.persona-button.share-element.auth(href='#log-in')
+      span Sign in
+    input(type='hidden', name='bid_assertion', value='1')

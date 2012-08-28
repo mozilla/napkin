@@ -8,6 +8,10 @@
 
 - Optimize requests
 - Add link on sharing page for visibility
+- Sign in button styles on FF
+- Moving nav elements around sometimes causes circular linked list
+  - Not sure why this only happens with nav and not with other elements
+  - Only happens sometimes
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash
