@@ -1,6 +1,6 @@
 .DS_Store
 *.sw[pon]
 node_modules
-local.json
+/local.json
 public/stylesheets/main.css
 log
