@@ -7,6 +7,7 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
 
       $element.append(can.view('project-template', this.viewData));
       this.setElement($element.children().last());
+      this.$('i').tooltip({ placement: 'bottom' });
       
       // for event handlers
       this.off();
@@ -54,6 +55,11 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
         this.viewData.removeAttr('editing');
         this.$('.edit').val(this.project.attr('title'));
       }
+    },
+
+    // to export a project
+    '.icon-inbox click': function($element, event) {
+      window.location.href = '/export/project/' + this.project.attr('id');
     },
 
     // to delete a project
