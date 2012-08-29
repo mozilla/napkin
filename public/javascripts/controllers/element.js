@@ -87,7 +87,8 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/
           if (this.elementModel.justCreated) {
             $popover.find('input, textarea')
               .eq(0)
-              .focus();
+              .focus()
+              .select();
 
             // only do this once
             this.elementModel.justCreated = false;
