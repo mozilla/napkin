@@ -59,6 +59,7 @@ define(['can', './extended', 'helpers/errors', 'can.super'], function(can, Exten
 
     // to export a project
     '.icon-inbox click': function($element, event) {
+      event.preventDefault();
       window.location.href = '/export/project/' + this.project.attr('id');
     },
 
