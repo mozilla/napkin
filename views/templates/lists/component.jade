@@ -1,9 +1,72 @@
-script#component-list-template(type='text/template')
+script#component-list-template(type='text/ejs')
   h2 Components
-  .drag-element.article(data-type='article')
+  .component.article(data-type='article')
     h3 Article
     p Lorem ipsum dolor sit amet consectetur malesuada.
 
-  .drag-element.form(data-type='form')
+  .component.form(data-type='form')
     h3 Form
-    input(type='text', name='text-box')
+    input(type='text', name='text-box', disabled='disabled')
+
+  .component.navigation.last(data-type='navigation')
+    h3 Navigation
+    ul.nav.nav-pills
+      li.active
+        a(href='#') Home
+
+  h2 Screen Configuration
+  form#screen-config.clearfix
+    .field
+      label(for='secure') Require user authentication to view?
+      <% if (attr('secure')) { %>
+      input#secure(type='checkbox', name='secure', value='true', checked='true')
+      <% } else { %>
+      input#secure(type='checkbox', name='secure', value='true')
+      <% } %>
+
+    button.btn.btn-danger(type='submit') Save
+    i.icon-white.icon-ok
+
+  h2 Screen Layout
+  #layout-modifications.clearfix
+    <% var layout = attr('layout'); %>
+    <% layout.each(function(colLengths, row) { %>
+    .layout-row.row.dropdown(data-row!='<%= row %>')
+      a.delete-row(href='#delete-row')
+        i.icon-trash.icon-white
+
+      <% colLengths.each(function(length) { %>
+      div(class!='layout-span<%= length %>')
+      <% }); %>
+
+      a.dropdown-toggle(data-toggle='dropdown', href='#modify-row')
+        i.icon-pencil.icon-white
+
+      ul.dropdown-menu
+        li
+          a.layout-row.row
+            span.layout-span4(data-length='4')
+            span.layout-span4(data-length='4')
+            span.layout-span4(data-length='4')
+        li
+          a.layout-row.row
+            span.layout-span4(data-length='4')
+            span.layout-span8(data-length='8')
+        li
+          a.layout-row.row
+            span.layout-span8(data-length='8')
+            span.layout-span4(data-length='4')
+        li
+          a.layout-row.row
+            span.layout-span12(data-length='12')
+    <% }); %>
+
+    .layout-actions
+      span Add Row
+      a.btn.btn-success(href='#add-row') +
+
+script#component-action-template(type='text/ejs')
+  .component-actions
+    if !sharing
+      a.delete-component(href='#delete', tabindex='-1')
+        i.icon-trash

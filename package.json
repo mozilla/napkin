@@ -9,12 +9,18 @@
   "dependencies": {
     "client-sessions": "0.0.3",
     "connect": "1.8.7",
+    "ejs": "0.8.2",
     "express": "2.5.9",
+    "handlebars": "1.0.6-2",
     "hiredis": "0.1.14",
+    "imagemagick": "0.1.2",
     "jade": ">= 0.20.3",
     "nconf": "0.6.0",
+    "ncp": "0.2.6",
+    "phantom": "0.3.5",
     "redis": "0.7.1",
     "request": "2.9.153",
+    "rimraf": "2.0.2",
     "socket.io": "0.9.6",
     "stylus": "0.27.2",
     "winston": "0.6.1"

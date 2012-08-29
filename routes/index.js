@@ -1,13 +1,16 @@
+var fs = require('fs');
 var projects = require('../lib/projects');
 var screens = require('../lib/screens');
 var components = require('../lib/components');
 var elements = require('../lib/elements');
 var users = require('../lib/users');
 var utils = require('../lib/utils');
+var exportProject = require('../export');
 
 module.exports = function(app, nconf, db) {
   var extractSharedEmail = utils.extractSharedEmail(db);
   var confirmScaffoldExistence = utils.confirmScaffoldExistence(db);
+  var rootUrl = nconf.get('domain') + ':' + nconf.get('port');
 
   app.get('/', function(req, res) {
     if (req.session.email) {
@@ -49,18 +52,39 @@ module.exports = function(app, nconf, db) {
           screenHash: screenHash,
           sharing: false
         });
+
+        var url = rootUrl + req.path.replace('/prototype',
+          '/share/' + req.session.id);
+        screens.generateScreenshot(req, db, req.screen.id, url);
       });
     });
 
   app.get('/share/:userId/project/:projectId/screen/:screenId',
     extractSharedEmail, confirmScaffoldExistence, function(req, res) {
+      var authenticated = true;
+      if (req.screen.secure && (!req.session.auth ||
+          !req.session.auth[req.project.id])) {
+        authenticated = false;
+      }
+
       res.render('prototype', {
         pageId: 'share',
         userId: req.params.userId,
         projectId: req.project.id,
         projectAuthor: req.project.authorId,
         screenId: req.screen.id,
+        authenticated: authenticated,
         sharing: true
+      });
+    });
+
+  app.get('/export/project/:projectId', utils.confirmAuthentication,
+    confirmScaffoldExistence, function(req, res) {
+      delete req.session.sharedId;
+      exportProject(req.project, req, db, function(zipFile) {
+        res.download(zipFile, function() {
+          fs.unlink(zipFile);
+        });
       });
     });
 

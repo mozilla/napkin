@@ -1,29 +1,29 @@
-script#heading-element-template(type='text/template')
+script#heading-element-template(type='text/ejs')
   if sharing
     <% if (level === 1) { %>
-    h1.share-element <%- text %>
+    h1.share-element <%= text %>
     <% } else if (level === 2) { %>
-    h2.share-element <%- text %>
+    h2.share-element <%= text %>
     <% } else if (level === 3) { %>
-    h3.share-element <%- text %>
+    h3.share-element <%= text %>
     <% } else if (level === 4) { %>
-    h4.share-element <%- text %>
+    h4.share-element <%= text %>
     <% } else if (level === 5) { %>
-    h5.share-element <%- text %>
+    h5.share-element <%= text %>
     <% } else if (level === 6) { %>
-    h6.share-element <%- text %>
+    h6.share-element <%= text %>
     <% } %>
   else
     <% if (level === 1) { %>
-    h1.live-element <%- text %>
+    h1.live-element <%= text %>
     <% } else if (level === 2) { %>
-    h2.live-element <%- text %>
+    h2.live-element <%= text %>
     <% } else if (level === 3) { %>
-    h3.live-element <%- text %>
+    h3.live-element <%= text %>
     <% } else if (level === 4) { %>
-    h4.live-element <%- text %>
+    h4.live-element <%= text %>
     <% } else if (level === 5) { %>
-    h5.live-element <%- text %>
+    h5.live-element <%= text %>
     <% } else if (level === 6) { %>
-    h6.live-element <%- text %>
+    h6.live-element <%= text %>
     <% } %>

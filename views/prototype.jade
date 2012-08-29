@@ -1,40 +1,40 @@
 extend layout
 
+block styles
+  link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
+
 block sidebar
   if sharing
     if projectAuthor === session.id
-      a.btn.btn-danger#back(href='/prototype/project/#{projectId}/screen/#{screenId}') &larr; Back to prototype
+      a.btn.btn-danger#back(href='/prototype/project/#{projectId}/screen/#{screenId}', tabindex='-1') &larr; Back to prototype
     else
-      a.btn.btn-danger#back(href='/') &larr; Back to home
+      a.btn.btn-danger#back(href='/', tabindex='-1') &larr; Back to home
     p This is Napkin, a rapid web prototyping tool. You're currently being shared a screen on the right, which is a mockup of one page of a potential website.
   else
-    a.btn.btn-danger#back(href='/##{projectId}') &larr; Back to project page
+    a.btn.btn-danger#back(href='/#!project/#{projectId}', tabindex='-1') &larr; Back to 
+      span project page
+
+  #screen-actions
+
+block content
+  if sharing && !authenticated
+    h2 Authentication Required
+    p You may not view this page unless you are authenticated.
+
+    != partial('helpers/share-login-form')
 
 block scripts
-  script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js')
-  script(src='/javascripts/json2.js')
-  script(src='/javascripts/underscore.min.js')
-  script(src='/javascripts/backbone.min.js')
-  script(src='/javascripts/tooltip-errors.js')
-  script(src='/javascripts/prototype.js')
-
-  if sharing
-    script(src='https://browserid.org/include.js')
-
-  script
-    jQuery(function() {
-      NapkinClient(window, document, jQuery, {
-        projectId: #{projectId},
-        screenId: #{screenId},
-        sharing: #{sharing}
-      });
-    });
+  if sharing && !authenticated
+    script(src='/javascripts/lib/require-jquery.min.js', data-main='/javascripts/scripts/share.js')
+  else
+    script(src='/javascripts/lib/require-jquery.min.js', data-main='/javascripts/scripts/prototype.js')
 
   // layouts and lists
   != partial('templates/layouts/layout')
   != partial('templates/lists/component')
   != partial('templates/lists/article-element')
   != partial('templates/lists/form-element')
+  != partial('templates/lists/navigation-element')
 
   // article elements and popovers
   != partial('templates/elements/heading')
@@ -57,3 +57,11 @@ block scripts
     != partial('templates/popovers/input-radio')
     != partial('templates/popovers/input-checkbox')
     != partial('templates/popovers/textarea')
+
+  // navigation elements and popovers
+  != partial('templates/elements/screen-link')
+  != partial('templates/elements/external-link')
+
+  if !sharing
+    != partial('templates/popovers/screen-link')
+    != partial('templates/popovers/external-link')

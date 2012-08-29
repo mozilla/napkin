@@ -1,25 +1,25 @@
-script#form-element-list-template(type='text/template')
+script#form-element-list-template(type='text/ejs')
   h2 Form Elements
   ul
     li
       .element(data-type='input-text', data-name='input-text')
         label(for='input-text') Text Input: 
-        input(type='text', name='input-text', tabindex='-1')
+        input(type='text', name='input-text', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-radio', data-name='input-radio')
         label(for='input-radio') Radio Input: 
-        input.radio(type='radio', name='input-radio', tabindex='-1')
+        input.radio(type='radio', name='input-radio', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='input-checkbox', data-name='input-checkbox')
         label(for='input-checkbox') Checkbox Input: 
-        input.checkbox(type='checkbox', name='input-checkbox', tabindex='-1')
+        input.checkbox(type='checkbox', name='input-checkbox', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
     li
       .element(data-type='textarea', data-name='textarea')
         label(for='textarea') Textarea: 
-        textarea(rows='8', cols='20', name='textarea', tabindex='-1')
+        textarea(rows='8', cols='20', name='textarea', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
 
   if !sharing
@@ -27,30 +27,14 @@ script#form-element-list-template(type='text/template')
     form.component-config
       .field
         label(for='action') On submit, redirect to screen:
-        .field-select
-          .selection
-          i.icon-chevron-down.icon-white
-          select#action(name='action')
-            - for (var screenId in screenHash) {
-            -   var screen = screenHash[screenId];
-            <% if (typeof action !== 'undefined' && action === #{screenId}) { %>
-            option(value=screenId, selected="true")= screen.title
-            <% } else { %>
-            option(value=screenId)= screen.title
-            <% } %>
-            - };
+
+        // can't use attr('action') to check selected element due to bug in
+        // CanJS with attr() inside if statement
+        != partial('templates/helpers/screen-selection', { selected: 'this.action', black: true, name: 'action' })
 
       button.btn.btn-danger(type='submit') Save
       i.icon-white.icon-ok
 
 if sharing
-  script#form-wrapper-template(type='text/template')
-    <% if (typeof action === 'undefined') { %>
-    form(method='get', action!='/share/#{session.sharedId}/project/#{projectId}/screen/#{screenId}')
-      <%= html %>
-      button.form-submit.btn.btn-primary(type='submit') Submit
-    <% } else { %>
-    form(method='get', action!='/share/#{session.sharedId}/project/#{projectId}/screen/<%- action %>')
-      <%= html %>
-      button.form-submit.btn.btn-primary(type='submit') Submit
-    <% } %>
+  script#form-wrapper-template(type='text/ejs')
+    != partial('templates/wrappers/form')

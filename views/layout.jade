@@ -19,24 +19,20 @@ html
       #sidebar.clearfix
         header
           h1
-            a(href='/') Napkin
+            a(href='/', tabindex='-1') Napkin
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
-              a(href='/log-out', tabindex='-1')
-                img(src='/images/browser-id-sign-out.png', alt='Browser ID Sign Out')
+              a.persona-button(href='/log-out', tabindex='-1')
+                span Sign out
             else
-              form#login-form(method='post', action='/log-in')
-                a(href='#login')
-                  img(src='/images/browser-id-sign-in.png', alt='Browser ID Sign In')
+              form.login-form(method='post', action='/log-in')
+                a.persona-button(href='#log-in', tabindex='-1')
+                  span Sign in
                 input(type='hidden', name='bid_assertion', value='1')
 
         block sidebar
       #content
         block content
-
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-    script(src='/javascripts/bootstrap.min.js')
-    script(src='/javascripts/core.js')
 
     block scripts

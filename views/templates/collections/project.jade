@@ -1,6 +1,9 @@
-script#project-template(type='text/template')
-  a(href='#edit-project') <%- title %>
-    i.icon-pencil.icon-white
-    i.icon-trash.icon-white
-    i.icon-chevron-right
-  input.edit(type='text', value!='<%- title %>')
+script#project-template(type='text/ejs')
+  li(class!="clearfix <%= attr('editing') %> <%= attr('active') %>")
+    a(href!="#project/<%= project.attr('id') %>") <%= project.attr('title') %>
+      i.icon-pencil.icon-white(title='Edit project')
+      i.icon-trash.icon-white(title='Delete project')
+      i.icon-inbox.icon-white(title='Export project to Node.js application')
+      i.icon-chevron-right
+    input.edit(type='text', value!="<%= project.attr('title') %>")
+    i.icon-remove

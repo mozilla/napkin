@@ -1,0 +1,7 @@
+script#external-link-element-template(type='text/ejs')
+  if sharing
+    li.share-element
+      a(href!='<%= url %>') <%= text %>
+  else
+    li.live-element
+      a <%= text %>

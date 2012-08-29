@@ -6,12 +6,43 @@
 | * Continuous task  |
 ======================
 
-- Validate action is an actual screen ID
+- Optimize requests
 - Add link on sharing page for visibility
-- Add screen flag for must be authenticated
+- Sign in button styles on FF
+- Moving nav elements around sometimes causes circular linked list
+  - Not sure why this only happens with nav and not with other elements
+  - Only happens sometimes
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash
+
+/ Change layout object to just row and col
+/ Sort projects by ID on client side
+/ Add callback to function documentation comments
+/ Validate action is an actual screen ID
+/ Keyboard shortcuts
+/ Sort screens by ID on client side
+
+CanJS migration
+/ Better way to merge URL data with screen (note: bad fn name getURLData)
+/ Focus component when added
+/ Add element to empty component
+/ isolatedKeyUp event
+/ tabindex for sidebar
+/ JS on not found page
+/ Get rid of third param in can.extend
+/ Optimize screen page requests upon screen deletion
+/ Optimize requests
+/ Check script tags
+/ Make destroy take params option
+/ Back button
+/ Look over dependencies
+/ Listen to change events on model.List?
+/ Share login script
+/ Sharing
+/ Component config submit
+
+---------------------
 
 / Restructure files in new folders before commit
 / Make form names unique
@@ -36,3 +67,4 @@
 / Rename login to log-in and logout to log-out
 / Screens should disappear when active project is deleted
 / Add link on sharing page for return to prototype
+/ Add screen flag for must be authenticated

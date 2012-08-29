@@ -1,10 +1,11 @@
-script#input-radio-element-template(type='text/template')
+script#input-radio-element-template(type='text/ejs')
   // TODO: make names unique and id-ize them for inputs
   if sharing
     .share-element.field
-      label(for!='<%- elementId %>') <%- name %>: 
-      input(type='radio', name!='<%- elementId %>', id!='<%- elementId %>')
+      label(for!='<%= elementId %>') <%= name %>: 
+      input(type='radio', name!='<%= elementId %>', id!='<%= elementId %>')
   else
     .live-element.field
-      label(for!='<%- elementId %>') <%- name %>: 
-      input(type='radio', name!='<%- elementId %>', id!='<%- elementId %>', tabindex='-1')
+      label(for!='<%= elementId %>') <%= name %>: 
+      input(type='radio', name!='<%= elementId %>', id!='<%= elementId %>',
+        disabled='disabled')

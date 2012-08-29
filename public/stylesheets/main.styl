@@ -14,6 +14,14 @@ box-shadow()
   -o-box-shadow arguments
   -webkit-box-shadow arguments
 
+box-sizing()
+  box-sizing arguments
+  -khtml-box-sizing arguments
+  -moz-box-sizing arguments
+  -ms-box-sizing arguments
+  -o-box-sizing arguments
+  -webkit-box-sizing arguments
+
 body, input
   font 13px/1.5 "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif
 
@@ -61,6 +69,7 @@ ul, ol
 
 a
   text-decoration none
+  color #3366bb
 
 p
   margin-top 0
@@ -71,9 +80,16 @@ input[type='text'], textarea
 
 textarea
   height 100px
+  font inherit
+
+a.btn, a.btn:hover, a.btn:active, a.btn:focus
+  outline none
 
 #main
-  width 1300px
+  min-width 750px
+
+#index #main
+  min-width 1300px
 
 #sidebar
   background url(/images/texture.jpg) repeat
@@ -98,6 +114,7 @@ header h1 a
   font-size 40px
   line-height 1
   text-transform uppercase
+  margin-top 0
   color #eee
 
 #sidebar header form
@@ -105,7 +122,7 @@ header h1 a
 
 header a
   float right
-  line-height 40px
+  margin-top 10px
 
 #sidebar form
   margin 10px 0
@@ -138,21 +155,28 @@ header a
   margin-right 20px
   margin-top 5px
 
-#sidebar input[type='text'], #sidebar textarea, .field-select
+#projects .active .icon-inbox
+  margin-left 13px
+
+#sidebar input[type='text'], #sidebar textarea, #sidebar .field-select
   background #333
   border-color #444
   box-shadow(inset 0 3px 4px #303030)
   color #eee
 
+#sidebar .field-select
+  border 1px solid #444
+
 .field-select
+  border 1px solid #ccc
   position relative
   padding 5px 10px
   height 20px
   margin-bottom 10px
   line-height 18px
-  border 1px solid #444
   outline none
-  border-radius(5px)
+  box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.075))
+  border-radius(3px)
 
 .field-select .selection
   position absolute
@@ -169,7 +193,7 @@ header a
   top 7px
   right 7px
 
-#projects .edit
+#projects .edit, #projects .icon-remove
   display none
 
 #projects .editing
@@ -180,7 +204,14 @@ header a
 
 #projects .editing .edit
   display block
+  float left
   margin-bottom 0
+
+#projects .editing .icon-remove
+  display block
+  float right
+  margin-top 10px
+  margin-right 20px
 
 #add-project-form label
   display block
@@ -192,7 +223,8 @@ header a
   width 180px
 
 #add-project-form input[type='text']:focus
-  box-shadow(inset 0 3px 4px #303030\, 0 0 3px #666)
+  border-color rgba(82, 168, 236, 0.4)
+  box-shadow(inset 0 3px 4px #303030\, 0 0 8px rgba(82, 168, 236, .4))
   outline none
 
 #add-project-form .btn
@@ -264,13 +296,22 @@ header a
 
 .screen .edit
   display none
-  width 204px
+  width 180px
+
+.screen .icon-remove
+  display none
+  margin-top 9px
 
 .screen.editing h4
   display none
 
 .screen.editing .edit
   display block
+  float left
+
+.screen.editing .icon-remove
+  display block
+  float right
 
 #projects a:hover .icon-white, #projects .active .icon-white
   display inline-block
@@ -281,22 +322,34 @@ header a
   box-shadow(0 0 8px rgba(82, 168, 236, 0.6))
   outline none
 
-.drop-target
+.component-location
+  position relative
   border 1px dashed #999
   border-radius(5px)
   margin-bottom 20px
+  box-sizing(border-box)
+  padding 10px 15px
 
-.drop-target
+#share .component-location
+  padding 0
+
+.component-location
   min-height 200px
   cursor pointer
 
-.drop-target.drop-hover
+#share .component-location
+  min-height 0
+
+.component-location.has-component
+  min-height 50px
+
+.component-hover
   background #ddd
 
-.drop-target.active
+.component-location.active
   border-style solid
 
-.drop-target.empty
+.component-location.empty
   color #aaa
   font-size 25px
   letter-spacing 1px
@@ -305,7 +358,14 @@ header a
   text-align center
   text-transform uppercase
 
-.drag-element, .elements ul, #sidebar .elements form
+#share .component-location
+  border none
+  cursor default
+
+#share .component-location.empty
+  display none
+
+.component, .elements ul, #sidebar .elements form
   margin 0 -21px
   padding 20px 40px
   box-shadow inset 0 0 2px #222
@@ -313,21 +373,25 @@ header a
 .elements h2
   margin-bottom 10px
 
-.elements ul
+.elements ul, .component.last
   margin-bottom 20px
 
-.drag-element
+.component
   text-align center
+  cursor crosshair
+  z-index 100
+
+.component input
   cursor crosshair
 
 .article-container
-  border-color #4380d3
+  border-color #3c6900
 
 .article
   margin-top 10px
 
 .article, .article-elements ul, .article-elements form
-  background rgba(5, 49, 109, 0.2)
+  background rgba(60, 105, 0, 0.2)
 
 .article p
   margin 5px 0
@@ -350,12 +414,16 @@ header a
   margin-left -10px
   margin-right -10px
 
+.live-element label
+  cursor pointer
+
 .live-element input[type="text"], .live-element textarea,
 .share-element input[type="text"], .share-element textarea
   display block
+  cursor pointer
 
 .share-element input[type="text"], .share-element textarea
-  width 270px
+  cursor auto
 
 #share .row
   margin-bottom 20px
@@ -370,14 +438,13 @@ header a
 .elements form
   overflow hidden
 
-.elements form button
+.elements form button, #screen-config button
   float right
 
 .form-container
   border-color #ee3c7e
 
 .form, .form-elements ul, .form-elements form
-  border-color #8e244b
   background rgba(144, 0, 53, 0.2)
 
 .form-elements input[type='text'], .form-elements textarea
@@ -391,11 +458,112 @@ header a
   width 180px
   margin 5px 0
 
-.component-config .icon-ok
+.navigation-container
+  border-color #4380d3
+
+.navigation, .navigation-elements ul
+  background rgba(5, 49, 109, 0.2)
+
+.navigation ul
+  margin 5px 0 0
+
+.navigation li
+  float none
+  display inline-block
+
+.navigation-elements .element
+  display inline-block
+  background #08c
+  color #fff
+  padding 6px 12px
+  border-radius(5px)
+
+.navigation-container ul
+  margin 0
+
+.navigation-container .share-element a:hover
+  background #e0e0e0
+
+.navigation-container .live-element:hover
+  border-radius(5px)
+
+.navigation-container .live-element a:hover
+  background transparent
+
+.navigation-container .active a:hover
+  background #08c
+
+.component-config .icon-ok, #screen-config .icon-ok
   float right
   margin-top 7px
   margin-right 10px
   display none
+
+#layout-modifications
+  margin-top 10px
+
+.layout-row.row
+  display block
+  margin-bottom 10px
+  margin-left -10px 
+
+#prototype [class^='layout-span']
+  float left
+  display block
+  height 20px
+  border 1px dotted #ccc
+  margin-left 10px
+
+#prototype .layout-span4
+  width 62px
+
+#prototype .layout-span8
+  width 136px
+
+#prototype .layout-span12
+  width 210px
+
+#layout-modifications .dropdown-toggle, .delete-row
+  float left
+  margin-left 9px
+  margin-top 2px
+
+.delete-row
+  margin-left 8px
+
+#layout-modifications .dropdown-menu
+  overflow hidden
+  margin-left 30px
+
+#prototype .dropdown-menu [class^='layout-span']
+  border-color #666
+
+#prototype .dropdown-menu li:hover [class^='layout-span']
+  border-color #fff
+
+.layout-actions
+  float right
+  margin-bottom 10px
+
+.layout-actions span
+  margin-right 7px
+
+.layout-actions a, .layout-actions a:hover
+  font-size 110%
+  font-weight bold
+  text-shadow 1px 1px #222
+  padding 1px 5px 3px
+  margin-bottom 10px
+  margin-top 5px
+
+#screen-config .icon-ok
+  margin-top 16px
+
+#screen-config input[type='checkbox']
+  margin-left 10px
+
+#screen-config [type='submit']
+  margin-top 10px
 
 #prototype-header
   margin-bottom 20px
@@ -416,7 +584,14 @@ header a
 #back
   margin-bottom 15px
 
-img.live-element, img.share-element
+.component-actions
+  position absolute
+  bottom 5px
+  right 5px
+  line-height 0
+  opacity 0.7
+
+img.live-element, img.share-element, .auth
   margin-bottom 10px
 
 .form-submit
@@ -447,3 +622,150 @@ img.live-element, img.share-element
   width 45px
   margin-left 10px
   margin-top 7px
+ 
+/* CSS-only Persona button - credits to Sawyer Hollenshead */
+.persona-button
+  color #fff
+  display inline-block
+  line-height 1
+  overflow hidden
+  position relative
+  text-decoration none
+  text-shadow 0 1px rgba(0,0,0,0.5), 0 0 2px rgba(0,0,0,0.2)
+
+  background #ee731a
+  background -moz-linear-gradient(top, #ee731a, #d03116)
+  background -ms-linear-gradient(top, #ee731a, #d03116)
+  background -o-linear-gradient(top, #ee731a, #d03116)
+  background -webkit-linear-gradient(top, #ee731a, #d03116)
+  background linear-gradient(top, #ee731a, #d03116)
+
+  -moz-border-radius 3px
+  -ms-border-radius 3px
+  -o-border-radius 3px
+  -webkit-border-radius 3px
+  border-radius 3px
+
+  -moz-box-shadow 0 1px 0 rgba(0,0,0,0.2)
+  -ms-box-shadow 0 1px 0 rgba(0,0,0,0.2)
+  -o-box-shadow 0 1px 0 rgba(0,0,0,0.2)
+  -webkit-box-shadow 0 1px 0 rgba(0,0,0,0.2)
+  box-shadow 0 1px 0 rgba(0,0,0,0.2)
+
+.persona-button:hover
+  background #cb6216
+  background -moz-linear-gradient(top, #cb6216, #b12a13)
+  background -ms-linear-gradient(top, #cb6216, #b12a13)
+  background -o-linear-gradient(top, #cb6216, #b12a13)
+  background -webkit-linear-gradient(top, #cb6216, #b12a13)
+  background linear-gradient(top, #cb6216, #b12a13)
+
+.persona-button:active, .persona-button:focus
+  top 1px
+  -moz-box-shadow none
+  -ms-box-shadow none
+  -o-box-shadow none
+  -webkit-box-shadow none
+  box-shadow none
+
+.persona-button span
+  display inline-block
+  padding 5px 10px 5px 40px
+
+/* Icon */
+.persona-button span:after
+  background url(../images/logo.png) 10px center no-repeat
+  content ''
+  display block
+  width 31px
+  
+  position absolute
+  bottom 0
+  left -3px
+  top 0
+  z-index 10
+
+/* Icon background */
+.persona-button span:before
+  content ''
+  display block
+  height 100%
+  width 20px
+
+  position absolute
+  bottom 0
+  left 0
+  top 0
+  z-index 1
+
+  background #e84a21
+  background -moz-linear-gradient(top, #f7ad27, #e84a21)
+  background -ms-linear-gradient(top, #f7ad27, #e84a21)
+  background -o-linear-gradient(top, #f7ad27, #e84a21)
+  background -webkit-linear-gradient(top, #f7ad27, #e84a21)
+  background linear-gradient(top, #f7ad27, #e84a21)
+
+  -moz-border-radius 3px 0 0 3px
+  -ms-border-radius 3px 0 0 3px
+  -o-border-radius 3px 0 0 3px
+  -webkit-border-radius 3px 0 0 3px
+  border-radius 3px 0 0 3px
+
+/* Triangle */
+.persona-button:before
+  background #42a9dd
+  content ''
+  display block
+  height 26px
+  width 26px
+
+  position absolute
+  left 2px
+  top 50%
+  margin-top -13px
+  z-index 0
+
+  background #e84a21
+  background -moz-linear-gradient(-45deg, #f7ad27, #e84a21)
+  background -ms-linear-gradient(-45deg, #f7ad27, #e84a21)
+  background -o-linear-gradient(-45deg, #f7ad27, #e84a21)
+  background -webkit-linear-gradient(-45deg, #f7ad27, #e84a21)
+  background linear-gradient(-45deg, #e84a21, #f7ad27)
+
+  -moz-box-shadow 1px -1px 1px rgba(0,0,0,0.1)
+  -ms-box-shadow 1px -1px 1px rgba(0,0,0,0.1)
+  -o-box-shadow 1px -1px 1px rgba(0,0,0,0.1)
+  -webkit-box-shadow 1px -1px 1px rgba(0,0,0,0.1)
+  box-shadow 1px -1px 1px rgba(0,0,0,0.1)
+
+  -moz-transform rotate(45deg)
+  -ms-transform rotate(45deg)
+  -o-transform rotate(45deg)
+  -webkit-transform rotate(45deg)
+  transform rotate(45deg)
+
+/* Inset shadow (required here because the icon background clips it when on the `a` element) */
+.persona-button:after
+  content ''
+  display block
+  height 100%
+  width 100%
+
+  position absolute
+  left 0
+  top 0
+  bottom 0
+  right 0
+  z-index 10
+
+  -moz-border-radius 3px
+  -ms-border-radius 3px
+  -o-border-radius 3px
+  -webkit-border-radius 3px
+  border-radius 3px
+
+  -moz-box-shadow inset 0 -1px 0 rgba(0,0,0,0.3)
+  -ms-box-shadow inset 0 -1px 0 rgba(0,0,0,0.3)
+  -o-box-shadow inset 0 -1px 0 rgba(0,0,0,0.3)
+  -webkit-box-shadow inset 0 -1px 0 rgba(0,0,0,0.3)
+  box-shadow inset 0 -1px 0 rgba(0,0,0,0.3)

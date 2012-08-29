@@ -4,19 +4,14 @@ block sidebar
   h2 Projects
   !=partial('forms/add-project')
 
+  ul#projects
+
 block content
   !=partial('forms/add-screen')
-      
-  !=partial('templates/collections/project')
-  !=partial('templates/collections/screen')
 
 block scripts
-  script(src='/javascripts/json2.js')
-  script(src='/javascripts/underscore.min.js')
-  script(src='/javascripts/backbone.min.js')
-  script(src='/javascripts/tooltip-errors.js')
-  script(src='/javascripts/main.js')
-  script
-    jQuery(function() {
-      NapkinClient(window, document, jQuery, {});
-    });
+  script(src='/javascripts/lib/require-jquery.min.js', data-main='/javascripts/scripts/index.js')
+
+  !=partial('templates/collections/project')
+  !=partial('templates/collections/screen')
+  !=partial('templates/popovers/project-deletion')
