@@ -49,6 +49,24 @@ module.exports = exports = function(project, req, db, callback) {
   var projectDir = __dirname + '/' + projectName;
   req.body.projectId = project.id;
 
+  /* Zips up this project directory and calls the given callback */
+  function zipProjectAndFinish() {
+    // zip up project directory to deliver to the user
+    exec('cd ' + __dirname + ';' + ' zip -r ' + projectName + '.zip ' +
+         projectName, function(err, stdout, stderr) {
+      if (err) {
+        throw err;
+      }
+
+      // remove project directory
+      rimraf(projectDir, function(err) {
+        // ignore error; it's not a big deal if the project dir
+        // doesn't get deleted fully
+        callback(projectDir + '.zip');
+      });
+    });
+  }
+
   // copy to a custom project directory
   ncp(__dirname + '/base-app', projectDir, function(err) {
     if (err) {
@@ -117,26 +135,15 @@ module.exports = exports = function(project, req, db, callback) {
 
               screensDone++;
               if (screensDone === screenList.length) {
-                var originalDir = process.cwd();
-
-                // zip up project directory to deliver to the user
-                exec('cd ' + __dirname + ';' + ' zip -r ' + projectName + '.zip ' +
-                  projectName, function(err, stdout, stderr) {
-                    if (err) {
-                      throw err;
-                    }
-
-                    // remove project directory
-                    rimraf(projectDir, function(err) {
-                      // ignore error; it's not a big deal if the project dir
-                      // doesn't get deleted fully
-                      callback(projectDir + '.zip');
-                    });
-                  });
+                zipProjectAndFinish();
               }
             });
         });
       });
+
+      if (screenList.length === 0) {
+        zipProjectAndFinish();
+      }
     });
   });
 };
@@ -182,8 +189,6 @@ function renderScreen(screen, req, db, callback) {
       var componentsDone = 0;
       var componentsByLocation = {};
 
-      var prevRow = componentList[0].row;
-
       componentList.forEach(function(component) {
         // keep track of components by location for easy screen construction
         // later on
@@ -225,9 +230,9 @@ function renderScreen(screen, req, db, callback) {
               callback(output);
             }
           });
-
-        prevRow = component.row;
       });
+    } else {
+      callback('');
     }
   });
 }
@@ -262,43 +267,47 @@ function renderComponent(component, req, db, callback) {
       }
     });
 
-    var elementsProcessed = 0;
-    var elementsDone = 0;
+    if (headElement) {
+      var elementsProcessed = 0;
+      var elementsDone = 0;
 
-    var curElement = headElement;
-    while (curElement) {
-      elementsProcessed++;
+      var curElement = headElement;
+      while (curElement) {
+        elementsProcessed++;
 
-      (function(element) {
-        // process each element's template
-        fs.readFile(__dirname + '/../views/templates/elements/' + element.type + '.jade',
-          'utf8', function(err, template) {
-            if (err) {
-              throw err;
-            }
-
-            element.jade = renderElementTemplate(template, element, component,
-              req.screensById);
-
-            // when done, amalgamate the results together
-            elementsDone++;
-            if (elementsDone === elementsProcessed) {
-              while (headElement) {
-                result += headElement.jade.trim() + '\n';
-                headElement = elementsById[headElement.nextId];
+        (function(element) {
+          // process each element's template
+          fs.readFile(__dirname + '/../views/templates/elements/' + element.type + '.jade',
+            'utf8', function(err, template) {
+              if (err) {
+                throw err;
               }
 
-              // add the component wrapper if it exists
-              wrapComponent(result, component, req.screensById, function(component) {
-                callback(component);
-              });
-            }
-          });
-      })(curElement);
+              element.jade = renderElementTemplate(template, element, component,
+                req.screensById);
 
-      // proceed through the linked list
-      var nextElement = elementsById[curElement.nextId];
-      curElement = nextElement;
+              // when done, amalgamate the results together
+              elementsDone++;
+              if (elementsDone === elementsProcessed) {
+                while (headElement) {
+                  result += headElement.jade.trim() + '\n';
+                  headElement = elementsById[headElement.nextId];
+                }
+
+                // add the component wrapper if it exists
+                wrapComponent(result, component, req.screensById, function(component) {
+                  callback(component);
+                });
+              }
+            });
+        })(curElement);
+
+        // proceed through the linked list
+        var nextElement = elementsById[curElement.nextId];
+        curElement = nextElement;
+      }
+    } else {
+      callback('');
     }
   });
 }
