@@ -377,12 +377,20 @@ function renderEjsTemplate(template, attributes, screensById) {
   template = template.replace(
     /\/share\/#\{session.sharedId\}\/project\/#\{projectId\}\/screen\/#\{screenId\}/g, '');
 
+  /* Replaces a screen id from a regular expression with a corresponding link.
+   * Requires: regular expression match, screen id
+   * Returns: corresponding screen link
+   */
+  function replaceLink(match, screenId) {
+    screenId = parseInt(screenId, 10);
+    return '/' + screensById[screenId].titleSlug;
+  }
+
   // screen link targets need to be translated to screen routes
   template = template.replace(/\/share\/#\{userId\}\/project\/#\{projectId\}\/screen\/(\d+)/g,
-    function(match, screenId) {
-      screenId = parseInt(screenId, 10);
-      return '/' + screensById[screenId].titleSlug;
-    });
+    replaceLink);
+  template = template.replace(/\/share\/#\{session.sharedId\}\/project\/#\{projectId\}\/screen\/(\d+)/g,
+    replaceLink);
 
   // no need for unescaped attributes
   template = template.replace(/!=/g, '=');
