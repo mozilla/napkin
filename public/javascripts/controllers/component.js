@@ -2,6 +2,8 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         'helpers/errors', 'can.super', 'jquery.ui'],
   function(can, ExtendedControl, ElementControl, ElementModel, screenUtils, errors) {
     return ExtendedControl({
+      fetchingElements: null
+    }, {
       init: function($element, options) {
         this._super($element, options);
         this.component = options.component;
@@ -37,9 +39,20 @@ define(['can', './extended', './element', 'models/element', 'helpers/screen-util
         if (self.cachedElements) {
           self.traverseElementLinkedList();
         } else {
+          if (this.constructor.fetchingElements) {
+            // pipe all element retrieval into one deferred to prevent
+            // simultaneous fetching, as this causes a bug in CanJS
+            this.constructor.fetchingElements = this.constructor
+              .fetchingElements.pipe(getElements);
+          } else {
+            this.constructor.fetchingElements = getElements();
+          }
+        }
+
+        function getElements() {
           // TODO: optimize this when layout row is removed (new request for
           // every moved component)
-          ElementModel.withRouteData()
+          return ElementModel.withRouteData()
             .findAll({ componentId: componentId })
             .then(function(elements) {
               self.cachedElements = elements;
