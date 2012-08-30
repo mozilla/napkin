@@ -164,6 +164,16 @@ header a
   box-shadow(inset 0 3px 4px #303030)
   color #eee
 
+// must keep the following two sets of selectors separate, as browsers will
+// ignore a whole line of selectors if one fails
+#sidebar input[type='text']:-moz-placeholder,
+#sidebar textarea:-moz-placeholder
+  color #888
+
+#sidebar input[type='text']::-webkit-input-placeholder,
+#sidebar textarea::-webkit-input-placeholder
+  color #888
+
 #sidebar .field-select
   border 1px solid #444
 
