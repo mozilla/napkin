@@ -139,9 +139,6 @@
 }
 
 @media (/* max-width: 767px */ max-width: 1097px) {
-  body {
-    padding-right: 20px;
-  }
   .navbar-fixed-top,
   .navbar-fixed-bottom {
     margin-right: -20px;
