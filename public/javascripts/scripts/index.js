@@ -1,16 +1,16 @@
 require.config({
   baseUrl: '/javascripts/',
   paths: {
-    can: 'lib/can.jquery.min',
-    'can.super': 'lib/can.construct.super',
-    'can.sort': 'lib/can.observe.list.sort'
+    backbone: 'lib/backbone.min',
+    underscore: 'lib/underscore.min',
+    router: 'routers/project-page'
   }
 });
 
-require(['controllers/project-list', 'controllers/screen-list'],
-  function(ProjectListControl, ScreenListControl) {
-    new ProjectListControl('#sidebar', {});
-    new ScreenListControl('#content', {});
+require(['views/project-list', 'views/screen-list'],
+  function(ProjectListView, ScreenListView) {
+    new ProjectListView({ el: $('#sidebar') });
+    new ScreenListView({ el: $('#content') });
   });
 
 require(['scripts/core']);

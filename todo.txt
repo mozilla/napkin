@@ -6,6 +6,11 @@
 | * Continuous task  |
 ======================
 
+Backbone Refactor
+- Templates from text/ejs -> text/template
+
+-----------------------
+
 - Optimize requests
 - Add link on sharing page for visibility
 - Sign in button styles on FF
