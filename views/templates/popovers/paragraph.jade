@@ -1,7 +1,7 @@
-script#paragraph-popover-template(type='text/ejs')
+script#paragraph-popover-template(type='text/template')
   form
     .field
       label(for='text') Text:
-      textarea#text(name='text', type='text') <%= text %>
+      textarea#text(name='text', type='text') <%- text %>
 
     != partial('templates/popovers/footer')
