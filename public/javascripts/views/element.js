@@ -149,8 +149,20 @@ define(['jquery', 'backbone', 'underscore', './extended', 'helpers/screen-utils'
         var model = this.model;
         var previousElement = this.getPreviousElement();
 
+        model.set({
+          head: null,
+          nextId: null
+        });
+
         if (previousElement) {
-          model.set('nextId', previousElement.get('nextId'));
+          var nextId = previousElement.get('nextId');
+
+          if (nextId) {
+            model.set('nextId', nextId);
+          } else {
+            model.set('nextId', null);
+          }
+
           previousElement.save({ nextId: model.get('id') }, { wait: true });
         } else {
           // no previous element means this is the head
@@ -175,7 +187,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'helpers/screen-utils'
 
           if (nextId) {
             // set the previous' nextId to this element's nextId
-            previousElement.set('nextId', model.get('nextId'));
+            previousElement.set('nextId', nextId);
           } else {
             // there is no next; remove the previous' nextId
             previousElement.set('nextId', null);
@@ -190,12 +202,6 @@ define(['jquery', 'backbone', 'underscore', './extended', 'helpers/screen-utils'
             nextElement.save({ head: true }, { wait: true });
           }
         }
-
-        // unset the element's nextId and head, but do not save; the element
-        // will either be deleted promptly (see destroyElement below) or saved
-        // later (see insertElement)
-        model.set('nextId', null);
-        model.set('head', null);
       },
 
       destroyElement: function() {
