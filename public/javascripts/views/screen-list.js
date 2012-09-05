@@ -10,7 +10,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/screen',
       },
 
       render: function() {
-        this.setEventHandlers(true);
+        this.setEventHandlers('on');
         this.Screens.fetch();
       },
 
@@ -36,17 +36,11 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/screen',
         this.numScreens++;
       },
 
-      setEventHandlers: function(on) {
-        var method = 'off';
-        if (on) {
-          method = 'on';
-        }
-
+      setEventHandlers: function(action) {
         if (this.Screens) {
-          // add or remove event handlers based on arguments
-          this.Screens[method]('add', this.addScreen, this);
-          this.Screens[method]('reset', this.addAllScreens, this);
-          this.Screens[method]('remove', this.addAllScreens, this);
+          this.Screens[action]('add', this.addScreen, this);
+          this.Screens[action]('reset', this.addAllScreens, this);
+          this.Screens[action]('remove', this.addAllScreens, this);
         }
       },
 
@@ -74,7 +68,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/screen',
 
           this.$el.show();
           // remove prior event handlers
-          this.setEventHandlers(false);
+          this.setEventHandlers('off');
 
           this.Screens = new ScreenCollection([], { projectId: id });
           this.render();
@@ -85,7 +79,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/screen',
           this.$el.hide();
 
           // remove prior event handlers
-          this.setEventHandlers(false);
+          this.setEventHandlers('off');
           this.Screens = null;
         }
       }

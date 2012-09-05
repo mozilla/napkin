@@ -7,8 +7,8 @@ require.config({
   }
 });
 
-require(['views/project-list', 'views/screen-list'],
-  function(ProjectListView, ScreenListView) {
+require(['jquery', 'views/project-list', 'views/screen-list'],
+  function($, ProjectListView, ScreenListView) {
     new ProjectListView({ el: $('#sidebar') });
     new ScreenListView({ el: $('#content') });
   });

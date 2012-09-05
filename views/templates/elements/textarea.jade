@@ -1,11 +1,8 @@
-script#textarea-element-template(type='text/ejs')
-  // TODO: make names unique and id-ize them for textarea
+script#textarea-element-template(type='text/template')
+  label(for!='<%- elementId %>') <%- name %>: 
+
   if sharing
-    .share-element.field
-      label(for!='<%= elementId %>') <%= name %>: 
-      textarea(rows='8', cols='20', name!='<%= elementId %>', id!='<%= elementId %>')
+    textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>')
   else
-    .live-element.field
-      label(for!='<%= elementId %>') <%= name %>: 
-      textarea(rows='8', cols='20', name!='<%= elementId %>', id!='<%= elementId %>',
-        disabled='disabled')
+    textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>',
+      disabled='disabled')

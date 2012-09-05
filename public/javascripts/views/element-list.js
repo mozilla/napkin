@@ -1,30 +1,29 @@
-define(['jquery', 'can', './switch', 'helpers/errors', 'can.super', 'jquery.serialize'],
-  function($, can, SwitchControl, errors) {
-    return SwitchControl({
-      init: function($element, options) {
-        this._super($element, options);
+define(['jquery', 'backbone', 'underscore', './extended', 'helpers/errors',
+        'jquery.serialize'],
+  function($, Backbone, _, ExtendedView, errors) {
+    return ExtendedView.extend({
+      initialize: function(options) {
+        this.constructParent(arguments);
         this.setComponentModel(options.component);
-      },
-
-      deactivate: function() {
-        this.unrender();
-        this._super();
+        this.render();
       },
 
       setComponentModel: function(component) {
         if (this.component !== component) {
-          this.deactivate();
+          this.publish('screenActions:deactivateElementsInComponent', this.component);
           this.component = component;
-          this.activate();
         }
       },
 
       render: function() {
-        var type = this.component.attr('type');
-        this.element.html(can.view(type + '-element-list-template', this.component));
+        var type = this.component.get('type');
+        var templateId = type + '-element-list-template';
 
-        this.element.addClass('elements');
-        this.element.addClass(type + '-elements');
+        var template = _.template($('#' + templateId).html());
+        this.$el.html(template(this.component.toJSON()));
+
+        this.$el.addClass('elements');
+        this.$el.addClass(type + '-elements');
         this.centerAddButtons();
 
         // prevent links/inputs on sidebar from being tabbed to so that user
@@ -39,9 +38,9 @@ define(['jquery', 'can', './switch', 'helpers/errors', 'can.super', 'jquery.seri
 
       unrender: function() {
         if (this.component) {
-          var type = this.component.attr('type');
-          this.element.removeClass('elements');
-          this.element.removeClass(type + '-elements');
+          var type = this.component.get('type');
+          this.$el.removeClass('elements');
+          this.$el.removeClass(type + '-elements');
         }
       },
 
@@ -51,43 +50,51 @@ define(['jquery', 'can', './switch', 'helpers/errors', 'can.super', 'jquery.seri
           var $element = $btn.siblings('.element');
 
           if ($element.height() > $btn.height()) {
-            // center each button vertically if the parent element is larger
-            // than it
+            // center each button vertically if the parent element is larger than it
             $btn.css('margin-top', ($element.height() - $btn.height()) / 2);
           }
         });
       },
 
-      '.component-config submit': function($form, event) {
-        event.preventDefault();
-        var $submit = $form.find('[type="submit"]');
-        $submit.attr('disabled', 'disabled');
+      events: {
+        'submit .component-config': function(event) {
+          event.preventDefault();
+          var $form = $(event.currentTarget);
 
-        var formData = $form.serializeObject();
-        // merge form data with component attributes
-        this.component.attr(formData);
+          var $submit = $form.find('[type="submit"]');
+          $submit.attr('disabled', 'disabled');
 
-        this.component.withRouteData()
-          .save()
-          .then(function(component) {
-            // visual feedback with a check icon
-            var $check = $form.find('.icon-ok');
-            $check.show();
+          var formData = $form.serializeObject();
+          // merge form data with component attributes
+          this.component.save(formData, {
+            success: function() {
+              // visual feedback with a check icon
+              var $check = $form.find('.icon-ok');
+              $check.show();
 
-            $submit.removeAttr('disabled');
-            setTimeout(function() {
-              $check.hide();
-            }, 1000);
-          }, function(xhr) {
-            $submit.removeAttr('disabled');
-            errors.tooltipHandler($submit)(xhr);
+              $submit.removeAttr('disabled');
+              setTimeout(function() {
+                $check.hide();
+              }, 1000);
+            },
+
+            error: function() {
+              var args = Array.prototype.slice.call(arguments, 0);
+              $submit.removeAttr('disabled');
+              errors.tooltipHandler($submit).apply(errors, args);
+            },
+
+            wait: true
           });
-      },
+        },
 
-      'li .btn-success click': function($btn, event) {
-        event.preventDefault();
-        var $element = $btn.siblings('.element');
-        $element.trigger('addRequested');
+        'click li .btn-success': function(event) {
+          event.preventDefault();
+          var $btn = $(event.currentTarget);
+
+          var $element = $btn.siblings('.element');
+          this.publish('elementList:addElement', $element);
+        }
       }
     });
   });

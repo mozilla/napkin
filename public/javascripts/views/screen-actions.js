@@ -1,62 +1,73 @@
-define(['jquery', 'can', './extended', './component-list', './element-list', 'can.super'],
-  function($, can, ExtendedControl, ComponentListControl, ElementListControl) {
-    return ExtendedControl({
-      init: function($element, options) {
-        this._super($element, options);
+define(['jquery', 'backbone', 'underscore', './extended', './component-list',
+        './element-list'],
+  function($, Backbone, _, ExtendedView, ComponentListView, ElementListView) {
+    return ExtendedView.extend({
+      initialize: function(options) {
+        this.constructParent(arguments);
         
-        // used for event handlers
-        this.off();
-        this.options.content = $('#content');
-        this.options.back = $('#back');
-        this.on();
+        // for caching purposes
+        this.$back = $('#back');
 
         // by default, the component list should be shown
         this.activateComponentList();
       },
 
       activateComponentList: function() {
-        if (this.elementListControl) {
-          this.elementListControl.deactivate();
+        if (this.elementListView) {
+          this.elementListView.unrender();
+          this.elementListView.undelegateEvents();
         }
 
-        this.options.back.find('span').text('project page');
-        if (this.componentListControl) {
-          this.componentListControl.activate();
+        this.$back.find('span').text('project page');
+        if (this.componentListView) {
+          this.elementListView.unrender();
+          this.componentListView.delegateEvents();
+          this.componentListView.render();
         } else {
-          this.componentListControl = new ComponentListControl(this.element, {});
+          this.componentListView = new ComponentListView({ el: this.el });
         }
       },
 
       activateElementList: function(component) {
-        if (this.componentListControl) {
-          this.componentListControl.deactivate();
+        if (this.componentListView) {
+          this.componentListView.unrender();
+          this.componentListView.undelegateEvents();
         }
 
-        this.options.back.find('span').text('component list');
-        if (this.elementListControl) {
-          this.elementListControl.activate();
-          this.elementListControl.setComponentModel(component);
+        this.$back.find('span').text('component list');
+
+        if (this.elementListView) {
+          this.elementListView.unrender();
+          this.elementListView.setComponentModel(component);
+
+          this.elementListView.delegateEvents();
+          this.elementListView.render();
         } else {
-          this.elementListControl = new ElementListControl(this.element, { component: component });
+          this.elementListView = new ElementListView({ el: this.el,
+            component: component });
         }
       },
 
-      '{content} .component-location selected': function($element, event, component) {
-        this.activateElementList(component);
+      contextualEvents: {
+        'click #sidebar | #back': function(event) {
+          if (this.elementListView && this.elementListView.isActive()) {
+            event.preventDefault();
+            // back button should go to component list
+            this.activateComponentList();
+          } else {
+            // back button should link to project page, as it normally does; no
+            // need to do anything
+          }
+        }
       },
 
-      '{content} deselectedAll': function($element, event, component) {
-        this.activateComponentList();
-      },
+      subscriptions: {
+        'component:selected': function(component) {
+          this.activateElementList(component);
+        },
 
-      '{back} click': function($element, event) {
-        if (this.elementListControl && this.elementListControl.isActive()) {
-          event.preventDefault();
-          // back button should go to component list
+        'component:deselectedAll': function(event, component) {
           this.activateComponentList();
-        } else {
-          // back button should link to project page, as it normally does; no
-          // need to do anything
         }
       }
     });

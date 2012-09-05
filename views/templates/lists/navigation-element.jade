@@ -1,4 +1,4 @@
-script#navigation-element-list-template(type='text/ejs')
+script#navigation-element-list-template(type='text/template')
   h2 Navigation Elements
   ul
     li
@@ -8,14 +8,5 @@ script#navigation-element-list-template(type='text/ejs')
       a.element(href='#', data-type='external-link', data-url='http://example.com') External link
       a.btn.btn-success(href='#add-element') +
 
-  if !sharing
-    h2 Form Configuration
-    form.component-config
-      .field
-        label(for='style') Navigation style:
-
-      button.btn.btn-danger(type='submit') Save
-      i.icon-white.icon-ok
-
-script#navigation-wrapper-template(type='text/ejs')
+script#navigation-wrapper-template(type='text/template')
   != partial('templates/wrappers/navigation')

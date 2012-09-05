@@ -1,35 +1,47 @@
-define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/errors',
-        'can.super', 'lib/bootstrap', 'jquery.ui'],
-  function(can, ExtendedControl, ElementModel, screenUtils, errors) {
-    return ExtendedControl({
-      usedIds: {}
-    }, {
-      init: function($element, options) {
-        this._super($element, options);
-        this.elementModel = options.elementModel;
+define(['jquery', 'backbone', 'underscore', './extended', 'helpers/screen-utils',
+        'helpers/errors', 'helpers/shared-models', 'lib/bootstrap', 'jquery.ui',
+        'jquery.serialize'],
+  function($, Backbone, _, ExtendedView, screenUtils, errors, sharedModels) {
+    return ExtendedView.extend({
+      tagName: 'div',
 
-        this.componentRow = options.component.attr('row');
-        this.componentId = options.component.attr('id');
+      initialize: function(options) {
+        this.component = options.component;
+        this.componentRow = this.component.get('row');
+        this.componentId = this.component.get('id');
 
-        if (options.component.attr('type') === 'form') {
-          this.addIdToFormElement();
+        var type = this.model.get('type');
+        var templateId = type + '-element-template';
+
+        var $template = $('#' + templateId);
+        this.template = _.template($template.html());
+
+        // popovers only on prototype page
+        if (!screenUtils.isSharePage()) {
+          var popoverTemplateId = type + '-popover-template';
+          this.popoverTemplate = _.template($('#' + popoverTemplateId).html());
         }
 
-        this.appendAndSetElement();
-        this.addPopover();
-        this.element.data('model', this.elementModel);
+        // if a certain tag is specified by the template, use it; otherwise,
+        // default to div
+        var tag = $template.data('tag');
+        if (tag) {
+          this.setElement(this.make(tag));
+        }
 
-        // for event handlers
-        this.off();
-        this.options.content = $('#content');
-        this.on();
-      },
+        // construct after tag is finalized
+        this.constructParent(arguments);
 
-      appendAndSetElement: function() {
-        var type = this.elementModel.attr('type');
-        this.options.container.append(can.view(type + '-element-template',
-          this.elementModel));
-        this.setElement(this.$('.live-element').last());
+        if (screenUtils.isSharePage()) {
+          this.$el.addClass('share-element');
+        } else {
+          this.$el.addClass('live-element');
+        }
+
+        if (this.component.get('type') === 'form') {
+          this.addIdToFormElement();
+          this.$el.addClass('field');
+        }
       },
 
       addPopover: function() {
@@ -38,76 +50,78 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/
           return;
         }
 
-        var templateId = this.elementModel.attr('type') + '-popover-template';
-        var placement = 'bottom';
+        var self = this;
+        sharedModels.getCurrentScreen()
+          .then(function(screen) {
+            var placement = 'bottom';
+            if (self.componentRow === screen.get('layout').length) {
+              placement = 'top';
+            }
 
-        // TODO: change this when layout additions kick in
-        if (this.componentRow === 3) {
-          placement = 'top';
-        }
-
-        this.element.popover({
-          title: 'Edit Element',
-          trigger: 'manual',
-          placement: placement,
-          content: can.view.render(templateId, this.elementModel)
-        });
+            self.$el.popover({
+              title: 'Edit Element',
+              trigger: 'manual',
+              placement: placement,
+              content: self.popoverTemplate(self.getTemplateData())
+            });
+          });
       },
 
       render: function() {
-        var type = this.elementModel.attr('type');
-        var $oldElement = this.element;
-
         this.deactivate();
-        this.setElement(this.element.parent());
+        this.$el.html(this.template(this.getTemplateData()));
 
-        // replace the current element with a newly rendered one
-        var $newElement = $(can.view.render(type + '-element-template', this.elementModel));
-        $newElement = $newElement.filter('.live-element');
-        $oldElement.replaceWith($newElement);
-
-        this.setElement($newElement);
+        // get rid of the current popover entirely if one exists
+        this.$el.data('popover', null);
         this.addPopover();
-        this.element.data('model', this.elementModel);
+
+        this.$el.data('model', this.model);
+        return this;
+      },
+
+      getTemplateData: function() {
+        var data = this.model.toJSON();
+        data.elementId = this.elementId;
+        return data;
       },
 
       activate: function() {
-        if (!this.element.hasClass('active')) {
-          this.element.popover('show');
-          this.element.addClass('active');
+        if (!this.$el.hasClass('active')) {
+          this.$el.popover('show');
+          this.$el.addClass('active');
 
           // add text to selection div inside popover select box
-          var $popover = this.element.data('popover').tip();
+          var $popover = this.$el.data('popover').tip();
           var $select = $popover.find('.field select');
           $select.siblings('.selection')
             .text($select.find('option:selected').text());
 
           // if the element model was just created, the user likely wants to
           // edit this element; in turn, immediately focus the first input/textarea
-          if (this.elementModel.justCreated) {
+          if (this.model.justCreated) {
             $popover.find('input, textarea')
               .eq(0)
               .focus()
               .select();
 
             // only do this once
-            this.elementModel.justCreated = false;
+            this.model.justCreated = false;
           }
         }
       },
 
       deactivate: function() {
-        if (this.element.hasClass('active')) {
-          var $popover = this.element.data('popover').tip();
+        if (this.$el.hasClass('active')) {
+          var $popover = this.$el.data('popover').tip();
           $popover.find('.btn-primary').tooltip('hide');
 
-          this.element.popover('hide');
-          this.element.removeClass('active');
+          this.$el.popover('hide');
+          this.$el.removeClass('active');
         }
       },
 
       getPreviousElement: function() {
-        var $prev = this.element.prev();
+        var $prev = this.$el.prev();
 
         if ($prev.length > 0) {
           return $prev.data('model');
@@ -116,7 +130,7 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/
       },
 
       getNextElement: function() {
-        var $next = this.element.next();
+        var $next = this.$el.next();
 
         // skip over placeholder added by jqueryui sortable
         if ($next.hasClass('ui-sortable-placeholder')) {
@@ -129,84 +143,79 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/
         return null;
       },
 
-      // given the current state of this element in the DOM, update the element
-      // model linked list to match
-      updateElementPosition: function() {
-        var elementModel = this.elementModel;
+      // insert this element into the linked list based off of its current
+      // position in the DOM
+      insertElement: function() {
+        var model = this.model;
         var previousElement = this.getPreviousElement();
 
         if (previousElement) {
-          elementModel.attr('nextId', previousElement.attr('nextId'));
-
-          previousElement.attr('nextId', elementModel.attr('id'));
-          previousElement.withRouteData({ componentId: this.componentId })
-            .save();
+          model.set('nextId', previousElement.get('nextId'));
+          previousElement.save({ nextId: model.get('id') }, { wait: true });
         } else {
           // no previous element means this is the head
-          elementModel.attr('head', true);
+          model.set('head', true);
           var nextElement = this.getNextElement();
 
           if (nextElement) {
-            elementModel.attr('nextId', nextElement.attr('id'));
-            nextElement.attr('head', null);
-            nextElement.withRouteData({ componentId: this.componentId })
-              .save();
+            model.set('nextId', nextElement.get('id'));
+            nextElement.save({ head: null }, { wait: true });
           }
         }
 
-        elementModel.withRouteData({ componentId: this.componentId })
-          .save();
+        model.save({}, { wait: true });
       },
 
       removeElementFromLinkedList: function() {
-        var elementModel = this.elementModel;
+        var model = this.model;
         var previousElement = this.getPreviousElement(); 
 
         if (previousElement) {
-          var nextId = elementModel.attr('nextId');
+          var nextId = model.get('nextId');
 
           if (nextId) {
             // set the previous' nextId to this element's nextId
-            previousElement.attr('nextId', elementModel.attr('nextId')) ;
+            previousElement.set('nextId', model.get('nextId'));
           } else {
             // there is no next; remove the previous' nextId
-            previousElement.attr('nextId', null);
+            previousElement.set('nextId', null);
           }
 
-          previousElement.withRouteData({ componentId: this.componentId })
-            .save();
+          previousElement.save({}, { wait: true });
         } else {
           var nextElement = this.getNextElement();
 
           if (nextElement) {
             // no previous element means nextElement is the new head
-            nextElement.attr('head', true);
-            nextElement.withRouteData({ componentId: this.componentId })
-              .save();
+            nextElement.save({ head: true }, { wait: true });
           }
         }
 
         // unset the element's nextId and head, but do not save; the element
         // will either be deleted promptly (see destroyElement below) or saved
-        // later (see updateElementPosition)
-        elementModel.attr('nextId', null);
-        elementModel.attr('head', null);
+        // later (see insertElement)
+        model.set('nextId', null);
+        model.set('head', null);
       },
 
       destroyElement: function() {
         var self = this;
-        self.removeElementFromLinkedList(true);
-        self.elementModel.withRouteData({ componentId: self.componentId })
-          .destroy()
-          .then(function() {
+        self.removeElementFromLinkedList();
+
+        self.model.destroy({
+          success: function() {
             self.deactivate();
-            // will also destroy this controller
-            self.element.remove();
-          });
+            self.undelegateEvents();
+
+            self.off();
+            self.remove();
+          },
+          wait: true
+        });
       },
 
       addIdToFormElement: function() {
-        var id = this.elementModel.attr('name');
+        var id = this.model.get('name');
         var usedIds = this.constructor.usedIds;
 
         // restrict to alphanumeric characters and underscores
@@ -236,92 +245,134 @@ define(['can', './extended', 'models/element', 'helpers/screen-utils', 'helpers/
           usedIds[id] = 1;
         }
 
-        this.elementModel.attr('elementId', id);
+        this.elementId = id;
       },
 
-      '{content} click': function($element, event) {
-        this.deactivate();
-      },
-
-      '{content} .live-element click': function($element, event) {
-        if ($element.is(this.element)) {
-          event.preventDefault();
-
-          if (this.element.hasClass('active')) {
-            // if already activated, deactivate
-            this.deactivate();
-          } else {
-            this.activate();
-          }
-        } else {
+      contextualEvents: {
+        'click window | #content': function(event) {
           this.deactivate();
-        }
-      },
+        },
 
-      '{content} deactivateElementRequested': function($element, event) {
-        this.deactivate();
-      },
-
-      '{window} .close-popover click': function($element, event) {
-        event.preventDefault();
-        this.deactivate();
-      },
-
-      '{window} .popover-content form submit': function($form, event) {
-        if (this.element.hasClass('active')) {
-          event.preventDefault();
-          var self = this;
-
-          var formData = $form.serializeObject();
-          for (var attr in formData) {
-            var oldValue = self.elementModel.attr(attr);
-
-            // make the new value's type match the old value's type
-            if (typeof oldValue === 'number' && typeof formData[attr] === 'string') {
-              formData[attr] = +formData[attr];
-            }
-
-            self.elementModel.attr(attr, formData[attr]);
-          }
-
-          self.elementModel.withRouteData({ componentId: self.componentId })
-            .save()
-            .then(function() {
-              self.render();
-            }, errors.tooltipHandler($form.find('.btn-primary')));
-        }
-      },
-
-      '{window} .popover-content textarea keydown': function($textarea, event) {
-        if (this.element.hasClass('active')) {
-          if ((event.ctrlKey || event.metaKey) && event.which === 13) {
+        'click #content | .live-element': function(event) {
+          var $element = $(event.currentTarget);
+          if ($element.is(this.$el)) {
             event.preventDefault();
 
-            // submit the element edit form
-            $textarea.parent().submit();
-          }
-        }
-      },
-
-      '{window} .popover-content .btn-danger click': function($btn, event) {
-        if (this.element.hasClass('active')) {
-          this.destroyElement();
-        }
-      },
-
-      '{window} isolatedKeyDown': function($window, event, keyEvent) {
-        if (this.element && this.element.hasClass('active')) {
-          // escape key
-          if (keyEvent.which === 27) {
+            if (this.$el.hasClass('active')) {
+              // if already activated, deactivate
+              this.deactivate();
+            } else {
+              this.activate();
+            }
+          } else {
             this.deactivate();
           }
+        },
 
-          // backspace key
-          if (keyEvent.which === 8) {
-            keyEvent.preventDefault();
+        'click window | .close-popover': function(event) {
+          event.preventDefault();
+          this.deactivate();
+        },
+
+        'submit window | .popover-content form': function(event) {
+          if (this.$el.hasClass('active')) {
+            event.preventDefault();
+            var self = this;
+
+            var $form = $(event.currentTarget);
+            var formData = $form.serializeObject();
+
+            for (var attr in formData) {
+              var oldValue = self.model.get(attr);
+
+              // make the new value's type match the old value's type
+              if (typeof oldValue === 'number' && typeof formData[attr] === 'string') {
+                formData[attr] = +formData[attr];
+              }
+
+              self.model.set(attr, formData[attr]);
+            }
+
+            self.model.save({}, {
+              success: function() {
+                self.render();
+              },
+
+              error: errors.tooltipHandler($form.find('.btn-primary')),
+              wait: true
+            });
+          }
+        },
+
+        'keydown window | .popover-content textarea': function(event) {
+          if (this.$el.hasClass('active')) {
+            if ((event.ctrlKey || event.metaKey) && event.which === 13) {
+              event.preventDefault();
+
+              // submit the element edit form
+              $(event.currentTarget).parent().submit();
+            }
+          }
+        },
+
+        'click window | .popover-content .btn-danger': function(event) {
+          if (this.$el.hasClass('active')) {
+            event.preventDefault();
+            this.deactivate();
             this.destroyElement();
           }
         }
+      },
+
+      subscriptions: {
+        'component:activateElement': function($element) {
+          if ($element.is(this.$el)) {
+            this.activate();
+          } else {
+            this.deactivate();
+          }
+        },
+
+        'component:deactivateElements': function() {
+          this.deactivate();
+        },
+
+        'screenActions:deactivateElementsInComponent': function(component) {
+          if (this.component === component) {
+            this.deactivate();
+          }
+        },
+
+        'component:removeElement': function($element) {
+          if ($element.is(this.$el)) {
+            this.removeElementFromLinkedList();
+          }
+        },
+
+        'component:insertElement': function($element) {
+          if ($element.is(this.$el)) {
+            this.insertElement();
+          }
+        },
+
+        'keyManager:keyDown': function(keyEvent) {
+          if (this.$el && this.$el.hasClass('active')) {
+            // escape key
+            if (keyEvent.which === 27) {
+              this.deactivate();
+            }
+
+            // backspace key
+            if (keyEvent.which === 8) {
+              keyEvent.preventDefault();
+              this.deactivate();
+              this.destroyElement();
+            }
+          }
+        }
       }
+    }, {
+      // to keep track of form IDs that are used
+      usedIds: {}
     });
   });

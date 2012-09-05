@@ -1,17 +1,17 @@
-define(['jquery', 'can', './switch', 'helpers/shared-models', 'helpers/errors',
-        './layout-modification', 'can.super', 'jquery.serialize', 'jquery.ui'],
-  function($, can, SwitchControl, sharedModels, errors, LayoutModificationControl) {
-    return SwitchControl({
-      init: function($element, options) {
-        this._super($element, options);
+define(['jquery', 'backbone', 'underscore', './extended', 'helpers/shared-models',
+        'helpers/errors', './layout-modification', 'jquery.serialize', 'jquery.ui'],
+  function($, Backbone, _, ExtendedView, sharedModels, errors, LayoutModificationView) {
+    return ExtendedView.extend({
+      template: _.template($('#component-list-template').html()),
+
+      initialize: function(options) {
+        this.constructParent(arguments);
         var self = this;
 
         sharedModels.getCurrentScreen()
           .then(function(screen) {
             self.screen = screen;
-            self.activate();
-          }, function() {
-            // TODO: handle error
+            self.render();
           });
       },
 
@@ -22,43 +22,55 @@ define(['jquery', 'can', './switch', 'helpers/shared-models', 'helpers/errors',
       },
 
       render: function() {
-        this.element.html(can.view('component-list-template', this.screen));
+        this.$el.html(this.template(this.screen.toJSON()));
         this.$('.component').draggable(this.dragOptions);
 
         // to control screen layout modifications
-        new LayoutModificationControl(this.$('#layout-modifications'), {});
-        this.$('.dropdown-toggle').dropdown();
+        var view = new LayoutModificationView({ screen: this.screen });
+        this.$el.append(view.render().el);
       },
 
-      '#screen-config submit': function($form, event) {
-        event.preventDefault();
-        var $submit = $form.find('[type="submit"]');
-        $submit.attr('disabled', 'disabled');
+      unrender: function() {
+        // nothing to do
+      },
 
-        var formData = $form.serializeObject();
-        // secure will not be set to false if the checkbox is not checked;
-        // instead, it will remain undefined; in this case, set it manually
-        if (!formData.secure) {
-          formData.secure = false;
-        }
+      events: {
+        'submit #screen-config': function(event) {
+          event.preventDefault();
+          var $form = $(event.currentTarget);
 
-        // merge form data with screen attributes
-        this.screen.attr(formData);
-        this.screen.withRouteData()
-          .save()
-          .then(function(screen) {
-            // visual feedback with a check icon
-            var $check = $form.find('.icon-ok');
-            $check.show();
+          var $submit = $form.find('[type="submit"]');
+          $submit.attr('disabled', 'disabled');
 
-            $submit.removeAttr('disabled');
-            setTimeout(function() {
-              $check.hide();
-            }, 1000);
-          }, function(xhr) {
-            $submit.removeAttr('disabled');
-            errors.tooltipHandler($submit)(xhr);
+          var formData = $form.serializeObject();
+          // secure will not be set to false if the checkbox is not checked;
+          // instead, it will remain undefined; in this case, set it manually
+          if (!formData.secure) {
+            formData.secure = false;
+          }
+
+          // merge form data with screen attributes
+          this.screen.save(formData, {
+            success: function() {
+              // visual feedback with a check icon
+              var $check = $form.find('.icon-ok');
+              $check.show();
+
+              $submit.removeAttr('disabled');
+              setTimeout(function() {
+                $check.hide();
+              }, 1000);
+            },
+
+            error: function() {
+              var args = Array.prototype.slice.call(arguments, 0);
+              $submit.removeAttr('disabled');
+              errors.tooltipHandler($submit).apply(errors, args);
+            },
+
+            wait: true
           });
+        }
       }
     });
   });

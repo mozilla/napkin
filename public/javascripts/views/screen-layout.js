@@ -1,38 +1,45 @@
-define(['can', './extended', './component', 'models/component', 'helpers/screen-utils',
-        'helpers/errors', 'helpers/shared-models', 'helpers/utils', 'can.super',
-        'jquery.ui'],
-  function(can, ExtendedControl, ComponentControl, ComponentModel, screenUtils, errors,
-           sharedModels, utils) {
-    return ExtendedControl({
-      dropOptions: {
-        hoverClass: 'component-hover',
-        accept: '.component'
-      },
+define(['jquery', 'backbone', 'underscore', './extended', 'collections/component',
+        './component', 'helpers/screen-utils', 'helpers/errors',
+        'helpers/shared-models', 'jquery.ui'],
+  function($, Backbone, _, ExtendedView, ComponentCollection, ComponentView,
+           screenUtils, errors, sharedModels) {
+    return ExtendedView.extend({
+      template: _.template($('#layout-template').html()),
 
-      init: function($element, options) {
-        this._super($element, options);
+      initialize: function(options) {
         var self = this;
+        self.constructParent(arguments);
+
+        self.Components = new ComponentCollection([], screenUtils.getUrlData());
+        self.Components.on('add', self.addComponent, self);
+        self.Components.on('reset', self.addAllComponents, self);
+
+        // remove is handled in component.js; no need to deal with it here
+        // self.Components.on('remove', self.addAllComponents, self);
 
         sharedModels.getCurrentScreen()
           .then(function(screen) {
             self.screen = screen;
             self.render();
-
-            // change could be called in rapid succession if, say, a splice
-            // call both removes and adds an element; because this can cause
-            // issues, debounce the callback
-            screen.layout.bind('change', utils.debounce(function() {
+            self.Components.fetch();
+ 
+            self.screen.on('change:layout', function() {
               self.render();
-            }, self, 50));
+              self.removeComponentViews();
+              self.Components.trigger('reset');
+            }, self);
           });
       },
 
-      render: function() {
-        this.element.html(can.view('layout-template', this.screen));
-        this.configureDropTargets();
+      dropOptions: {
+        hoverClass: 'component-hover',
+        accept: '.component'
+      },
 
+      render: function() {
+        this.$el.html(this.template(this.screen.toJSON()));
+        this.configureDropTargets();
         this.markComponentPositions();
-        this.addAllComponents();
       },
 
       configureDropTargets: function() {
@@ -68,33 +75,13 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
       },
 
       addAllComponents: function() {
-        var self = this;
-
-        if (self.cachedComponents) {
-          // already have components; add each one
-          self.addEachComponent();
-        } else {
-          ComponentModel.withRouteData()
-            .findAll()
-            .then(function(components) {
-              self.cachedComponents = components;
-              self.addEachComponent();
-            }, function(xhr) {
-              // TODO: handle error
-            });
-        }
-      },
-
-      addEachComponent: function() {
-        var self = this;
-        self.cachedComponents.each(function(component, index) {
-          self.addComponent(component);
-        });
+        this.$('.component-location').empty();
+        this.Components.each(_.bind(this.addComponent, this));
       },
 
       addComponent: function(component) {
         // select the component via the data-position attribute added earlier
-        var positionAttr = component.row + ':' + component.col;
+        var positionAttr = component.get('row') + ':' + component.get('col');
         var $componentLocation = this.$('[data-position="' + positionAttr + '"]');
 
         if ($componentLocation.length === 0) {
@@ -102,60 +89,74 @@ define(['can', './extended', './component', 'models/component', 'helpers/screen-
           return;
         }
 
-        var componentControl = new ComponentControl($componentLocation,
-          { component: component });
-        this.setComponentControl($componentLocation, componentControl);
+        var view = new ComponentView({
+          el: $componentLocation,
+          model: component
+        });
+        this.setComponentView($componentLocation, view);
       },
 
-      componentControls: {},
-      getComponentControl: function($componentLocation) {
+      componentViews: {},
+      getComponentView: function($componentLocation) {
         var position = $componentLocation.data('position');
         var key = position.row + ':' + position.col;
-        return this.componentControls[key];
+        return this.componentViews[key];
       },
 
-      setComponentControl: function($componentLocation, componentControl) {
+      setComponentView: function($componentLocation, componentView) {
         var self = this;
         var position = $componentLocation.data('position');
-        var key = position.row + ':' + position.col;
 
-        self.componentControls[key] = componentControl;
-        can.bind.call(componentControl, 'destroyed', function() {
-          delete self.componentControls[key];
+        var key = position.row + ':' + position.col;
+        self.componentViews[key] = componentView;
+
+        componentView.on('remove', function() {
+          delete self.componentViews[key];
         });
       },
 
-      '.component-location drop': function($componentLocation, event, ui) {
-        var self = this;
-        var $component = $(ui.draggable);
-        var componentType = $component.data('type');
-        var existingControl = self.getComponentControl($componentLocation);
+      removeComponentViews: function() {
+        _.each(this.componentViews, function(component) {
+          component.undelegateEvents();
+          component.off();
+        });
 
-        // reset component position, since it was just dragged
-        $component.css({ top: 0, left: 0 });
+        this.componentViews = {};
+      },
 
-        if (existingControl) {
-          // remove the existing component if its type is different from the
-          // one being added; otherwise, simply focus the component
-          if (existingControl.getType() === componentType) {
-            existingControl.select();
-          } else {
-            existingControl.remove();
+      events: {
+        'drop .component-location': function(event, ui) {
+          var self = this;
+          var $componentLocation = $(event.currentTarget);
+          var $component = $(ui.draggable);
+          var componentType = $component.data('type');
+          var existingView = self.getComponentView($componentLocation);
+
+          // reset component position, since it was just dragged
+          $component.css({ top: 0, left: 0 });
+
+          if (existingView) {
+            // remove the existing component if its type is different from the
+            // one being added; otherwise, simply focus the component
+            if (existingView.model.get('type') === componentType) {
+              existingView.select();
+            } else {
+              existingView.undelegateEvents();
+              existingView.off();
+            }
           }
+
+          // create new component and an associated control
+          self.Components.create(_.extend({ type: componentType },
+            $componentLocation.data('position')), {
+              success: function(component) {
+                self.publish('screenLayout:selectComponent', component);
+              },
+
+              error: errors.tooltipHandler($component),
+              wait: true
+            });
         }
-
-        // create new component and an associated control
-        var component = new ComponentModel(can.extend({ type: componentType },
-          $componentLocation.data('position')));
-
-        component.withRouteData()
-          .save()
-          .then(function(component) {
-            var componentControl = new ComponentControl($componentLocation,
-              { component: component });
-            self.setComponentControl($componentLocation, componentControl);
-            componentControl.select();
-          }, errors.tooltipHandler($component));
       }
     });
   });

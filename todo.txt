@@ -7,7 +7,12 @@
 ======================
 
 Backbone Refactor
-- Templates from text/ejs -> text/template
+/ Keyboard shorcuts
+/ Changes when layout additions kick in (public/javascripts/views/element.js)
+/ Comment out navigation form configuration
+/ Templates from text/ejs -> text/template
+/ undelegateEvents to remove view? what about contextualEvents and routeEvents?
+/ Assess wait: true
 
 -----------------------
 
