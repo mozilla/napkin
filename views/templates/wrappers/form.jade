@@ -1,7 +1,6 @@
-<% if (attr('action') === undefined) { %>
-form.elements-container(method='get', action!='/share/#{session.sharedId}/project/#{projectId}/screen/#{screenId}')
-  button.form-submit.btn.btn-primary(type='submit') Submit
-<% } else { %>
-form.elements-container(method='get', action!="/share/#{session.sharedId}/project/#{projectId}/screen/<%= attr('action') %>")
-  button.form-submit.btn.btn-primary(type='submit') Submit
+<% if (typeof action === 'undefined') { %>
+<% var action = #{screenId}; %>
 <% } %>
+
+form.elements-container(method='get', action!="/share/#{session.sharedId}/project/#{projectId}/screen/<%- action %>")
+  button.form-submit.btn.btn-primary(type='submit') Submit

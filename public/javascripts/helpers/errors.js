@@ -6,7 +6,7 @@ define(['lib/bootstrap.min'], function() {
      */
     tooltipHandler: function($element, placement, howLong) {
       var self = this;
-      return function(xhr) {
+      return function(model, xhr) {
         self.displayTooltip($element, xhr.responseText, placement, howLong);
         $element.focus();
       };

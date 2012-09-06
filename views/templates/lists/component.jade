@@ -1,4 +1,4 @@
-script#component-list-template(type='text/ejs')
+script#component-list-template(type='text/template')
   h2 Components
   .component.article(data-type='article')
     h3 Article
@@ -18,7 +18,7 @@ script#component-list-template(type='text/ejs')
   form#screen-config.clearfix
     .field
       label(for='secure') Require user authentication to view?
-      <% if (attr('secure')) { %>
+      <% if (secure) { %>
       input#secure(type='checkbox', name='secure', value='true', checked='true')
       <% } else { %>
       input#secure(type='checkbox', name='secure', value='true')
@@ -28,45 +28,45 @@ script#component-list-template(type='text/ejs')
     i.icon-white.icon-ok
 
   h2 Screen Layout
-  #layout-modifications.clearfix
-    <% var layout = attr('layout'); %>
-    <% layout.each(function(colLengths, row) { %>
-    .layout-row.row.dropdown(data-row!='<%= row %>')
-      a.delete-row(href='#delete-row')
-        i.icon-trash.icon-white
 
-      <% colLengths.each(function(length) { %>
-      div(class!='layout-span<%= length %>')
-      <% }); %>
-
-      a.dropdown-toggle(data-toggle='dropdown', href='#modify-row')
-        i.icon-pencil.icon-white
-
-      ul.dropdown-menu
-        li
-          a.layout-row.row
-            span.layout-span4(data-length='4')
-            span.layout-span4(data-length='4')
-            span.layout-span4(data-length='4')
-        li
-          a.layout-row.row
-            span.layout-span4(data-length='4')
-            span.layout-span8(data-length='8')
-        li
-          a.layout-row.row
-            span.layout-span8(data-length='8')
-            span.layout-span4(data-length='4')
-        li
-          a.layout-row.row
-            span.layout-span12(data-length='12')
-    <% }); %>
-
-    .layout-actions
-      span Add Row
-      a.btn.btn-success(href='#add-row') +
-
-script#component-action-template(type='text/ejs')
+script#component-action-template(type='text/template')
   .component-actions
     if !sharing
       a.delete-component(href='#delete', tabindex='-1')
         i.icon-trash
+
+script#screen-layout-template(type='text/template')
+  <% _.each(layout, function(cols, row) { %>
+  .layout-row.row.dropdown(data-row!='<%- row %>')
+    a.delete-row(href='#delete-row')
+      i.icon-trash.icon-white
+
+    <% _.each(cols, function(length) { %>
+    div(class!='layout-span<%- length %>')
+    <% }); %>
+
+    a.dropdown-toggle(data-toggle='dropdown', href='#modify-row')
+      i.icon-pencil.icon-white
+
+    ul.dropdown-menu
+      li
+        a.layout-row.row
+          span.layout-span4(data-length='4')
+          span.layout-span4(data-length='4')
+          span.layout-span4(data-length='4')
+      li
+        a.layout-row.row
+          span.layout-span4(data-length='4')
+          span.layout-span8(data-length='8')
+      li
+        a.layout-row.row
+          span.layout-span8(data-length='8')
+          span.layout-span4(data-length='4')
+      li
+        a.layout-row.row
+          span.layout-span12(data-length='12')
+  <% }); %>
+
+  .layout-actions
+    span Add Row
+    a.btn.btn-success(href='#add-row') +

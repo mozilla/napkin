@@ -1,5 +1,2 @@
-script#paragraph-element-template(type='text/ejs')
-  if sharing
-    p.share-element <%= text %>
-  else
-    p.live-element <%= text %>
+script#paragraph-element-template(type='text/template')
+  p <%- text %>
