@@ -8,6 +8,12 @@ define(['jquery', 'backbone', 'underscore', './extended', 'helpers/errors',
         this.render();
       },
 
+      dragOptions: {
+        revert: 'invalid',
+        // don't cancel if input is dragged
+        cancel: ''
+      },
+
       setComponentModel: function(component) {
         if (this.component !== component) {
           this.publish('screenActions:deactivateElementsInComponent', this.component);
@@ -34,6 +40,9 @@ define(['jquery', 'backbone', 'underscore', './extended', 'helpers/errors',
         var $select = this.$('.field select');
         $select.siblings('.selection')
           .text($select.find('option:selected').text());
+
+        // elements can also be dragged into their component
+        this.$('.element').draggable(this.dragOptions);
       },
 
       unrender: function() {
