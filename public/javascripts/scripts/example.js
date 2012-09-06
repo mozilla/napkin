@@ -42,7 +42,7 @@ require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], fun
 
     $loginForm.children('a').popover({
       title: 'Ready to prototype?',
-      content: 'Sign in with Browser ID to get started.',
+      content: 'Sign in with Persona to get started.',
       trigger: 'manual',
       placement: 'bottom'
     }).popover('show');

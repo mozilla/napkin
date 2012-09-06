@@ -1,4 +1,4 @@
-script#layout-template(type='text/ejs')
+script#layout-template(type='text/template')
   if !sharing
     #prototype-header
       h2 &lsquo;#{screenHash[screenId].title}&rsquo; screen prototype
@@ -6,10 +6,9 @@ script#layout-template(type='text/ejs')
         i.icon-globe
         | Share Screen
 
-  <% var layout = attr('layout'); %>
-  <% layout.each(function(colLengths) { %>
+  <% _.each(layout, function(cols) { %>
   .row
-    <% colLengths.each(function(length) { %>
-    div(class!='span<%= length %> component-location empty')
+    <% _.each(cols, function(length) { %>
+    div(class!='span<%- length %> component-location empty')
     <% }); %>
   <% }); %>

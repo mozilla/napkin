@@ -1,20 +1,19 @@
-script#screen-row-template(type='text/ejs')
+script#screen-row-template(type='text/template')
   .row.screen-row
 
-script#screen-template(type='text/ejs')
-  .span3.screen(class!="<%= attr('editing') %>")
-    h4 <%= screen.attr('title') %>
-      a(href='#edit-screen')
-        i.icon-pencil
-        i.icon-trash
+script#screen-template(type='text/template')
+  h4 <%- title %>
+    a(href='#edit-screen')
+      i.icon-pencil
+      i.icon-trash
 
-    input.edit(type='text', value!="<%= screen.attr('title') %>")
-    i.icon-remove
+  input.edit(type='text', value!="<%- title %>")
+  i.icon-remove
 
-    a(href!="/prototype/project/<%= attr('projectId') %>/screen/<%= screen.attr('id') %>")
-      <% if (screen.attr('screenshotCreated')) { %>
-      <% var imageSrc = attr('projectId') + '-' + screen.attr('id') + '.png'; %>
-      img(src!="/screenshots/#{session.id}-<%= imageSrc %>", alt='Screen screenshot')
-      <% } else { %>
-      img(src='http://placehold.it/220x220', alt='Screen placeholder')
-      <% } %>
+  a(href!="/prototype/project/<%- projectId %>/screen/<%- id %>")
+    <% if (screenshotCreated) { %>
+    <% var imageSrc = projectId + '-' + id + '.png'; %>
+    img(src!="/screenshots/#{session.id}-<%- imageSrc %>", alt='Screen screenshot')
+    <% } else { %>
+    img(src='/images/220x220.gif', alt='Screen placeholder')
+    <% } %>

@@ -377,12 +377,26 @@ function renderEjsTemplate(template, attributes, screensById) {
   template = template.replace(
     /\/share\/#\{session.sharedId\}\/project\/#\{projectId\}\/screen\/#\{screenId\}/g, '');
 
+  /* Replaces a screen id with its corresponding title slug. Returns a function
+   * that should be used as a regular expression replace callback.
+   * Requires: format for the replacement string, where %s will be replaced
+   *  with the slug
+   * Returns: regular expression replace callback assuming that the first
+   *  capture group is the screen id
+   */
+  function replaceLink(format) {
+    return function(match, screenId) {
+      screenId = parseInt(screenId, 10);
+      return format.replace(/%s/g, screensById[screenId].titleSlug);
+    };
+  }
+
   // screen link targets need to be translated to screen routes
   template = template.replace(/\/share\/#\{userId\}\/project\/#\{projectId\}\/screen\/(\d+)/g,
-    function(match, screenId) {
-      screenId = parseInt(screenId, 10);
-      return '/' + screensById[screenId].titleSlug;
-    });
+    replaceLink('/%s'));
+  template = template.replace(/\/share\/#\{session.sharedId\}\/project\/#\{projectId\}\/screen\/(\d+)/g,
+    replaceLink('/%s'));
+  template = template.replace(/\?redirect=(\d+)/, replaceLink('?redirect=%s'));
 
   // no need for unescaped attributes
   template = template.replace(/!=/g, '=');

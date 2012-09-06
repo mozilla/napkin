@@ -1,22 +1,23 @@
 require.config({
   baseUrl: '/javascripts/',
   paths: {
-    can: 'lib/can.jquery.min',
-    'can.super': 'lib/can.construct.super',
+    backbone: 'lib/backbone.min',
+    underscore: 'lib/underscore.min',
+    router: 'routers/project-page',
     'jquery.ui': 'lib/jquery.ui',
     'jquery.serialize': 'lib/jquery.serialize'
   }
 });
 
-require(['controllers/window', 'controllers/screen-layout',
-         'controllers/screen-actions', 'helpers/screen-utils'],
-  function(WindowControl, ScreenLayoutControl, ScreenActionsControl, screenUtils) {
-    new WindowControl(window, {});
-    new ScreenLayoutControl('#content', {});
+require(['jquery', 'views/key-manager', 'views/screen-layout',
+         'views/screen-actions', 'helpers/screen-utils'],
+  function($, KeyManagerView, ScreenLayoutView, ScreenActionsView, screenUtils) {
+    new KeyManagerView({ el: window });
+    new ScreenLayoutView({ el: $('#content') });
 
     if (!screenUtils.isSharePage()) {
       // screen actions should only be present on the prototyping page
-      new ScreenActionsControl('#screen-actions', {});
+      new ScreenActionsView({ el: $('#screen-actions') });
     } else {
       // adds BrowserID functionality to sign in buttons
       require(['scripts/share-login']);

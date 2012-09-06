@@ -86,10 +86,11 @@ a.btn, a.btn:hover, a.btn:active, a.btn:focus
   outline none
 
 #main
-  min-width 750px
+  position relative
+  min-width 880px
 
-#index #main
-  min-width 1300px
+#index #main, #example #main
+  min-width 1450px
 
 #sidebar
   background url(/images/texture.jpg) repeat
@@ -163,6 +164,16 @@ header a
   border-color #444
   box-shadow(inset 0 3px 4px #303030)
   color #eee
+
+// must keep the following two sets of selectors separate, as browsers will
+// ignore a whole line of selectors if one fails
+#sidebar input[type='text']:-moz-placeholder,
+#sidebar textarea:-moz-placeholder
+  color #888
+
+#sidebar input[type='text']::-webkit-input-placeholder,
+#sidebar textarea::-webkit-input-placeholder
+  color #888
 
 #sidebar .field-select
   border 1px solid #444
@@ -591,7 +602,8 @@ header a
   line-height 0
   opacity 0.7
 
-img.live-element, img.share-element, .auth
+.live-element img, .share-element img,
+.live-element .persona-button, .share-element .persona-button
   margin-bottom 10px
 
 .form-submit
@@ -622,6 +634,11 @@ img.live-element, img.share-element, .auth
   width 45px
   margin-left 10px
   margin-top 7px
+
+#github
+  position absolute
+  top 0
+  right 0
  
 /* CSS-only Persona button - credits to Sawyer Hollenshead */
 .persona-button

@@ -1,16 +1,7 @@
-define(['can', './extended'], function(can, ExtendedModel) {
-  var ScreenModel = ExtendedModel({
-    findAll: 'GET /projects/{projectId}/screens',
-    findOne: 'GET /projects/{projectId}/screens/{id}',
-    create: 'POST /projects/{projectId}/screens',
-    update: 'PUT /projects/{projectId}/screens/{id}',
-    destroy: 'DELETE /projects/{projectId}/screens/{id}',
-  }, {});
-
-  ScreenModel.List = can.Model.List({
-    // sort by screen id for correct order
-    comparator: 'id'
+define(['backbone', './extended'], function(Backbone, ExtendedModel) {
+  return ExtendedModel.extend({
+    urlRoot: function() {
+      return '/projects/' + this.options.projectId + '/screens';
+    }
   });
-
-  return ScreenModel;
 });

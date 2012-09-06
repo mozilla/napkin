@@ -1,4 +1,4 @@
-script#form-element-list-template(type='text/ejs')
+script#form-element-list-template(type='text/template')
   h2 Form Elements
   ul
     li
@@ -30,11 +30,11 @@ script#form-element-list-template(type='text/ejs')
 
         // can't use attr('action') to check selected element due to bug in
         // CanJS with attr() inside if statement
-        != partial('templates/helpers/screen-selection', { selected: 'this.action', black: true, name: 'action' })
+        != partial('templates/helpers/screen-selection', { selected: 'action', black: true, name: 'action' })
 
       button.btn.btn-danger(type='submit') Save
       i.icon-white.icon-ok
 
 if sharing
-  script#form-wrapper-template(type='text/ejs')
+  script#form-wrapper-template(type='text/template')
     != partial('templates/wrappers/form')
