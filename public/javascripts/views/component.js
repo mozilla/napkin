@@ -152,12 +152,82 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/element',
         return $lastElement.data('model');
       },
 
+      createElement: function($element) {
+        if (this.$el.hasClass('active')) {
+          var self = this;
+          // gather all element data; clone to prevent data modifications below
+          // from affecting the original element
+          var data = _.extend({}, $element.data());
+
+          // get rid of jquery-ui data
+          delete data.draggable;
+          delete data.sortable;
+
+          // integer level for headings
+          if (data.level) {
+            data.level = parseInt(data.level, 10);
+          }
+
+          // text for headings/paragraphs
+          var text = $element.text();
+          if (text) {
+            data.text = text;
+          }
+
+          var lastElement = self.getLastElement();
+          if (!lastElement) {
+            data.head = true;
+          }
+
+          self.Elements.create(data, {
+            success: function(element) {
+              element.justCreated = true;
+
+              function onLinkedListReady() {
+                // when the linked list ready, refresh the elements
+                self.publish('component:deactivateElements');
+                self.addAllElements();
+              }
+
+              if (lastElement) {
+                // lastElement is no longer the last; it now has a next
+                lastElement.save({ nextId: element.get('id') }, {
+                  success: onLinkedListReady,
+                  wait: true
+                });
+              } else {
+                onLinkedListReady();
+              }
+            },
+
+            error: errors.tooltipHandler($element),
+            wait: true
+          });
+        }
+      },
+
       events: {
         'click .icon-trash': function(event) {
           event.preventDefault();
           this.publish('component:deactivateElements');
           this.remove();
         },
+
+        'drop': function(event, ui) {
+          var $element = $(ui.draggable);
+
+          if (!$element.is('.element')) {
+            // an element was not dragged; perhaps this is a component?
+            return;
+          }
+
+          // reset component position, since it was just dragged
+          $element.css({ top: 0, left: 0 });
+
+          if (this.$el.hasClass('active')) {
+            this.createElement($element);
+          }
+        }
       },
 
       contextualEvents: {
@@ -218,55 +288,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/element',
           }
         },
 
-        'elementList:addElement': function($element) {
-          if (this.$el.hasClass('active')) {
-            var self = this;
-            // gather all element data; clone to prevent data modifications below
-            // from affecting the original element
-            var data = _.extend({}, $element.data());
-
-            // integer level for headings
-            if (data.level) {
-              data.level = parseInt(data.level, 10);
-            }
-
-            // text for headings/paragraphs
-            var text = $element.text();
-            if (text) {
-              data.text = text;
-            }
-
-            var lastElement = self.getLastElement();
-            if (!lastElement) {
-              data.head = true;
-            }
-
-            self.Elements.create(data, {
-              success: function(element) {
-                element.justCreated = true;
-
-                function onLinkedListReady() {
-                  // when the linked list ready, refresh the elements
-                  self.publish('component:deactivateElements');
-                  self.addAllElements();
-                }
-
-                if (lastElement) {
-                  // lastElement is no longer the last; it now has a next
-                  lastElement.save({ nextId: element.get('id') }, {
-                    success: onLinkedListReady,
-                    wait: true
-                  });
-                } else {
-                  onLinkedListReady();
-                }
-              },
-
-              error: errors.tooltipHandler($element),
-              wait: true
-            });
-          }
-        },
+        'elementList:addElement': 'createElement',
 
         'layoutModification:deleteComponent': function(location) {
           // remove this component if it corresponds to the given location

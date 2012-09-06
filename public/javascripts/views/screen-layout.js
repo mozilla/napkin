@@ -33,7 +33,7 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/component
 
       dropOptions: {
         hoverClass: 'component-hover',
-        accept: '.component'
+        accept: '.component, .element'
       },
 
       render: function() {
@@ -131,6 +131,11 @@ define(['jquery', 'backbone', 'underscore', './extended', 'collections/component
           var $component = $(ui.draggable);
           var componentType = $component.data('type');
           var existingView = self.getComponentView($componentLocation);
+
+          if (!$component.is('.component')) {
+            // a component was not dragged; perhaps this is an element?
+            return;
+          }
 
           // reset component position, since it was just dragged
           $component.css({ top: 0, left: 0 });

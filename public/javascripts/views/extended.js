@@ -88,7 +88,7 @@ define(['jquery', 'backbone', 'underscore', 'router', 'helpers/screen-utils'],
         // callback may be a string reference to a function as opposed to
         // a function itself, so resolve it if necessary
         if (_.isString(callback)) {
-          callback = self[callback];
+          callback = this[callback];
         }
         return callback;
       },
