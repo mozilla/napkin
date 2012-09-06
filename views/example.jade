@@ -3,124 +3,96 @@ extend layout
 block styles
   link(rel='stylesheet', href='/stylesheets/bootstrap-responsive-project.min.css')
 
-block sidebar
-  h2 Projects
-  !=partial('forms/add-project')
+block github
+  // relocate github buttons to end of sidebar; see below
 
-  ul#projects
-    li
-      a(href='#edit-project') Persona.org
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') Mortar
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') Firefox Mobile
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') Firefox Desktop
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li.active
-      a(href='#edit-project') Boot2Gecko
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') OpenBadges
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') Mozilla Popcorn
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
-    li
-      a(href='#edit-project') WebFWD
-        i.icon-pencil.icon-white
-        i.icon-chevron-right
+block sidebar
+  h2 Get Started
+  p If you're ready to start using Napkin, simply sign in via 
+    a(href='https://login.persona.org/') Persona
+    |  using the button above.
+
+  iframe#fork(src='http://ghbtns.com/github-btn.html?user=mozilla&repo=napkin&type=fork&count=true&size=large',
+    allowtransparency='true', frameborder='0', scrolling='0', width='126px', height='30px')
+
+  iframe#star(src='http://ghbtns.com/github-btn.html?user=mozilla&repo=napkin&type=watch&count=true&size=large',
+    allowtransparency='true', frameborder='0', scrolling='0', width='126px', height='30px')
 
 block content
-  !=partial('forms/add-screen')
-
   .row
-    .span3.screen
-      h4 Home
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 About
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Contact
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Gallery
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
+    .span12
+      h2 Summary
 
-  .row
-    .span3.screen
-      h4 Portfolio
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 My Account
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Log In
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Log Out
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
+      p Napkin is a rapid web prototyping tool meant for users who want to make functional, revisionable mockups that can easily be shared and exported to baseline front and back-end code.
 
-  .row
-    .span3.screen
-      h4 Dashboard
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Admin
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Pricing
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
-    .span3.screen
-      h4 Purchase
-        a(href='#edit-screen')
-          i.icon-pencil
-      a(href='#view-screen')
-        img(src='/images/220x220.gif', alt='Screen placeholder')
+      img#summary-img(src='/images/summary.png', alt='Summary')
+
+      h2 Features
+      .row.features
+        .span6
+          h3 Interface
+          p When you begin prototyping, you'll be presented with a layout builder, allowing you to select the ideal grid for your mockup.
+
+          p You'll then use a simple drag-and-drop interface to add components and elements to your prototypes, both of which can be customized, rearranged, and deleted with ease.
+
+          img#layout-img(src='/images/layout-builder.png', alt='Layout Builder')
+
+        .span6
+          h3 Interaction
+          p Unlike other tools, Napkin is largely focused on interactions. Rather than creating a prototype and telling others where a certain link leads to or that some page requires authentication, you can directly show them. The elements that you can add to a page have these interactions built in, and you can see them in action when you preview your prototype.
+
+          img(src='/images/interaction.png', alt='Interaction')
+
+      .row.features
+        .span6
+          h3 Export to Code
+          p When you're done working, you can export a whole project to a node.js standalone express application as a baseline starting point for development. All the interactions that you specified for your mockup will be baked in, saving you time.
+
+          img#export-img(src='/images/export-to-code.png', alt='Export to Code')
+
+        .span6
+          h3 Responsiveness
+          p Because you prototype is grid-based, you won't need to worry about tablets and smartphones. Napkin will automatically add responsiveness to your mockup, making it render well on these smaller-screen devices. You can simply resize your browser when prototyping to view this responsiveness live!
+
+          img(src='/images/responsiveness.png', alt='Responsiveness')
+
+      h2 How it Works
+      ol
+        li
+          h3 Create a project 
+            i.icon.icon-eye-open
+          p For each potential application/site you have in mind, create a project.
+
+        li
+          h3 Add screens 
+            i.icon.icon-plus-sign
+          p Each project contains multiple screens, which represent pages or different views.
+            
+        li 
+          h3 Start prototyping with components and elements 
+            i.icon.icon-pencil
+          p After selecting a layout for a screen, you can add components&mdash;articles, forms, navigation, etc.&mdash;and their corresponding elements&mdash;headings, paragraphs, input boxes, links&mdash;as a means of wireframing the pages you would eventually like to create.
+
+        li
+          h3 Bump it up with interactions 
+            i.icon.icon-play
+          p But wireframes are not limited to interaction at the inter-screen level. Through links and form submissions, they can also have intra-screen connections. For example, a contact form on one screen could submit to a thank you page represented by another screen. In this way, you are able to create a more complete mockup that not only mimics the final product's aesthetics, but also its interactions.
+
+        li
+          h3 Share with friends 
+            i.icon.icon-globe
+          p Want some feedback? You can share a screen with your friends using a simple link.
+
+        li
+          h3 Export when done 
+            i.icon.icon-inbox
+          p Once the site is complete, you can run the project as a demo or export it to a standalone node.js express application.
+
+      h2 Get Started
+      p Ready to get started? Sign in using the 
+        a(href='#sidebar') button at the top of the sidebar
+        | .
+
 
 block scripts
   script(src='/javascripts/lib/require-jquery.min.js', data-main='/javascripts/scripts/example.js');

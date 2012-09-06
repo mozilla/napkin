@@ -6,16 +6,7 @@
 | * Continuous task  |
 ======================
 
-Backbone Refactor
-/ Keyboard shorcuts
-/ Changes when layout additions kick in (public/javascripts/views/element.js)
-/ Comment out navigation form configuration
-/ Templates from text/ejs -> text/template
-/ undelegateEvents to remove view? what about contextualEvents and routeEvents?
-/ Assess wait: true
-
------------------------
-
+- Fix export
 - Optimize requests
 - Add link on sharing page for visibility
 - Sign in button styles on FF
@@ -25,6 +16,16 @@ Backbone Refactor
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash
+
+Backbone Refactor
+/ Keyboard shorcuts
+/ Changes when layout additions kick in (public/javascripts/views/element.js)
+/ Comment out navigation form configuration
+/ Templates from text/ejs -> text/template
+/ undelegateEvents to remove view? what about contextualEvents and routeEvents?
+/ Assess wait: true
+
+-----------------------
 
 / Change layout object to just row and col
 / Sort projects by ID on client side
