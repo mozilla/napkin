@@ -1,8 +1,8 @@
 script#textarea-element-template(type='text/template')
-  label(for!='<%- elementId %>') <%- name %>: 
-
   if sharing
+    label(for!='<%- elementId %>') <%- name %>: 
     textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>')
   else
+    label(for!='<%- elementId %>') <%- name %>: 
     textarea(rows='8', cols='20', name!='<%- elementId %>', id!='<%- elementId %>',
       disabled='disabled')
