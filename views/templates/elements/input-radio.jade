@@ -1,8 +1,8 @@
 script#input-radio-element-template(type='text/template')
-  label(for!='<%- elementId %>') <%- name %>: 
-
   if sharing
+    label(for!='<%- elementId %>') <%- name %>: 
     input(type='radio', name!='<%- elementId %>', id!='<%- elementId %>')
   else
+    label(for!='<%- elementId %>') <%- name %>: 
     input(type='radio', name!='<%- elementId %>', id!='<%- elementId %>',
       disabled='disabled')
