@@ -88,6 +88,9 @@
   input, textarea {
     width: 170px;
   }
+  .popover-content input[type="text"], .popover-content textarea {
+    width: 210px;
+  }
 }
 
 @media (/* max-width: 480px */ max-width: 810px) {
