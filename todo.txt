@@ -6,8 +6,6 @@
 | * Continuous task  |
 ======================
 
-- Fix export
-- Responsiveness for popovers
 - Optimize requests
 - Add link on sharing page for visibility
 - Sign in button styles on FF
@@ -17,6 +15,9 @@
 
 * Make sure routes contain delete req.session.sharedId if they are not for shared pages
 * For all forms on the page, make sure their field ids are by default in the usedIds hash
+
+/ Fix export
+/ Responsiveness for popovers
 
 Backbone Refactor
 / Keyboard shorcuts
