@@ -1,8 +1,8 @@
 script#input-checkbox-element-template(type='text/template')
-  label(for!='<%- elementId %>') <%- name %>: 
-
   if sharing
+    label(for!='<%- elementId %>') <%- name %>: 
     input(type='checkbox', name!='<%- elementId %>', id!='<%- elementId %>')
   else
+    label(for!='<%- elementId %>') <%- name %>: 
     input(type='checkbox', name!='<%- elementId %>', id!='<%- elementId %>',
       disabled='disabled')

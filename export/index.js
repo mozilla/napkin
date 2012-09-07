@@ -317,15 +317,34 @@ function renderComponent(component, req, db, callback) {
  * Returns: the rendered element's Jade
  */
 function renderElementTemplate(template, element, component, screensById) {
+  var newlineIndex = template.indexOf('\n');
+  var scriptTag = template.substring(0, newlineIndex);
+
+  // get rid of first line, as this contains a script tag
+  template = template.substring(newlineIndex + 1);
   var startMatch = /(\s*)if sharing\n/.exec(template);
-  var startIndex = startMatch.index + startMatch[0].length;
 
-  var whitespace = startMatch[1];
-  // same amount of whitespace precedes 'else'
-  var endMatch = new RegExp(whitespace + 'else').exec(template);
+  if (startMatch !== null) {
+    var startIndex = startMatch.index + startMatch[0].length;
+    var whitespace = startMatch[1];
+    
+    // same amount of whitespace precedes 'else'
+    var endMatch = new RegExp('^' + whitespace + 'else', 'm').exec(template);
 
-  // only get text in the `if sharing` clause
-  template = template.substring(startIndex, endMatch.index);
+    // only get text in the `if sharing` clause
+    template = template.substring(startIndex, endMatch.index);
+  }
+
+  // strip out trailing whitespace for dedent to work properly
+  template = template.replace(/\s+$/, '');
+
+  // if the template requires a wrapping tag, add it in
+  var tagNameMatch = /data-tag='([^']+)'/.exec(scriptTag);
+  if (tagNameMatch !== null) {
+    var tag = tagNameMatch[1];
+    template = indent(dedent(template), '  ');
+    template = tag + '\n' + template;
+  }
 
   if (component.type === 'form') {
     // generate an id for this element
