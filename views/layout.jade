@@ -23,7 +23,7 @@ html
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
-              a.persona-button(href='/log-out', tabindex='-1')
+              a.persona-button.log-out(href='/log-out', tabindex='-1')
                 span Sign out
             else
               form.login-form(method='post', action='/log-in')
