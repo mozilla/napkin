@@ -18,34 +18,6 @@ require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], fun
         }
       });
     });
-
-    // add faded overlay on top of sidebar and main content area
-    $('<div/>').css({
-      position: 'absolute',
-      top: 70,
-      left: 0,
-      // outerWidth/outerHeight = width/height with padding/border
-      width: $sidebar.outerWidth(),
-      height: $sidebar.outerHeight() - 70,
-      backgroundColor: 'rgba(0, 0, 0, 0.4)'
-    }).appendTo('body');
-
-    $('<div/>').css({
-      position: 'absolute',
-      top: 0,
-      left: $sidebar.outerWidth(),
-      // outerWidth/outerHeight = width/height with padding/border
-      width: $body.outerWidth() - $sidebar.outerWidth(),
-      height: $sidebar.outerHeight(),
-      backgroundColor: 'rgba(0, 0, 0, 0.4)'
-    }).appendTo('body');
-
-    $loginForm.children('a').popover({
-      title: 'Ready to prototype?',
-      content: 'Sign in with Persona to get started.',
-      trigger: 'manual',
-      placement: 'bottom'
-    }).popover('show');
   });
 });
 

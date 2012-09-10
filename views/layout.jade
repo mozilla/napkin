@@ -23,7 +23,7 @@ html
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
-              a.persona-button(href='/log-out', tabindex='-1')
+              a.persona-button.log-out(href='/log-out', tabindex='-1')
                 span Sign out
             else
               form.login-form(method='post', action='/log-in')
@@ -31,12 +31,16 @@ html
                   span Sign in
                 input(type='hidden', name='bid_assertion', value='1')
 
+        block github
+          iframe#fork(src='http://ghbtns.com/github-btn.html?user=mozilla&repo=napkin&type=fork&count=true',
+            allowtransparency='true', frameborder='0', scrolling='0', width='82px', height='20px')
+
+          iframe#star(src='http://ghbtns.com/github-btn.html?user=mozilla&repo=napkin&type=watch&count=true',
+            allowtransparency='true', frameborder='0', scrolling='0', width='82px', height='20px')
+
         block sidebar
       #content
         block content
 
-      block github
-        a#github(href='https://github.com/mozilla/napkin')
-          img(src='https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png', alt='Fork on GitHub')
 
     block scripts

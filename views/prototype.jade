@@ -21,7 +21,11 @@ block content
     h2 Authentication Required
     p You may not view this page unless you are authenticated.
 
-    != partial('helpers/share-login-form')
+    form.login-form(method='post',
+      action!="/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-in")
+      a.persona-button.share-element.auth(href='#log-in')
+        span Sign in
+      input(type='hidden', name='bid_assertion', value='1')
 
 block scripts
   if sharing && !authenticated

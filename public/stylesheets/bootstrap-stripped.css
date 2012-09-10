@@ -698,6 +698,12 @@ input[type="submit"].btn::-moz-focus-inner {
 .icon-inbox {
   background-position: -168px -24px;
 }
+.icon-eye-open {
+  background-position: -96px -120px;
+}
+.icon-play {
+  background-position: -264px -72px;
+}
 .tooltip {
   position: absolute;
   z-index: 1020;

@@ -1,22 +1,22 @@
 script#form-element-list-template(type='text/template')
   h2 Form Elements
   ul
-    li
+    li.clearfix
       .element(data-type='input-text', data-name='input-text')
         label(for='input-text') Text Input: 
         input(type='text', name='input-text', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
-    li
+    li.clearfix
       .element(data-type='input-radio', data-name='input-radio')
         label(for='input-radio') Radio Input: 
         input.radio(type='radio', name='input-radio', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
-    li
+    li.clearfix
       .element(data-type='input-checkbox', data-name='input-checkbox')
         label(for='input-checkbox') Checkbox Input: 
         input.checkbox(type='checkbox', name='input-checkbox', disabled='disabled')
       a.btn.btn-success(href='#add-element') +
-    li
+    li.clearfix
       .element(data-type='textarea', data-name='textarea')
         label(for='textarea') Textarea: 
         textarea(rows='8', cols='20', name='textarea', disabled='disabled')
