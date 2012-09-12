@@ -118,10 +118,7 @@ describe('component', function() {
 
       it('accepts an empty callback', function(done) {
         var req = otherComponentReq;
-        components.add(req, db);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        components.add(req, db, function(err) {
           components.get(req, db, 2, function(err, component) {
             component.type.should.equal(req.body.type);
             component.row.should.eql(req.body.row);
@@ -129,7 +126,7 @@ describe('component', function() {
             component.action.should.equal(req.body.action);
             done();
           });
-        }, 10);
+        });
       });
     });
 
@@ -190,15 +187,12 @@ describe('component', function() {
 
       it('accepts an empty callback', function(done) {
         req.body.col = 4;
-        components.update(req, db, 1);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        components.update(req, db, 1, function(err) {
           components.get(req, db, 1, function(err, component) {
             component.col.should.eql(req.body.col);
             done();
           });
-        }, 10);
+        });
       });
     });
 
@@ -214,15 +208,12 @@ describe('component', function() {
       });
 
       it('accepts an empty callback', function(done) {
-        components.remove(req, db, 2);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        components.remove(req, db, 2, function(err) {
           components.list(req, db, function(error, componentList) {
             componentList.should.eql([]);
             done();
           });
-        }, 10);
+        });
       });
 
       it('deletes an element associated with a component', function(done) {

@@ -123,10 +123,7 @@ describe('element', function() {
 
       it('accepts an empty callback', function(done) {
         var req = otherElementReq;
-        elements.add(req, db);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        elements.add(req, db, function(err) {
           elements.get(req, db, 2, function(err, element) {
             element.type.should.equal(req.body.type);
             element.head.should.equal(req.body.head);
@@ -135,7 +132,7 @@ describe('element', function() {
             element.level.should.equal(req.body.level);
             done();
           });
-        }, 10);
+        });
       });
     });
 
@@ -199,15 +196,12 @@ describe('element', function() {
 
       it('accepts an empty callback', function(done) {
         req.body.nextId = 3;
-        elements.update(req, db, 1);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        elements.update(req, db, 1, function(err) {
           elements.get(req, db, 1, function(err, element) {
             element.nextId.should.equal(req.body.nextId);
             done();
           });
-        }, 10);
+        });
       });
     });
 
@@ -223,15 +217,12 @@ describe('element', function() {
       });
 
       it('accepts an empty callback', function(done) {
-        elements.remove(req, db, 2);
-
-        // wait 10ms for db transaction to complete
-        setTimeout(function() {
+        elements.remove(req, db, 2, function(err) {
           elements.list(req, db, function(error, elementList) {
             elementList.should.eql([]);
             done();
           });
-        }, 10);
+        });
       });
     });
 });

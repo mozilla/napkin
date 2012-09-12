@@ -64,16 +64,13 @@ describe('project', function() {
 
     it('accepts an empty callback', function(done) {
       var req = otherProjectReq;
-      projects.add(req, db);
-
-      // wait 10ms for db transaction to complete
-      setTimeout(function() {
+      projects.add(req, db, function(err) {
         projects.get(req, db, 2, function(err, project) {
           project.title.should.equal(req.body.title);
           project.author.should.equal(req.session.email);
           done();
         });
-      }, 10);
+      });
     });
   });
 
@@ -148,15 +145,12 @@ describe('project', function() {
     });
 
     it('accepts an empty callback', function(done) {
-      projects.remove(req, db, 2);
-
-      // wait 10ms for db transaction to complete
-      setTimeout(function() {
+      projects.remove(req, db, 2, function(err) {
         projects.list(req, db, function(err, projectList) {
           projectList.should.eql([]);
           done();
         });
-      }, 10);
+      });
     });
 
     it('deletes a screen associated with a project', function(done) {
