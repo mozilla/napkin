@@ -22,7 +22,7 @@ module.exports = function(app, nconf, db) {
           }
 
           req.session.id = id;
-          res.redirect('/');
+          res.json({ message: 'Login successful' });
         });
       }
     });
@@ -51,12 +51,12 @@ module.exports = function(app, nconf, db) {
   });
 
   // Log out of napkin
-  app.get('/log-out', function(req, res) {
+  app.post('/log-out', function(req, res) {
     if (req.session) {
       req.session.reset();
     }
 
-    res.redirect('/', 303);
+    res.json({ message: 'Log out successful' });
   });
 
   // Log out of project

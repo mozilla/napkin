@@ -91,17 +91,14 @@ describe('screen', function() {
 
     it('accepts an empty callback', function(done) {
       var req = otherScreenReq;
-      screens.add(req, db);
-
-      // wait 10ms for db transaction to complete
-      setTimeout(function() {
+      screens.add(req, db, function(err) {
         screens.get(req, db, 2, function(err, screen) {
           screen.title.should.equal(req.body.title);
           screen.isStart.should.equal(req.body.isStart);
           screen.layout.should.equal(req.body.layout);
           done();
         });
-      }, 10);
+      });
     });
   });
 
@@ -154,15 +151,12 @@ describe('screen', function() {
 
     it('accepts an empty callback', function(done) {
       req.body.title = 'My Screen3';
-      screens.update(req, db, 1);
-
-      // wait 10ms for db transaction to complete
-      setTimeout(function() {
+      screens.update(req, db, 1, function(err) {
         screens.get(req, db, 1, function(err, screen) {
           screen.title.should.equal(req.body.title);
           done();
         });
-      }, 10);
+      });
     });
   });
 
@@ -177,15 +171,12 @@ describe('screen', function() {
     });
 
     it('accepts an empty callback', function(done) {
-      screens.remove(req, db, 2);
-
-      // wait 10ms for db transaction to complete
-      setTimeout(function() {
+      screens.remove(req, db, 2, function(err) {
         screens.list(req, db, function(err, screenList) {
           screenList.should.eql([]);
           done();
         });
-      }, 10);
+      });
     });
 
     it('deletes a component associated with a screen', function(done) {

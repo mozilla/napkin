@@ -23,13 +23,11 @@ html
 
           if typeof(sharing) === 'undefined' || !sharing
             if session.email
-              a.persona-button.log-out(href='/log-out', tabindex='-1')
+              a.persona-button.log-out(href='#', tabindex='-1')
                 span Sign out
             else
-              form.login-form(method='post', action='/log-in')
-                a.persona-button(href='#log-in', tabindex='-1')
-                  span Sign in
-                input(type='hidden', name='bid_assertion', value='1')
+              a.persona-button.login(href='#log-in', tabindex='-1')
+                span Sign in
 
         block github
           iframe#fork(src='http://ghbtns.com/github-btn.html?user=mozilla&repo=napkin&type=fork&count=true',
@@ -42,5 +40,9 @@ html
       #content
         block content
 
-
+    script(type='text/javascript')
+      var currentUser = null;
+      var redirectUrl = '/';
+    if session.email
+      != '<script type="text/javascript">currentUser = "' + session.email + '";</script>'
     block scripts

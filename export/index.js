@@ -327,7 +327,7 @@ function renderElementTemplate(template, element, component, screensById) {
   if (startMatch !== null) {
     var startIndex = startMatch.index + startMatch[0].length;
     var whitespace = startMatch[1];
-    
+
     // same amount of whitespace precedes 'else'
     var endMatch = new RegExp('^' + whitespace + 'else', 'm').exec(template);
 

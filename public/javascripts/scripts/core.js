@@ -1,8 +1,49 @@
-require(['jquery'], function($) {
+require(['jquery', 'https://login.persona.org/include.js'], function($) {
   $(function() {
     var $window = $(window);
     var $body = $('body');
     var $sidebar = $('#sidebar');
+
+    // Persona login
+    /* Authenticatication for Persona */
+    $sidebar.on('click', 'a.login', function(event) {
+      event.preventDefault();
+      navigator.id.request();
+    });
+
+    $sidebar.on('click', 'a.log-out', function(event) {
+      event.preventDefault();
+      navigator.id.logout();
+    });
+
+    navigator.id.watch({
+      loggedInEmail: currentUser,
+      onlogin: function(assertion) {
+        $.ajax({
+          type: 'POST',
+          url: '/log-in',
+          data: { assertion: assertion },
+          success: function(res, status, xhr) {
+            window.location = redirectUrl;
+          },
+          error: function(res, status, xhr) {
+            alert('login failure ' + res);
+          }
+        });
+      },
+      onlogout: function() {
+        $.ajax({
+          type: 'POST',
+          url: '/log-out',
+          success: function(res, status, xhr) {
+            window.location.reload();
+          },
+          error: function(res, status, xhr) {
+            console.log('logout failure ' + res);
+          }
+        });
+      }
+    });
 
     // placeholder polyfill
     var input = document.createElement('input');

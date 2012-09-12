@@ -2,8 +2,6 @@
 <% redirect = ''; %>
 <% } %>
 
-form.login-form(method='post',
-  action!="/share/#{userId}/project/#{projectId}/screen/#{screenId}/log-in?redirect=<%- redirect %>")
-  a.persona-button.share-element.auth(href='#log-in')
-    span Sign in
-  input(type='hidden', name='bid_assertion', value='1')
+a.persona-button.share-element.auth.login(href='#log-in',
+  data-redirect!="/share/#{userId}/project/#{projectId}/screen/<%- redirect %>")
+  span Sign in

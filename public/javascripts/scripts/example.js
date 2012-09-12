@@ -2,23 +2,21 @@ require.config({
   baseUrl: '/javascripts/'
 });
 
-require(['jquery', 'lib/bootstrap.min', 'https://browserid.org/include.js'], function($) {
+require(['scripts/core', 'lib/bootstrap.min']);
+
+require(['jquery', 'lib/bootstrap.min'], function($) {
   $(function() {
-    var $body = $('body');
-    var $loginForm = $('header .login-form');
     var $sidebar = $('#sidebar');
 
-    // Browser ID login
-    $loginForm.on('click', 'a', function(event) {
-      event.preventDefault(); 
-      navigator.id.getVerifiedEmail(function(assertion) {
-        if (assertion) {
-          $loginForm.find('input[name="bid_assertion"]').val(assertion);
-          $loginForm.submit();
-        }
-      });
+    /* Authenticatication for Persona */
+    $sidebar.on('click', 'a.login', function(event) {
+      event.preventDefault();
+      navigator.id.request();
+    });
+
+    $sidebar.on('click', 'a.log-out', function(event) {
+      event.preventDefault();
+      navigator.id.logout();
     });
   });
 });
-
-require(['scripts/core', 'lib/bootstrap.min']);
